@@ -460,7 +460,6 @@
   let weeklyChart = null;
   let donutChart = null;
 
-  // NIMIQ QR SCANNER GLOBALS
   let qrScanner = null;
 
   // ─── API BRIDGE (Replaces google.script.run) ────────────
@@ -582,7 +581,7 @@
           if (!isScanning) onScanSuccess(result.data);
         },
         {
-          onDecodeError: error => {}, // Ignore unread frames
+          onDecodeError: error => {},
           highlightScanRegion: true,
           preferredCamera: 'environment'
         }
@@ -667,6 +666,8 @@
           if (tbody.rows.length > MAX_RECENT_SCANS) tbody.deleteRow(tbody.rows.length - 1);
         } else {
           msg.style.background = 'rgba(211,47,47,0.9)'; msg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + res.msg;
+          // Trigger crisp error notification on unauthorized card injection
+          Swal.fire({ icon: 'error', title: 'Security Alert', text: res.msg, confirmButtonColor: 'var(--status-red)' });
         }
         setTimeout(() => {
           isScanning = false; msg.innerText = 'OPTICS ONLINE. POINT AT QR CODE.';
@@ -747,6 +748,7 @@
     for (let r of rows) r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
   }
 
+  // ... (REMAINING CRUD INTERFACE BRIDGES RUNNING STABLY) ...
   function createAcc() {
     const u = document.getElementById('new-user').value.trim(), p = document.getElementById('new-pass').value, r = document.getElementById('new-role').value;
     if (!u || !p) return Swal.fire('Notice', 'Fill out all fields.', 'warning');
