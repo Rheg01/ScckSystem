@@ -21,7 +21,7 @@
     body { background: var(--army-dark); color: white; overflow-x: hidden; scroll-behavior: smooth; }
 
     /* ─── STICKY HEADER ─── */
-    .header { position: fixed; top: 0; left: 0; width: 100%; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 30000; background: rgba(27, 32, 21, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 175, 55, 0.2); transition: all 0.3s ease; }
+    .header { position: fixed; top: 0; left: 0; width: 100%; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 30000; background: rgba(15, 18, 12, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 175, 55, 0.2); transition: all 0.3s ease; }
     .header .logo-group { display: flex; align-items: center; gap: 10px; font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: bold; color: var(--army-gold); letter-spacing: 2px; text-decoration: none; }
     .header .logo-group img { width: 35px; height: 35px; object-fit: contain; }
     
@@ -38,10 +38,11 @@
     /* ─── CINEMATIC HERO SECTION ─── */
     .landing-hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow: hidden; margin-top: 0; }
     
-    .landing-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at center, var(--army-primary) 0%, #0a0c08 100%); background-size: cover; background-position: center; z-index: 0; animation: breathe 15s infinite alternate ease-in-out; }
+    .landing-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), radial-gradient(circle at center, var(--army-primary) 0%, #0a0c08 100%); background-size: cover; background-position: center; z-index: 0; animation: breathe 15s infinite alternate ease-in-out; }
     @keyframes breathe { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
     
-    .landing-content { position: relative; z-index: 1; max-width: 800px; background: rgba(10, 12, 8, 0.6); padding: 50px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); border-top: 4px solid var(--army-gold); animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    /* HCI FIX: Opacity increased to 90% and dark overlay added to bg */
+    .landing-content { position: relative; z-index: 1; max-width: 800px; background: rgba(15, 18, 12, 0.90); padding: 50px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); border-top: 4px solid var(--army-gold); animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
     .landing-content img { width: 120px; height: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); display:none; object-fit: contain; }
@@ -136,6 +137,7 @@
       <h1>SCCK ROTC UNIT</h1>
       <h3>LEADERSHIP • DISCIPLINE • EXCELLENCE</h3>
       
+      <!-- Navigates directly to the secure login app -->
       <a href="app.html" class="btn-enter">
         <i class="fas fa-shield-alt"></i> ENTER COMMAND CENTER
       </a>
@@ -179,11 +181,11 @@
 
   <script>
     // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE:
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx5rLHSnvMOqseXQeMwu_CK7QgL44oOvwgMfmjjexCuPgHlhnHYqQ7ofFK8A5G1j_D9IQ/exec";
+    const GAS_API_URL = "PASTE_YOUR_COPIED_URL_HERE";
 
     let legacyCache = [];
 
-    // ─── SCROLL ANIMATIONS ───
+    // ─── SCROLL ANIMATIONS (INTERSECTION OBSERVER) ───
     document.addEventListener("DOMContentLoaded", () => {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -208,10 +210,13 @@
           if(data.branding.logoUrl) {
             document.getElementById('system-logo-landing').src = data.branding.logoUrl;
             document.getElementById('system-logo-landing').style.display = 'inline-block';
-            document.getElementById('nav-logo').src = data.branding.logoUrl;
+          }
+          if(data.branding.navLogoUrl) {
+            document.getElementById('nav-logo').src = data.branding.navLogoUrl;
           }
           if(data.branding.bgUrl) {
-            document.getElementById('landing-bg-img').style.backgroundImage = `url('${data.branding.bgUrl}')`;
+            // Adds dark overlay directly over custom background
+            document.getElementById('landing-bg-img').style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${data.branding.bgUrl}')`;
           }
         }
         
