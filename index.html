@@ -20,28 +20,26 @@
     h1, h2, h3, button, .nav-links a { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
     body { background: var(--army-dark); color: white; overflow-x: hidden; scroll-behavior: smooth; }
 
-    /* ─── STICKY HEADER ─── */
+    /* ─── UPGRADED HEADER ─── */
     .header { position: fixed; top: 0; left: 0; width: 100%; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 30000; background: rgba(15, 18, 12, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 175, 55, 0.2); transition: all 0.3s ease; }
-    .header .logo-group { display: flex; align-items: center; gap: 10px; font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: bold; color: var(--army-gold); letter-spacing: 2px; text-decoration: none; }
-    .header .logo-group img { width: 35px; height: 35px; object-fit: contain; }
+    .header .logo-group { display: flex; align-items: center; gap: 12px; font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700; color: var(--army-gold); letter-spacing: 1.5px; text-decoration: none; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+    .header .logo-group img { width: 40px; height: 40px; object-fit: contain; }
     
     .nav-links { display: flex; gap: 30px; align-items: center; }
-    .nav-links a { color: #dce0d5; text-decoration: none; font-size: 15px; transition: color 0.3s; position: relative; }
+    .nav-links a { color: #dce0d5; text-decoration: none; font-size: 15px; font-weight: 500; transition: color 0.3s; position: relative; }
     .nav-links a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--army-gold); transition: width 0.3s; }
     .nav-links a:hover::after { width: 100%; }
     .nav-links a:hover { color: var(--army-gold); }
     
-    .nav-btn { background: var(--army-gold); color: var(--army-dark) !important; padding: 8px 20px; border-radius: 4px; font-weight: bold; transition: all 0.3s; border: 1px solid transparent; }
+    .nav-btn { background: var(--army-gold); color: var(--army-dark) !important; padding: 8px 20px; border-radius: 4px; font-weight: 700; transition: all 0.3s; border: 1px solid transparent; }
     .nav-btn::after { display: none; }
     .nav-btn:hover { background: transparent; color: var(--army-gold) !important; border: 1px solid var(--army-gold); }
 
     /* ─── CINEMATIC HERO SECTION ─── */
     .landing-hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow: hidden; margin-top: 0; }
-    
     .landing-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), radial-gradient(circle at center, var(--army-primary) 0%, #0a0c08 100%); background-size: cover; background-position: center; z-index: 0; animation: breathe 15s infinite alternate ease-in-out; }
     @keyframes breathe { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
     
-    /* HCI FIX: Opacity increased to 90% and dark overlay added to bg */
     .landing-content { position: relative; z-index: 1; max-width: 800px; background: rgba(15, 18, 12, 0.90); padding: 50px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); border-top: 4px solid var(--army-gold); animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -66,7 +64,7 @@
     .section-title { color: var(--army-gold); font-size: 32px; margin-bottom: 25px; text-align: center; border-bottom: 2px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; }
     .history-container p { color: #b0bec5; font-size: 16px; line-height: 1.8; margin-bottom: 20px; text-align: justify; }
 
-    /* ─── LEGACY GALLERY SECTION (SLEEK LOGO UPDATE) ─── */
+    /* ─── LEGACY GALLERY SECTION ─── */
     .landing-legacy { position: relative; z-index: 1; background: var(--army-dark); padding: 120px 20px; min-height: 50vh; }
     .legacy-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
     
@@ -137,7 +135,6 @@
       <h1>SCCK ROTC UNIT</h1>
       <h3>LEADERSHIP • DISCIPLINE • EXCELLENCE</h3>
       
-      <!-- Navigates directly to the secure login app -->
       <a href="app.html" class="btn-enter">
         <i class="fas fa-shield-alt"></i> ENTER COMMAND CENTER
       </a>
@@ -185,7 +182,6 @@
 
     let legacyCache = [];
 
-    // ─── SCROLL ANIMATIONS (INTERSECTION OBSERVER) ───
     document.addEventListener("DOMContentLoaded", () => {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -198,7 +194,6 @@
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     });
 
-    // ─── FETCH DATA ───
     window.onload = () => {
       fetch(GAS_API_URL, {
         method: 'POST',
@@ -215,7 +210,6 @@
             document.getElementById('nav-logo').src = data.branding.navLogoUrl;
           }
           if(data.branding.bgUrl) {
-            // Adds dark overlay directly over custom background
             document.getElementById('landing-bg-img').style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${data.branding.bgUrl}')`;
           }
         }
@@ -237,8 +231,11 @@
         return;
       }
       
+      // Sort array incrementally by year (Oldest left -> Newest right)
+      let sortedClasses = [...classes].sort((a, b) => parseInt(a.year) - parseInt(b.year));
+      
       let html = '';
-      classes.forEach(c => {
+      sortedClasses.forEach(c => {
         const logo = c.logo ? `<img src="${c.logo}" class="class-logo">` : `<i class="fas fa-shield-alt" style="font-size:80px; color:var(--army-gold); margin-bottom:20px;"></i>`;
         html += `
           <div class="class-card" onclick="openClassModal('${c.id}')">
