@@ -125,25 +125,35 @@
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--army-dark); border-radius: 4px; }
     ::-webkit-scrollbar-thumb { background: var(--army-gold); border-radius: 4px; }
-    @media (max-width: 768px) { .header { padding: 15px 20px; } .nav-links a.hide-mobile { display: none; } .gate-title { font-size: 32px; } .modal-content { padding: 20px; } .logo-text .line1 { font-size: 14px; } .logo-text .line2 { font-size: 11px; } }
+    
+    /* BULLETPROOF MOBILE OPTIMIZATION */
+    @media (max-width: 768px) { 
+      .header { padding: 15px 20px; } 
+      .nav-links a.hide-mobile { display: none; } 
+      .gate-title { font-size: 28px; } 
+      .gate-card { padding: 35px 25px; } 
+      .gate-glow { width: 180px; height: 180px; } 
+      .modal-content { padding: 20px; } 
+      .logo-text .line1 { font-size: 14px; } 
+      .logo-text .line2 { font-size: 11px; } 
+      .post-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } 
+    }
   </style>
 </head>
 <body>
 
-  <!-- PHASE 1: THE GATE ENTRANCE -->
   <div id="gate-screen">
     <div class="gate-card">
       <div class="gate-glow"></div>
       <div class="gate-content">
         <img src="https://cdn-icons-png.flaticon.com/512/1055/1055664.png" id="gate-logo" class="gate-logo" alt="SCCK Logo">
         <h1 class="gate-title">SCCK ROTC UNIT</h1>
-        <h3 class="gate-motto">LEADERSHIP &bull; DISCIPLINE &bull; EXCELLENCE</h3>
+        <h3 class="gate-motto">LEADERSHIP • DISCIPLINE • EXCELLENCE</h3>
         <button onclick="enterSite()" class="btn-enter"><i class="fas fa-shield-alt"></i> ENTER COMMAND CENTER</button>
       </div>
     </div>
   </div>
 
-  <!-- PHASE 2 & 3: THE MAIN SITE CONTENT -->
   <div id="main-wrapper">
     <header class="header" id="navbar">
       <a href="#" class="logo-group">
