@@ -9,24 +9,28 @@
   <style>
     :root { --army-dark: #0a0c08; --army-primary: #1e2418; --army-gold: #d4af37; --card-bg: #12140e; --text-main: #ffffff; --text-muted: #b0bec5; --border-color: #2a3322; }
     
-    /* LIGHT MODE VARIABLES */
-    body.light-mode { --army-dark: #f4f7f9; --army-primary: #ffffff; --army-gold: #d4af37; --card-bg: #ffffff; --text-main: #1b2015; --text-muted: #4a5568; --border-color: #e2e8f0; }
+    /* LIGHT MODE VARIABLES (Military Green Theme) */
+    body.light-mode { --army-dark: #1b2015; --army-primary: #4b5a36; --army-gold: #d4af37; --card-bg: #ffffff; --text-main: #ffffff; --text-muted: #dce0d5; --border-color: #d4d8cc; }
     
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
     h1, h2, h3, button, .nav-links a { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
     body { background: var(--army-dark); color: var(--text-main); overflow-x: hidden; scroll-behavior: smooth; transition: background 0.5s ease, color 0.5s ease; }
     
+    /* Applying the Radial Green Gradient to Light Mode */
+    body.light-mode { background: radial-gradient(circle at center, var(--army-primary) 0%, var(--army-dark) 100%); background-attachment: fixed; }
+
     /* ─── PHASE 1: CINEMATIC GATE SCREEN ─── */
     #gate-screen { position: fixed; inset: 0; z-index: 50000; background: var(--army-dark); display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease, transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
     #gate-screen.unlocked { opacity: 0; transform: scale(1.1); pointer-events: none; }
     
     .gate-card { background: var(--card-bg); padding: 50px 40px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 0 50px rgba(212, 175, 55, 0.05), 0 20px 60px rgba(0,0,0,0.8); text-align: center; max-width: 500px; width: 90%; transition: all 0.5s ease; position: relative; overflow: hidden; }
     
-    /* 🔥 ENHANCED LIGHT MODE GATE DESIGN 🔥 */
-    body.light-mode #gate-screen { background-color: #f4f7f9; background-image: radial-gradient(#dce0d5 1.5px, transparent 1.5px); background-size: 24px 24px; }
-    body.light-mode .gate-card { background: rgba(255, 255, 255, 0.98); border: 1px solid rgba(212, 175, 55, 0.4); box-shadow: 0 30px 60px rgba(27, 32, 21, 0.08), 0 0 0 10px rgba(255, 255, 255, 0.5); backdrop-filter: blur(8px); }
-    body.light-mode .gate-glow { background: radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 65%); }
-    body.light-mode .gate-motto { color: #4a5568; font-weight: 600; }
+    /* 🔥 MILITARY GREEN THEME GATE DESIGN 🔥 */
+    body.light-mode #gate-screen { background: transparent; }
+    body.light-mode .gate-card { background: var(--card-bg); border: none; border-top: 5px solid var(--army-gold); box-shadow: 0 20px 50px rgba(0,0,0,0.6); backdrop-filter: none; }
+    body.light-mode .gate-glow { display: none; } /* Disabled in light mode for cleaner look */
+    body.light-mode .gate-title { color: #2d3821; text-shadow: none; }
+    body.light-mode .gate-motto { color: #6b705c; font-weight: 600; }
     
     .gate-glow { position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 250px; height: 250px; background: radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 70%); z-index: 0; }
     .gate-content { position: relative; z-index: 1; }
@@ -35,7 +39,6 @@
     @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
     
     .gate-title { font-size: 38px; color: var(--army-gold); margin-bottom: 15px; letter-spacing: 2px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); line-height: 1.1; }
-    body.light-mode .gate-title { color: #1b2015; text-shadow: none; }
     .gate-motto { font-size: 13px; color: var(--text-muted); margin-bottom: 35px; font-weight: 500; letter-spacing: 3px; font-family: 'Oswald', sans-serif;}
     
     .btn-enter { background: var(--army-gold); color: #1b2015; font-size: 16px; font-weight: bold; padding: 16px 35px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.3s; text-transform: uppercase; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px;}
@@ -48,7 +51,7 @@
     /* ─── HEADER & NAVIGATION ─── */
     .header { position: fixed; top: 0; left: 0; width: 100%; padding: 12px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 30000; background: rgba(10, 12, 8, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, background 0.3s, border 0.3s; }
     .header.unlocked { transform: translateY(0); }
-    body.light-mode .header { background: rgba(255, 255, 255, 0.95); }
+    body.light-mode .header { background: rgba(27, 32, 21, 0.95); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
     
     .header .logo-group { display: flex; align-items: center; gap: 15px; text-decoration: none; }
     .header .logo-group img { width: 50px; height: 50px; object-fit: contain; }
@@ -66,12 +69,19 @@
     /* ─── SHOWCASE & LEGACY SECTIONS ─── */
     .landing-showcase { position: relative; z-index: 1; padding: 120px 20px; min-height: 60vh; border-bottom: 1px solid var(--border-color); }
     .section-title { color: var(--army-gold); font-size: 32px; margin-bottom: 40px; text-align: center; border-bottom: 2px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; max-width: 900px; margin-left: auto; margin-right: auto;}
-    body.light-mode .section-title { color: #1b2015; }
-
+    
     .post-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; justify-content: center; }
     .post-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-    body.light-mode .post-card { box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
     .post-card:hover { transform: translateY(-8px); border-color: var(--army-gold); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15); }
+    
+    /* Light Mode Card Adjustments */
+    body.light-mode .post-card, body.light-mode .officer-card, body.light-mode .modal-content { background: var(--card-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.2); border: none; }
+    body.light-mode .post-title, body.light-mode .officer-name, body.light-mode .full-post-title { color: #1b2015; }
+    body.light-mode .post-desc, body.light-mode .officer-desig, body.light-mode .full-post-desc { color: #4a5568; }
+    body.light-mode .read-more-btn { color: #4b5a36; border-color: #4b5a36; }
+    body.light-mode .read-more-btn:hover { background: #4b5a36; color: #ffffff; }
+    body.light-mode .class-name { text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+
     .post-img-container { overflow: hidden; height: 220px; border-bottom: 2px solid var(--army-gold); }
     .post-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
     .post-card:hover .post-img { transform: scale(1.08); }
@@ -89,11 +99,10 @@
     .class-card { background: transparent; border: none; padding: 20px; text-align: center; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; align-items: center; }
     .class-card:hover { transform: translateY(-15px) scale(1.05); }
     .class-logo { width: 160px; height: 160px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.8)); transition: transform 0.4s ease, filter 0.4s ease; }
-    body.light-mode .class-logo { filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15)); }
+    body.light-mode .class-logo { filter: drop-shadow(0 10px 15px rgba(0,0,0,0.25)); }
     .class-card:hover .class-logo { transform: scale(1.1); filter: drop-shadow(0 15px 25px rgba(212, 175, 55, 0.6)); }
     .class-year { font-size: 14px; color: var(--army-gold); font-weight: bold; margin-bottom: 5px; letter-spacing: 2px; }
     .class-name { font-size: 26px; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-    body.light-mode .class-name { text-shadow: none; }
     
     .officer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top:20px; }
     .officer-card { text-align: center; background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); transition: transform 0.3s; }
@@ -147,6 +156,7 @@
 </head>
 <body>
 
+  <!-- PHASE 1: THE GATE ENTRANCE -->
   <div id="gate-screen">
     <div class="gate-card">
       <div class="gate-glow"></div>
@@ -159,6 +169,7 @@
     </div>
   </div>
 
+  <!-- PHASE 2 & 3: THE MAIN SITE CONTENT -->
   <div id="main-wrapper">
     <header class="header" id="navbar">
       <a href="#" class="logo-group">
@@ -242,9 +253,12 @@
 
           const gateScreen = document.getElementById('gate-screen');
           if(gateScreen && data.branding.bgUrl) {
-            gateScreen.style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${data.branding.bgUrl}')`;
-            gateScreen.style.backgroundSize = 'cover';
-            gateScreen.style.backgroundPosition = 'center';
+            // Apply the custom background image ONLY to the Dark Mode Gate
+            if (!document.body.classList.contains('light-mode')) {
+                gateScreen.style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${data.branding.bgUrl}')`;
+                gateScreen.style.backgroundSize = 'cover';
+                gateScreen.style.backgroundPosition = 'center';
+            }
           }
         }
 
