@@ -69,6 +69,7 @@
 
 <div id="mobile-overlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
 
+<!-- CROPPER MODAL -->
 <div class="cropper-modal" id="cropper-modal">
   <div class="cropper-content">
     <h2 style="color: var(--army-gold); margin-bottom: 15px;"><i class="fas fa-crop-alt"></i> ADJUST IMAGE</h2>
@@ -82,6 +83,7 @@
   </div>
 </div>
 
+<!-- LOGIN SCREEN -->
 <div id="view-login">
   <div class="login-box">
     <div class="login-logo-container">
@@ -105,8 +107,10 @@
   </div>
 </div>
 
+<!-- MAIN DASHBOARD CONTAINER -->
 <div id="app-container" class="app-container" style="display:none;">
   
+  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
@@ -117,6 +121,7 @@
       <div id="sidebar-profile-role" style="font-size: 11px; color: #9aa08f; font-family: 'Inter', sans-serif; text-transform: uppercase; margin-top: 5px;">System Active</div>
     </div>
 
+    <!-- ADMIN & SUPER ADMIN MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-admin" style="display:none;">
       <li><button onclick="switchTab('panel-dashboard',this)"><i class="fas fa-chart-pie"></i> <span>DASHBOARD</span></button></li>
       <li><button onclick="switchTab('panel-attendance',this)"><i class="fas fa-clipboard-list"></i> <span>ATTENDANCE LOG</span></button></li>
@@ -127,6 +132,7 @@
       
       <li><button onclick="switchTab('panel-posts',this)"><i class="fas fa-images"></i> <span>PUBLIC POSTS</span></button></li>
       
+      <!-- SUPER ADMIN ONLY TABS -->
       <li class="super-admin-only"><button onclick="switchTab('panel-accounts',this)"><i class="fas fa-user-shield"></i> <span>PERSONNEL ACCESS</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-audit',this)"><i class="fas fa-history"></i> <span>SYSTEM AUDIT LOG</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-settings',this)"><i class="fas fa-cog"></i> <span>SYSTEM BRANDING</span></button></li>
@@ -134,6 +140,7 @@
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
     </ul>
 
+    <!-- SCANNER TERMINAL MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-scanner" style="display:none;">
       <li><button onclick="switchTab('panel-scanner',this)" class="active"><i class="fas fa-qrcode"></i> <span>QR SCANNER TERMINAL</span></button></li>
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
@@ -145,8 +152,10 @@
     </ul>
   </div>
 
+  <!-- MAIN CONTENT AREA -->
   <div class="main-content">
 
+    <!-- SCANNER PANEL -->
     <div id="panel-scanner" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-qrcode"></i> QR SCANNER TERMINAL</h2></div><button style="width:auto; padding: 10px 15px;" onclick="clearRecentScans()"><i class="fas fa-trash"></i> CLEAR LOG</button></div>
       <div class="scanner-dashboard">
@@ -157,22 +166,26 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Personnel</th><th>Time Logged</th><th>Action</th></tr></thead><tbody id="recent-scans"></tbody></table></div></div>
     </div>
 
+    <!-- DASHBOARD PANEL -->
     <div id="panel-dashboard" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-chart-pie"></i> COMMAND DASHBOARD</h2></div><div style="display:flex; gap:15px; align-items:center;"><span style="font-size:13px; color:var(--text-muted); font-family:'Inter',sans-serif;">DATE: <strong id="admin-active-day" style="color:var(--text);">--</strong></span><button style="width:auto; padding:10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i> REFRESH DATA</button></div></div>
       <div class="dashboard-grid anim-2"><div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div><div class="stat-label">Total Cadets</div><div class="stat-val" id="stat-total">--</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green);"><div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-user-check"></i></div><div><div class="stat-label">Present Today</div><div class="stat-val" id="stat-present">--</div><div class="stat-sub" id="stat-present-pct"></div></div></div><div class="stat-card" style="border-bottom-color:var(--status-yellow);"><div class="stat-icon" style="color:var(--status-yellow);"><i class="fas fa-clock"></i></div><div><div class="stat-label">Late Today</div><div class="stat-val" id="stat-late">--</div><div class="stat-sub" id="stat-late-pct"></div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red);"><div class="stat-icon" style="color:var(--status-red);"><i class="fas fa-user-times"></i></div><div><div class="stat-label">Absent Today</div><div class="stat-val" id="stat-absent">--</div><div class="stat-sub" id="stat-absent-pct"></div></div></div></div>
       <div class="charts-row anim-3"><div class="chart-card"><h4><i class="fas fa-chart-bar"></i> 7-DAY ATTENDANCE TREND</h4><div class="chart-container"><canvas id="chart-weekly"></canvas></div></div><div class="chart-card"><h4><i class="fas fa-chart-pie"></i> DAILY BREAKDOWN</h4><div class="chart-container"><canvas id="chart-donut"></canvas></div></div></div>
     </div>
 
+    <!-- ATTENDANCE PANEL -->
     <div id="panel-attendance" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-clipboard-list"></i> DAILY ATTENDANCE LOG</h2></div><button style="width:auto; padding: 10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i> REFRESH</button></div>
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead><tbody id="attendance-table"><tr><td colspan="6" style="text-align:center;">Loading records...</td></tr></tbody></table></div></div>
     </div>
 
+    <!-- MASTERLIST PANEL -->
     <div id="panel-masterlist" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-users"></i> UNIT ROSTER</h2></div><div style="display:flex; gap:10px; align-items:center;"><input type="text" id="search-masterlist" placeholder="Search cadet name or ID..." style="width:250px; margin:0; padding:10px;" oninput="filterMasterlist()"><button style="width:auto; padding: 10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i></button></div></div>
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Cadet ID</th><th>Full Name</th><th>Company</th><th>Contact</th><th>Actions</th></tr></thead><tbody id="masterlist-table"><tr><td colspan="5" style="text-align:center;">Loading roster...</td></tr></tbody></table></div></div>
     </div>
 
+    <!-- LEAVES PANEL -->
     <div id="panel-leaves" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2></div></div>
       <div class="dashboard-grid anim-2" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;"><div class="stat-card" style="border-bottom-color:var(--status-yellow); padding: 15px;"><div><div class="stat-val" id="lv-stat-pending" style="color:var(--status-yellow);">--</div><div class="stat-label">Pending</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green); padding: 15px;"><div><div class="stat-val" id="lv-stat-approved" style="color:var(--status-green);">--</div><div class="stat-label">Approved</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red); padding: 15px;"><div><div class="stat-val" id="lv-stat-rejected" style="color:var(--status-red);">--</div><div class="stat-label">Rejected</div></div></div></div>
@@ -180,12 +193,14 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date Range</th><th>Cadet ID</th><th>Name</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaves-table"><tr><td colspan="6" style="text-align:center;">Loading requests...</td></tr></tbody></table></div></div>
     </div>
 
+    <!-- ID GENERATOR PANEL -->
     <div id="panel-idcards" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-id-card"></i> IDENTIFICATION GENERATOR</h2></div></div>
       <div class="anim-2" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap; box-shadow:0 4px 6px rgba(0,0,0,0.02);"><div style="flex:2; min-width:250px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">SELECT CADET:</label><select id="id-target-select" style="width:100%; margin-top:5px; margin-bottom:0;"><option value="ALL">Loading roster...</option></select></div><div style="display:flex; gap:10px;"><button class="btn-success" style="width:auto; padding:14px 20px;" onclick="generateIDPreview()"><i class="fas fa-magic"></i> PREVIEW</button><button class="btn-secondary" style="width:auto; padding:14px 20px;" onclick="printIDCards()"><i class="fas fa-print"></i> PRINT BATCH</button></div></div>
       <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0; font-family:'Inter',sans-serif;">Select a target and generate preview to render Identification Cards.</p></div>
     </div>
 
+    <!-- LEGACY PANEL -->
     <div id="panel-legacy" class="view-panel">
       <div class="header-bar anim-1">
         <div style="display:flex; align-items:center;">
@@ -225,6 +240,7 @@
       </div>
     </div>
 
+    <!-- PUBLIC POSTS PANEL (ADMIN DRAFTING & SUPER ADMIN REVIEW) -->
     <div id="panel-posts" class="view-panel">
       <div class="header-bar anim-1">
         <div style="display:flex; align-items:center;">
@@ -233,11 +249,14 @@
         </div>
       </div>
       
-      <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px;">
+      <!-- ONLY ADMINS SEE THIS DRAFTING SECTION -->
+      <div id="admin-draft-section" class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px; display:none;">
         <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-pen"></i> DRAFT NEW POST</h3>
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; font-family:'Inter',sans-serif;">Create a public post to showcase ROTC events. Posts require Commander approval to appear on the public landing page. You may select multiple images.</p>
+        
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">POST TITLE</label>
         <input type="text" id="post-title" placeholder="E.g. Tactical Training Alpha 2026">
+        
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;">POST DESCRIPTION</label>
         <textarea id="post-desc" rows="4" placeholder="Write the details of the activity here..."></textarea>
         
@@ -245,7 +264,10 @@
         <input type="file" id="post-image-file" accept="image/*" multiple>
         <p style="font-size:11px; color:var(--text-muted); margin-top:5px; margin-bottom:15px;">Hold CTRL (or CMD) to select multiple images. System will auto-compress them.</p>
         
-        <button class="btn-success" onclick="submitPublicPost()"><i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL</button>
+        <div style="display:flex; gap:10px;">
+          <button id="btn-submit-post" class="btn-success" onclick="submitPublicPost()" style="flex:2;"><i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL</button>
+          <button id="btn-cancel-edit" class="btn-danger" onclick="cancelEdit()" style="flex:1; display:none;"><i class="fas fa-times"></i> CANCEL EDIT</button>
+        </div>
       </div>
 
       <div class="anim-3 header-bar" style="border:none; margin-bottom:10px; padding-bottom:0;">
@@ -261,18 +283,21 @@
       </div></div>
     </div>
 
+    <!-- SUPER ADMIN ONLY: ACCOUNTS PANEL -->
     <div id="panel-accounts" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-user-shield"></i> PERSONNEL ACCESS CONTROL</h2></div><button style="width:auto; padding:10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i> REFRESH</button></div>
       <div class="anim-2" style="display:flex; gap:15px; margin-bottom:20px; flex-wrap:wrap; background:var(--card-bg); padding:20px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02);"><input type="text" id="new-user" placeholder="Assign Username" style="flex:1; margin:0;"><input type="password" id="new-pass" placeholder="Assign Password" style="flex:1; margin:0;"><select id="new-role" style="flex:1; margin:0;"><option value="Scanner">Scanner Terminal</option><option value="Admin">Command Admin</option><option value="Super Admin">Super Admin (Commander)</option></select><button style="width:auto; white-space:nowrap; padding:14px 20px;" onclick="createAcc()"><i class="fas fa-user-plus"></i> ADD PERSONNEL</button></div>
       <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Username</th><th>Clearance Level</th><th>Status</th><th>Action</th></tr></thead><tbody id="accounts-table"><tr><td colspan="4" style="text-align:center;">Loading access list...</td></tr></tbody></table></div></div>
     </div>
 
+    <!-- SUPER ADMIN ONLY: AUDIT LOG PANEL -->
     <div id="panel-audit" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-history"></i> SYSTEM AUDIT LOG</h2></div><button style="width:auto; padding: 10px 15px;" onclick="loadAuditLogs()"><i class="fas fa-sync"></i> REFRESH</button></div>
       <div class="tamper-warning" id="audit-tamper-warning"><i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom:10px; display:block;"></i> CRITICAL WARNING: CRYPTOGRAPHIC BLOCKCHAIN BROKEN.<br><span style="font-size: 13px; font-weight: normal;">The system detected unauthorized tampering or deletion in the raw database. Integrity is compromised.</span></div>
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Date & Time</th><th>User / Operator</th><th>Action Taken</th><th>Activity Details</th></tr></thead><tbody id="audit-table"><tr><td colspan="4" style="text-align:center;">Loading logs...</td></tr></tbody></table></div></div>
     </div>
 
+    <!-- SUPER ADMIN ONLY: BRANDING SETTINGS PANEL -->
     <div id="panel-settings" class="view-panel">
       <div class="header-bar anim-1">
         <div style="display:flex; align-items:center;">
@@ -289,6 +314,7 @@
       </div>
     </div>
 
+    <!-- PROFILE PANEL -->
     <div id="panel-profile" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-user-circle"></i> MY PROFILE</h2></div></div>
       <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); max-width: 600px;">
@@ -319,6 +345,8 @@
   let currentCropper = null;
   let currentCropTarget = '';
   const croppedData = {}; 
+  
+  let editingPostId = null;
 
   window.onload = () => {
     initCropperInputs();
@@ -328,7 +356,6 @@
     });
   };
 
-  // Note: post-image-file is excluded here so it uses the bulk compressor below
   function initCropperInputs() {
     const inputs = ['prof-image-file', 'set-logo-file', 'set-nav-logo-file', 'set-bg-file', 'leg-class-logo', 'leg-off-photo'];
     inputs.forEach(id => {
@@ -401,7 +428,7 @@
     payload.action = action;
     fetch(GAS_API_URL, { 
       method: 'POST', 
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // BROWSER CORS BYPASS FIX
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
       body: JSON.stringify(payload) 
     })
     .then(response => response.json())
@@ -447,22 +474,46 @@
     const desc = document.getElementById('post-desc').value.trim();
     const files = document.getElementById('post-image-file').files;
     
-    if (!title || !desc || files.length === 0) return Swal.fire('Notice', 'Title, description, and at least one image are required.', 'warning');
+    if (!title || !desc) return Swal.fire('Notice', 'Title and description are required.', 'warning');
+    if (!editingPostId && files.length === 0) return Swal.fire('Notice', 'At least one image is required for a new post.', 'warning');
     
-    Swal.fire({ title: 'COMPRESSING & UPLOADING...', html: 'This may take a moment for multiple files.', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    Swal.fire({ title: 'COMPRESSING & UPLOADING...', html: 'This may take a moment...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     
     let base64Array = [];
-    for (let i = 0; i < files.length; i++) {
-       let b64 = await compressAutoImage(files[i]);
-       base64Array.push(b64);
+    if (files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+         let b64 = await compressAutoImage(files[i]);
+         base64Array.push(b64);
+      }
     }
 
-    apiCall('submitPost', { title: title, description: desc, imageArray: base64Array, user: session.user, pass: session.pass }, (res) => {
+    let actionName = editingPostId ? 'resubmitPost' : 'submitPost';
+    let payload = { title: title, description: desc, imageArray: base64Array, user: session.user, pass: session.pass };
+    if (editingPostId) payload.postId = editingPostId;
+
+    apiCall(actionName, payload, (res) => {
       Swal.fire('Success', res.message, 'success');
-      document.getElementById('post-title').value = ''; document.getElementById('post-desc').value = '';
-      document.getElementById('post-image-file').value = '';
+      cancelEdit();
       loadPosts();
     }, (err) => Swal.fire('Error', err.message, 'error'));
+  }
+
+  function editPost(id, title, desc) {
+    editingPostId = id;
+    document.getElementById('post-title').value = title;
+    document.getElementById('post-desc').value = desc;
+    document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST';
+    document.getElementById('btn-cancel-edit').style.display = 'inline-block';
+    document.getElementById('admin-draft-section').scrollIntoView({behavior: 'smooth'});
+  }
+
+  function cancelEdit() {
+    editingPostId = null;
+    document.getElementById('post-title').value = '';
+    document.getElementById('post-desc').value = '';
+    document.getElementById('post-image-file').value = '';
+    document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL';
+    document.getElementById('btn-cancel-edit').style.display = 'none';
   }
 
   function loadPosts() {
@@ -471,22 +522,62 @@
       let html = '';
       res.posts.forEach(p => {
         let actionBtn = '-';
-        if (p.status === 'Pending' && session.role === 'Super Admin') {
-          actionBtn = `<button class="btn-success" style="padding:6px 10px; font-size:11px; margin-bottom:5px;" onclick="updatePost('${p.id}','Approved')">APPROVE</button><br><button class="btn-danger" style="padding:6px 10px; font-size:11px;" onclick="updatePost('${p.id}','Rejected')">REJECT</button>`;
+        let feedbackHtml = '';
+
+        if (session.role === 'Super Admin') {
+          if (p.status === 'Pending' || p.status === 'Revise') {
+            feedbackHtml = `<textarea id="feedback-${p.id}" placeholder="Type instructions or corrections here..." style="width:100%; height:60px; margin-top:10px; font-size:12px; padding:8px;">${p.feedback || ''}</textarea>`;
+            actionBtn = `
+              <button class="btn-success" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="updatePost('${p.id}','Approved')">APPROVE</button>
+              <button class="btn-warning" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="updatePost('${p.id}','Revise')">REVISE</button>
+              <button class="btn-danger" style="padding:6px 10px; font-size:11px; width:100%;" onclick="updatePost('${p.id}','Rejected')">REJECT</button>
+            `;
+          } else {
+            feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px;"><b>Notes:</b> ${p.feedback}</div>` : '';
+          }
+        } else if (session.role === 'Admin') {
+          if (p.status === 'Revise') {
+            feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${p.feedback}</div>`;
+            actionBtn = `<button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff;" onclick="editPost('${p.id}', \`${p.title.replace(/`/g, "'")}\`, \`${p.description.replace(/`/g, "'")}\`)">EDIT POST</button>`;
+          } else if (p.status === 'Rejected') {
+            feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${p.feedback}</div>` : '';
+          }
         }
-        let badgeClass = p.status === 'Approved' ? 'badge-approved' : (p.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
+
+        let badgeClass = p.status === 'Approved' ? 'badge-present' : (p.status === 'Rejected' ? 'badge-absent' : (p.status === 'Revise' ? 'badge-late' : 'badge-timeout'));
         let firstImg = p.image ? p.image.split(',')[0] : '';
         let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : 'No Image';
         
-        html += `<tr><td style="font-size:12px;">${p.date}</td><td>${imgHtml}</td><td><b>${p.title}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${p.description}</span></td><td><span class="badge ${badgeClass}">${p.status}</span></td><td>${actionBtn}</td></tr>`;
+        html += `<tr>
+          <td style="font-size:12px; width:80px;">${p.date}</td>
+          <td style="width:90px;">${imgHtml}</td>
+          <td><b>${p.title}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${p.description}</span>${feedbackHtml}</td>
+          <td style="width:90px;"><span class="badge ${badgeClass}">${p.status}</span></td>
+          <td style="width:100px;">${actionBtn}</td>
+        </tr>`;
       });
       document.getElementById('posts-table').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No posts found.</td></tr>';
     });
   }
 
   function updatePost(id, status) {
+    let feedback = '';
+    if (document.getElementById(`feedback-${id}`)) {
+      feedback = document.getElementById(`feedback-${id}`).value.trim();
+    }
+    
+    if (status === 'Revise' && !feedback) {
+      return Swal.fire('Notice', 'Please provide correction instructions for the Admin before clicking Revise.', 'warning');
+    }
+
     Swal.fire({ title: `Set status to ${status}?`, showCancelButton: true, confirmButtonText: 'CONFIRM' }).then(r => {
-      if (r.isConfirmed) apiCall('updatePostStatus', { postId: id, status: status, user: session.user, pass: session.pass }, () => loadPosts());
+      if (r.isConfirmed) {
+        Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() });
+        apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, pass: session.pass }, () => {
+          Swal.fire('Success', `Post marked as ${status}.`, 'success');
+          loadPosts();
+        });
+      }
     });
   }
 
@@ -508,8 +599,15 @@
         if (res.role === 'Super Admin' || res.role === 'Admin') {
           document.getElementById('sidebar-menu-admin').style.display = 'block'; 
           document.getElementById('sidebar-menu-scanner').style.display = 'none';
-          if (res.role === 'Admin') document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none');
-          else document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block');
+          
+          if (res.role === 'Super Admin') {
+            document.getElementById('admin-draft-section').style.display = 'none';
+            document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block');
+          } else {
+            document.getElementById('admin-draft-section').style.display = 'block';
+            document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none');
+          }
+
           switchTab('panel-dashboard', document.querySelectorAll('#sidebar-menu-admin button')[0]);
         } else {
           document.getElementById('sidebar-menu-admin').style.display = 'none'; 
