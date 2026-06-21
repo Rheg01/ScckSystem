@@ -6,7 +6,7 @@
   <title>SCCK ROTC Unit - Official Site</title>
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -20,22 +20,23 @@
     h1, h2, h3, button, .nav-links a { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
     body { background: var(--army-dark); color: white; overflow-x: hidden; scroll-behavior: smooth; }
 
-    /* ─── UPGRADED HEADER ─── */
-    .header { position: fixed; top: 0; left: 0; width: 100%; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 30000; background: rgba(15, 18, 12, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 175, 55, 0.2); transition: all 0.3s ease; }
-    .header .logo-group { display: flex; align-items: center; gap: 12px; font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700; color: var(--army-gold); letter-spacing: 1.5px; text-decoration: none; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-    .header .logo-group img { width: 40px; height: 40px; object-fit: contain; }
+    /* ─── AFP MEDICAL CENTER STYLE HEADER ─── */
+    .header { position: fixed; top: 0; left: 0; width: 100%; padding: 12px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 30000; background: rgba(15, 18, 12, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
+    
+    .header .logo-group { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+    .header .logo-group img { width: 50px; height: 50px; object-fit: contain; }
+    .logo-text { display: flex; flex-direction: column; justify-content: center; }
+    .logo-text .line1 { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
+    .logo-text .line2 { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: #b0bec5; letter-spacing: 0.5px; margin-top: -2px; }
     
     .nav-links { display: flex; gap: 30px; align-items: center; }
-    .nav-links a { color: #dce0d5; text-decoration: none; font-size: 15px; font-weight: 500; transition: color 0.3s; position: relative; }
-    .nav-links a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--army-gold); transition: width 0.3s; }
-    .nav-links a:hover::after { width: 100%; }
+    .nav-links a { color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.3s; position: relative; font-family: 'Inter', sans-serif; }
     .nav-links a:hover { color: var(--army-gold); }
     
-    .nav-btn { background: var(--army-gold); color: var(--army-dark) !important; padding: 8px 20px; border-radius: 4px; font-weight: 700; transition: all 0.3s; border: 1px solid transparent; }
-    .nav-btn::after { display: none; }
+    .nav-btn { background: var(--army-gold); color: var(--army-dark) !important; padding: 8px 20px; border-radius: 4px; font-weight: 700; transition: all 0.3s; border: 1px solid transparent; font-family: 'Oswald', sans-serif !important;}
     .nav-btn:hover { background: transparent; color: var(--army-gold) !important; border: 1px solid var(--army-gold); }
 
-    /* ─── CINEMATIC HERO SECTION ─── */
+    /* ─── HERO SECTION ─── */
     .landing-hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow: hidden; margin-top: 0; }
     .landing-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), radial-gradient(circle at center, var(--army-primary) 0%, #0a0c08 100%); background-size: cover; background-position: center; z-index: 0; animation: breathe 15s infinite alternate ease-in-out; }
     @keyframes breathe { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
@@ -50,47 +51,49 @@
     .btn-enter { background: var(--army-gold); color: var(--army-dark); font-size: 18px; font-weight: bold; padding: 18px 40px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.3s; text-transform: uppercase; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); text-decoration: none; display: inline-block; }
     .btn-enter:hover { background: #ebd575; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5); }
     
-    .scroll-indicator { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1; font-size: 24px; color: rgba(255,255,255,0.5); animation: bounce 2s infinite; cursor: pointer; transition: color 0.3s; }
-    .scroll-indicator:hover { color: var(--army-gold); }
-    @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); } 40% { transform: translateY(-15px) translateX(-50%); } 60% { transform: translateY(-7px) translateX(-50%); } }
+    /* ─── SHOWCASE NEWSFEED SECTION ─── */
+    .landing-showcase { position: relative; z-index: 1; background: #0a0c08; padding: 120px 20px; min-height: 60vh; border-bottom: 1px solid #1e2418;}
+    .section-title { color: var(--army-gold); font-size: 32px; margin-bottom: 40px; text-align: center; border-bottom: 2px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; max-width: 900px; margin-left: auto; margin-right: auto;}
+    
+    .post-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+    .post-card { background: var(--card-bg); border: 1px solid #2a3322; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .post-card:hover { transform: translateY(-8px); border-color: rgba(212, 175, 55, 0.4); }
+    
+    .post-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid var(--army-gold); }
+    .post-content { padding: 25px; display: flex; flex-direction: column; flex: 1; }
+    .post-date { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--army-gold); font-weight: bold; margin-bottom: 10px; letter-spacing: 1px; }
+    .post-title { font-size: 22px; color: #fff; margin-bottom: 15px; line-height: 1.2; }
+    .post-desc { font-family: 'Inter', sans-serif; font-size: 14px; color: #b0bec5; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 20px; flex: 1; }
+    
+    .read-more-btn { background: transparent; color: var(--army-gold); border: 1px solid var(--army-gold); padding: 10px 15px; border-radius: 4px; font-size: 13px; font-family: 'Oswald', sans-serif; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-weight: bold; width: 100%; }
+    .read-more-btn:hover { background: var(--army-gold); color: var(--army-dark); }
 
-    /* ─── SCROLL REVEAL ANIMATIONS ─── */
-    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-    .reveal.active { opacity: 1; transform: translateY(0); }
-
-    /* ─── HISTORY SECTION ─── */
-    .landing-history { position: relative; z-index: 1; background: #0a0c08; padding: 120px 20px; text-align: center; }
-    .history-container { max-width: 900px; margin: 0 auto; text-align: left; }
-    .section-title { color: var(--army-gold); font-size: 32px; margin-bottom: 25px; text-align: center; border-bottom: 2px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; }
-    .history-container p { color: #b0bec5; font-size: 16px; line-height: 1.8; margin-bottom: 20px; text-align: justify; }
+    /* ─── MODALS ─── */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 40000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+    .modal-overlay.show { display: flex; opacity: 1; }
+    
+    .modal-content { background: var(--card-bg); width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; border-radius: 12px; padding: 40px; border: 2px solid var(--army-gold); position: relative; transform: scale(0.95) translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
+    .modal-overlay.show .modal-content { transform: scale(1) translateY(0); }
+    
+    .close-btn { position: absolute; top: 20px; right: 25px; font-size: 28px; color: #9aa08f; cursor: pointer; transition: 0.2s; z-index: 10;}
+    .close-btn:hover { color: #ef5350; transform: rotate(90deg); }
+    
+    .full-post-img { width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px; margin-bottom: 25px; background: #000; }
+    .full-post-date { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--army-gold); font-weight: bold; margin-bottom: 5px; }
+    .full-post-title { font-size: 32px; color: #fff; margin-bottom: 20px; line-height: 1.2; border-bottom: 1px solid #3a4230; padding-bottom: 15px;}
+    .full-post-desc { font-family: 'Inter', sans-serif; font-size: 16px; color: #dce0d5; line-height: 1.8; white-space: pre-wrap; }
 
     /* ─── LEGACY GALLERY SECTION ─── */
     .landing-legacy { position: relative; z-index: 1; background: var(--army-dark); padding: 120px 20px; min-height: 50vh; }
     .legacy-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
-    
     .class-card { background: transparent; border: none; padding: 20px; text-align: center; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; align-items: center; }
     .class-card:hover { transform: translateY(-15px) scale(1.05); }
-    
     .class-logo { width: 160px; height: 160px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.8)); transition: transform 0.4s ease, filter 0.4s ease; }
     .class-card:hover .class-logo { transform: scale(1.1); filter: drop-shadow(0 15px 25px rgba(212, 175, 55, 0.6)); }
-    
     .class-year { font-size: 14px; color: var(--army-gold); font-weight: bold; margin-bottom: 5px; letter-spacing: 2px; }
     .class-name { font-size: 26px; color: #ffffff; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
-    /* ─── MODAL (POPUP) ─── */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 40000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-    .modal-overlay.show { display: flex; opacity: 1; }
-    
-    .modal-content { background: var(--card-bg); width: 90%; max-width: 900px; max-height: 85vh; overflow-y: auto; border-radius: 12px; padding: 40px; border: 2px solid var(--army-gold); position: relative; transform: scale(0.95) translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
-    .modal-overlay.show .modal-content { transform: scale(1) translateY(0); }
-    
-    .close-btn { position: absolute; top: 20px; right: 25px; font-size: 28px; color: #9aa08f; cursor: pointer; transition: 0.2s; }
-    .close-btn:hover { color: #ef5350; transform: rotate(90deg); }
-    
-    .modal-header { text-align: center; margin-bottom: 40px; border-bottom: 1px solid #3a4230; padding-bottom: 20px; }
-    .modal-header h2 { color: var(--army-gold); font-size: 32px; letter-spacing: 2px; }
-    
-    .officer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
+    .officer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top:20px; }
     .officer-card { text-align: center; background: #12140e; padding: 20px; border-radius: 8px; border: 1px solid #3a4230; transition: transform 0.3s; }
     .officer-card:hover { transform: translateY(-5px); border-color: rgba(212, 175, 55, 0.5); }
     .officer-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--army-gold); margin: 0 auto 15px auto; background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
@@ -98,29 +101,35 @@
     .officer-name { font-size: 16px; color: white; font-weight: bold; margin-bottom: 5px; font-family: 'Oswald', sans-serif;}
     .officer-desig { font-size: 12px; color: #9aa08f; }
 
-    .modal-content::-webkit-scrollbar { width: 8px; }
-    .modal-content::-webkit-scrollbar-track { background: var(--army-dark); border-radius: 4px; }
-    .modal-content::-webkit-scrollbar-thumb { background: var(--army-gold); border-radius: 4px; }
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--army-dark); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--army-gold); border-radius: 4px; }
 
     @media (max-width: 768px) {
       .header { padding: 15px 20px; }
       .nav-links a.hide-mobile { display: none; }
       .landing-content h1 { font-size: 36px; }
       .modal-content { padding: 20px; }
+      .logo-text .line1 { font-size: 14px; }
+      .logo-text .line2 { font-size: 11px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER NAVIGATION -->
+  <!-- HEADER NAVIGATION (AFP MEDICAL CENTER STYLE) -->
   <header class="header" id="navbar">
     <a href="#" class="logo-group">
       <img src="https://cdn-icons-png.flaticon.com/512/1055/1055664.png" id="nav-logo" alt="Logo">
-      <span>SCCK ROTC</span>
+      <div class="logo-text">
+        <span class="line1">ST. CLARE COLLEGE OF KALOOKAN</span>
+        <span class="line2">ROTC UNIT</span>
+      </div>
     </a>
     <nav class="nav-links">
       <a href="#hero" class="hide-mobile">Home</a>
-      <a href="#history-section" class="hide-mobile">History</a>
+      <a href="#showcase-section" class="hide-mobile">Activities</a>
       <a href="#legacy-section" class="hide-mobile">Legacy</a>
       <a href="app.html" class="nav-btn"><i class="fas fa-lock"></i> Portal</a>
     </nav>
@@ -129,49 +138,36 @@
   <!-- HERO SECTION -->
   <div class="landing-hero" id="hero">
     <div class="landing-bg" id="landing-bg-img"></div>
-    
     <div class="landing-content">
       <img src="" id="system-logo-landing" alt="SCCK Logo">
       <h1>SCCK ROTC UNIT</h1>
       <h3>LEADERSHIP • DISCIPLINE • EXCELLENCE</h3>
-      
-      <a href="app.html" class="btn-enter">
-        <i class="fas fa-shield-alt"></i> ENTER COMMAND CENTER
-      </a>
-    </div>
-
-    <div class="scroll-indicator" onclick="document.getElementById('history-section').scrollIntoView({behavior: 'smooth'})">
-      <i class="fas fa-chevron-down"></i>
+      <a href="app.html" class="btn-enter"><i class="fas fa-shield-alt"></i> ENTER COMMAND CENTER</a>
     </div>
   </div>
 
-  <!-- HISTORY SECTION -->
-  <div class="landing-history" id="history-section">
-    <div class="history-container reveal">
-      <h2 class="section-title">OUR HISTORY & MISSION</h2>
-      <p>The SCCK ROTC Unit was established with a singular mission: to forge the next generation of leaders. Rooted in the core values of duty, honor, and country, our command has a long-standing tradition of excellence.</p>
-      <p>Over the years, our cadets have proven their mettle through rigorous physical training, tactical operations, and academic discipline. We pride ourselves on producing not just capable officers, but outstanding citizens ready to serve the nation.</p>
-      <p>This digital infrastructure represents our commitment to modernization and operational efficiency. By leveraging cutting-edge technology, we ensure accountability, precision, and readiness at all times.</p>
+  <!-- SHOWCASE NEWSFEED SECTION -->
+  <div class="landing-showcase" id="showcase-section">
+    <h2 class="section-title">CAPABILITIES & ACTIVITIES</h2>
+    <div class="post-grid" id="post-grid-container">
+      <p style="text-align:center; width:100%; color:#9aa08f;"><i class="fas fa-spinner fa-spin"></i> Retrieving intelligence reports...</p>
     </div>
   </div>
 
   <!-- LEGACY GALLERY SECTION -->
   <div class="landing-legacy" id="legacy-section">
-    <h2 class="section-title reveal">LEGACY OF LEADERS</h2>
-    <div class="legacy-grid reveal" id="legacy-grid-container">
+    <h2 class="section-title">CLASS LEGACY</h2>
+    <div class="legacy-grid" id="legacy-grid-container">
       <p style="text-align:center; width:100%; color:#9aa08f;"><i class="fas fa-spinner fa-spin"></i> Retrieving archives...</p>
     </div>
   </div>
 
-  <!-- MODAL FOR OFFICERS -->
-  <div class="modal-overlay" id="officer-modal" onclick="closeModal(event)">
+  <!-- UNIVERSAL MODAL -->
+  <div class="modal-overlay" id="public-modal" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <i class="fas fa-times close-btn" onclick="closeModal(true)"></i>
-      <div class="modal-header">
-        <h2 id="modal-class-name">CLASS NAME</h2>
-      </div>
-      <div class="officer-grid" id="modal-officer-grid">
-        <!-- Officers injected here -->
+      <div id="modal-dynamic-content">
+        <!-- Content injected dynamically via JS -->
       </div>
     </div>
   </div>
@@ -181,105 +177,119 @@
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx5rLHSnvMOqseXQeMwu_CK7QgL44oOvwgMfmjjexCuPgHlhnHYqQ7ofFK8A5G1j_D9IQ/exec";
 
     let legacyCache = [];
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-          }
-        });
-      }, { threshold: 0.15 });
-
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    });
+    let postCache = [];
 
     window.onload = () => {
-      fetch(GAS_API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: "getLegacyData" })
-      })
+      // 1. Fetch Legacy & Branding
+      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: "getLegacyData" }) })
       .then(res => res.json())
       .then(data => {
         if (data.branding) {
-          if(data.branding.logoUrl) {
-            document.getElementById('system-logo-landing').src = data.branding.logoUrl;
-            document.getElementById('system-logo-landing').style.display = 'inline-block';
-          }
-          if(data.branding.navLogoUrl) {
-            document.getElementById('nav-logo').src = data.branding.navLogoUrl;
-          }
-          if(data.branding.bgUrl) {
-            document.getElementById('landing-bg-img').style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${data.branding.bgUrl}')`;
-          }
+          if(data.branding.logoUrl) { document.getElementById('system-logo-landing').src = data.branding.logoUrl; document.getElementById('system-logo-landing').style.display = 'inline-block'; }
+          if(data.branding.navLogoUrl) { document.getElementById('nav-logo').src = data.branding.navLogoUrl; }
+          if(data.branding.bgUrl) { document.getElementById('landing-bg-img').style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${data.branding.bgUrl}')`; }
         }
-        
-        if (data.classes) {
-          legacyCache = data.classes;
-          renderLegacyGrid(data.classes);
+        if (data.classes) { legacyCache = data.classes; renderLegacyGrid(data.classes); }
+      });
+
+      // 2. Fetch Approved Posts
+      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: "getApprovedPosts" }) })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.posts) {
+          postCache = data.posts;
+          renderPostGrid(data.posts);
         }
-      })
-      .catch(err => {
-        document.getElementById('legacy-grid-container').innerHTML = '<p style="text-align:center; width:100%; color:#ef5350;">Failed to load archives. Check API Connection.</p>';
       });
     };
 
-    function renderLegacyGrid(classes) {
-      const container = document.getElementById('legacy-grid-container');
-      if (classes.length === 0) {
-        container.innerHTML = '<p style="text-align:center; width:100%; color:#9aa08f;">No legacy records available.</p>';
+    function renderPostGrid(posts) {
+      const container = document.getElementById('post-grid-container');
+      if (posts.length === 0) {
+        container.innerHTML = '<p style="text-align:center; width:100%; color:#9aa08f;">No public activities posted yet.</p>';
         return;
       }
       
-      // Sort array incrementally by year (Oldest left -> Newest right)
-      let sortedClasses = [...classes].sort((a, b) => parseInt(a.year) - parseInt(b.year));
-      
       let html = '';
-      sortedClasses.forEach(c => {
-        const logo = c.logo ? `<img src="${c.logo}" class="class-logo">` : `<i class="fas fa-shield-alt" style="font-size:80px; color:var(--army-gold); margin-bottom:20px;"></i>`;
+      posts.forEach(p => {
+        const img = p.image ? `<img src="${p.image}" class="post-img">` : `<div class="post-img" style="display:flex; align-items:center; justify-content:center; background:#111;"><i class="fas fa-camera" style="font-size:40px; color:#333;"></i></div>`;
         html += `
-          <div class="class-card" onclick="openClassModal('${c.id}')">
-            ${logo}
-            <div class="class-year">CLASS OF ${c.year}</div>
-            <div class="class-name">${c.name}</div>
+          <div class="post-card">
+            ${img}
+            <div class="post-content">
+              <div class="post-date">${p.date}</div>
+              <h3 class="post-title">${p.title}</h3>
+              <p class="post-desc">${p.description}</p>
+              <button class="read-more-btn" onclick="openPostModal('${p.id}')">READ FULL REPORT</button>
+            </div>
           </div>
         `;
       });
       container.innerHTML = html;
     }
 
+    function renderLegacyGrid(classes) {
+      const container = document.getElementById('legacy-grid-container');
+      if (classes.length === 0) return container.innerHTML = '<p style="text-align:center; width:100%; color:#9aa08f;">No legacy records available.</p>';
+      
+      let sortedClasses = [...classes].sort((a, b) => parseInt(a.year) - parseInt(b.year));
+      let html = '';
+      sortedClasses.forEach(c => {
+        const logo = c.logo ? `<img src="${c.logo}" class="class-logo">` : `<i class="fas fa-shield-alt" style="font-size:80px; color:var(--army-gold); margin-bottom:20px;"></i>`;
+        html += `<div class="class-card" onclick="openClassModal('${c.id}')">${logo}<div class="class-year">CLASS OF ${c.year}</div><div class="class-name">${c.name}</div></div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function openPostModal(postId) {
+      const p = postCache.find(x => x.id === postId);
+      if (!p) return;
+      
+      const img = p.image ? `<img src="${p.image}" class="full-post-img">` : '';
+      const html = `
+        ${img}
+        <div class="full-post-date">${p.date}</div>
+        <h2 class="full-post-title">${p.title}</h2>
+        <div class="full-post-desc">${p.description}</div>
+      `;
+      
+      document.getElementById('modal-dynamic-content').innerHTML = html;
+      showModal();
+    }
+
     function openClassModal(classId) {
       const cls = legacyCache.find(c => c.id === classId);
       if (!cls) return;
       
-      document.getElementById('modal-class-name').innerText = `${cls.name} (${cls.year})`;
-      
-      const grid = document.getElementById('modal-officer-grid');
+      let oHtml = '';
       if (cls.officers.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; width:100%; color:#9aa08f;">Officer records pending.</p>';
+        oHtml = '<p style="text-align:center; width:100%; color:#9aa08f; margin-top:30px;">Officer records pending.</p>';
       } else {
-        let oHtml = '';
         cls.officers.forEach(o => {
           const photo = o.image ? `<img src="${o.image}" class="officer-photo">` : `<div class="officer-photo" style="display:flex; align-items:center; justify-content:center; color:#555; font-size:30px;"><i class="fas fa-user"></i></div>`;
-          oHtml += `
-            <div class="officer-card">
-              ${photo}
-              <div class="officer-rank">${o.rank}</div>
-              <div class="officer-name">${o.name}</div>
-              <div class="officer-desig">${o.designation}</div>
-            </div>
-          `;
+          oHtml += `<div class="officer-card">${photo}<div class="officer-rank">${o.rank}</div><div class="officer-name">${o.name}</div><div class="officer-desig">${o.designation}</div></div>`;
         });
-        grid.innerHTML = oHtml;
       }
       
-      const modal = document.getElementById('officer-modal');
+      const html = `
+        <div style="text-align: center; border-bottom: 1px solid #3a4230; padding-bottom: 20px;">
+          <h2 style="color: var(--army-gold); font-size: 32px; font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing: 2px;">${cls.name} (${cls.year})</h2>
+        </div>
+        <div class="officer-grid">${oHtml}</div>
+      `;
+      
+      document.getElementById('modal-dynamic-content').innerHTML = html;
+      showModal();
+    }
+
+    function showModal() {
+      const modal = document.getElementById('public-modal');
       modal.style.display = 'flex';
       setTimeout(() => modal.classList.add('show'), 10);
     }
 
     function closeModal(force) {
-      const modal = document.getElementById('officer-modal');
+      const modal = document.getElementById('public-modal');
       if (force === true || force.target === modal) {
         modal.classList.remove('show');
         setTimeout(() => modal.style.display = 'none', 300);
