@@ -181,15 +181,7 @@
       .catch(error => { console.error("API Error:", error); if (onFailure) onFailure(error); });
     }
 
-    window.onload = () => {
-      apiCall('getLegacyData', {}, (data) => {
-        if (data.branding) {
-          if(data.branding.logoUrl) { document.getElementById('system-logo-landing').src = data.branding.logoUrl; document.getElementById('system-logo-landing').style.display = 'inline-block'; }
-          if(data.branding.navLogoUrl) { document.getElementById('nav-logo').src = data.branding.navLogoUrl; }
-          if(data.branding.bgUrl) { document.getElementById('landing-bg-img').style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${data.branding.bgUrl}')`; }
-        }
-        if (data.classes) { legacyCache = data.classes; renderLegacyGrid(data.classes); }
-      });
+    window.onloa
 
       apiCall('getApprovedPosts', {}, (data) => {
         if (data.success && data.posts) { postCache = data.posts; renderPostGrid(data.posts); }
