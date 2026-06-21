@@ -168,6 +168,7 @@
     let legacyCache = [];
     let postCache = [];
 
+    // Helper to bypass CORS blocks
     function apiCall(action, payload, onSuccess, onFailure) {
       payload.action = action;
       fetch(GAS_API_URL, { 
