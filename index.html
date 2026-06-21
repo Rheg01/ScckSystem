@@ -163,15 +163,26 @@
 
   <script>
     // ⚠️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE:
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx5rLHSnvMOqseXQeMwu_CK7QgL44oOvwgMfmjjexCuPgHlhnHYqQ7ofFK8A5G1j_D9IQ/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw63y63Mk-wyqa1a846oBhnDTHj29dUEJznvrG52sjEtwONa6kOEzDVCy_GlnAMqPXPAg/exec";
 
     let legacyCache = [];
     let postCache = [];
 
+    // Helper to bypass CORS blocks just like in app.html
+    function apiCall(action, payload, onSuccess, onFailure) {
+      payload.action = action;
+      fetch(GAS_API_URL, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload) 
+      })
+      .then(response => response.json())
+      .then(data => { if (data.error && !data.success && data.message) throw new Error(data.message); onSuccess(data); })
+      .catch(error => { console.error("API Error:", error); if (onFailure) onFailure(error); });
+    }
+
     window.onload = () => {
-      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: "getLegacyData" }) })
-      .then(res => res.json())
-      .then(data => {
+      apiCall('getLegacyData', {}, (data) => {
         if (data.branding) {
           if(data.branding.logoUrl) { document.getElementById('system-logo-landing').src = data.branding.logoUrl; document.getElementById('system-logo-landing').style.display = 'inline-block'; }
           if(data.branding.navLogoUrl) { document.getElementById('nav-logo').src = data.branding.navLogoUrl; }
@@ -180,9 +191,7 @@
         if (data.classes) { legacyCache = data.classes; renderLegacyGrid(data.classes); }
       });
 
-      fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: "getApprovedPosts" }) })
-      .then(res => res.json())
-      .then(data => {
+      apiCall('getApprovedPosts', {}, (data) => {
         if (data.success && data.posts) { postCache = data.posts; renderPostGrid(data.posts); }
       });
     };
