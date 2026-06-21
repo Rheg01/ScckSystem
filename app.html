@@ -41,7 +41,6 @@
     .badge { padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-block; text-align: center; } .badge-present { background: rgba(56,142,60,0.15); color: var(--status-green); border: 1px solid rgba(56,142,60,0.3); } .badge-late { background: rgba(245,127,23,0.15); color: var(--status-yellow); border: 1px solid rgba(245,127,23,0.3); } .badge-absent { background: rgba(211,47,47,0.15); color: var(--status-red); border: 1px solid rgba(211,47,47,0.3); } .badge-timeout { background: rgba(96,125,139,0.15); color: #455a64; border: 1px solid rgba(96,125,139,0.3); } .badge-action { background: rgba(2, 136, 209, 0.15); color: #0288d1; border: 1px solid rgba(2, 136, 209, 0.3); }
     .btn-icon { width: 34px; height: 34px; padding: 0; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; margin-right: 4px; font-size: 14px; }
     
-    /* VERTICAL PVC ID CARD LAYOUT */
     .id-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 30px; margin-top: 30px; justify-items: center; } 
     .id-card-modern { width: 225px; height: 360px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; }
     .id-card-top { height: 55px; background: var(--army-dark); border-bottom: 4px solid var(--army-gold); position: absolute; top:0; left:0; width: 100%; z-index: 1; }
@@ -60,6 +59,31 @@
     .cropper-modal.show { display: flex; } .cropper-content { background: var(--card-bg); width: 95%; max-width: 700px; padding: 25px; border-radius: 12px; border: 3px solid var(--army-gold); text-shadow: none; box-shadow: 0 0 50px rgba(0,0,0,0.8); } .cropper-area { width: 100%; height: 450px; background: #111; margin-bottom: 20px; overflow: hidden; border-radius: 6px; border: 1px solid var(--border); } .cropper-area img { max-width: 100%; max-height: 100%; display: block; }
     .tamper-warning { background: #b71c1c; color: white; padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 20px; border: 2px solid #ff5252; box-shadow: 0 0 15px rgba(211,47,47,0.5); display: none; animation: pulse 2s infinite; }
     @keyframes pulse { 0% { box-shadow: 0 0 15px rgba(211,47,47,0.5); } 50% { box-shadow: 0 0 25px rgba(211,47,47,1); } 100% { box-shadow: 0 0 15px rgba(211,47,47,0.5); } }
+
+    /* POST PREVIEW MODAL (Mirrors Landing Page UI) */
+    .post-preview-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 50000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+    .post-preview-overlay.show { display: flex; opacity: 1; }
+    .post-preview-content { background: var(--card-bg); width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; border-radius: 12px; padding: 40px; border: 2px solid var(--army-gold); position: relative; transform: scale(0.95) translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 20px 60px rgba(0,0,0,0.7); color: var(--text); }
+    body.dark-mode .post-preview-content { color: #fff; background: #1e2418; }
+    .post-preview-overlay.show .post-preview-content { transform: scale(1) translateY(0); }
+    .close-preview-btn { position: absolute; top: 20px; right: 25px; font-size: 28px; color: #9aa08f; cursor: pointer; transition: 0.2s; z-index: 10;}
+    .close-preview-btn:hover { color: #ef5350; transform: rotate(90deg); }
+    
+    .preview-carousel-container { position: relative; width: 100%; max-height: 450px; background: #000; border-radius: 8px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .preview-carousel-slide { display: none; width: 100%; height: 100%; text-align: center; }
+    .preview-carousel-slide.active { display: block; animation: fade 0.5s ease-in-out; }
+    .preview-carousel-slide img { max-width: 100%; max-height: 450px; object-fit: contain; }
+    .preview-carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.7); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; transition: 0.3s; z-index: 10; display: flex; align-items: center; justify-content: center; }
+    .preview-carousel-btn:hover { background: var(--army-gold); color: black; }
+    .preview-carousel-prev { left: 15px; }
+    .preview-carousel-next { right: 15px; }
+    .preview-carousel-dots { position: absolute; bottom: 15px; width: 100%; text-align: center; z-index: 10; }
+    .preview-dot { display: inline-block; width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; margin: 0 5px; cursor: pointer; transition: 0.3s; }
+    .preview-dot.active { background: var(--army-gold); transform: scale(1.3); }
+
+    .preview-post-date { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--army-gold); font-weight: bold; margin-bottom: 5px; }
+    .preview-post-title { font-size: 32px; margin-bottom: 20px; line-height: 1.2; border-bottom: 1px solid var(--border); padding-bottom: 15px;}
+    .preview-post-desc { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.8; white-space: pre-wrap; }
 
     @media print { body * { visibility: hidden; } #id-grid-container, #id-grid-container * { visibility: visible; } #id-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: grid; grid-template-columns: repeat(3, 240px); gap: 20px; justify-content: center; margin: 0; padding: 0; } .id-card-modern { page-break-inside: avoid; border: 1px solid #000; box-shadow: none; } .id-card-top { background: #1b2015 !important; border-bottom: 4px solid #d4af37 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} .id-footer-modern { background: #1b2015 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} }
     @media (max-width: 768px) { .sidebar { position: fixed; top: 0; left: -260px; height: 100vh; z-index: 10000; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } .sidebar.open { left: 0; } .mobile-menu-btn { display: block; } .main-content { padding: 15px; width: 100%; } .charts-row { grid-template-columns: 1fr; } .id-grid { grid-template-columns: 1fr; } }
@@ -80,6 +104,14 @@
       <button class="btn-success" id="btn-crop-apply" style="flex:1;"><i class="fas fa-check"></i> APPLY CROP</button>
       <button class="btn-danger" onclick="closeCropper()" style="flex:1;"><i class="fas fa-times"></i> CANCEL</button>
     </div>
+  </div>
+</div>
+
+<!-- POST PREVIEW MODAL -->
+<div class="post-preview-overlay" id="post-preview-modal" onclick="closePostPreview(event)">
+  <div class="post-preview-content" onclick="event.stopPropagation()">
+    <i class="fas fa-times close-preview-btn" onclick="closePostPreview(true)"></i>
+    <div id="preview-dynamic-content"></div>
   </div>
 </div>
 
@@ -110,7 +142,6 @@
 <!-- MAIN DASHBOARD CONTAINER -->
 <div id="app-container" class="app-container" style="display:none;">
   
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
@@ -121,7 +152,6 @@
       <div id="sidebar-profile-role" style="font-size: 11px; color: #9aa08f; font-family: 'Inter', sans-serif; text-transform: uppercase; margin-top: 5px;">System Active</div>
     </div>
 
-    <!-- ADMIN & SUPER ADMIN MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-admin" style="display:none;">
       <li><button onclick="switchTab('panel-dashboard',this)"><i class="fas fa-chart-pie"></i> <span>DASHBOARD</span></button></li>
       <li><button onclick="switchTab('panel-attendance',this)"><i class="fas fa-clipboard-list"></i> <span>ATTENDANCE LOG</span></button></li>
@@ -132,7 +162,6 @@
       
       <li><button onclick="switchTab('panel-posts',this)"><i class="fas fa-images"></i> <span>PUBLIC POSTS</span></button></li>
       
-      <!-- SUPER ADMIN ONLY TABS -->
       <li class="super-admin-only"><button onclick="switchTab('panel-accounts',this)"><i class="fas fa-user-shield"></i> <span>PERSONNEL ACCESS</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-audit',this)"><i class="fas fa-history"></i> <span>SYSTEM AUDIT LOG</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-settings',this)"><i class="fas fa-cog"></i> <span>SYSTEM BRANDING</span></button></li>
@@ -140,7 +169,6 @@
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
     </ul>
 
-    <!-- SCANNER TERMINAL MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-scanner" style="display:none;">
       <li><button onclick="switchTab('panel-scanner',this)" class="active"><i class="fas fa-qrcode"></i> <span>QR SCANNER TERMINAL</span></button></li>
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
@@ -152,10 +180,8 @@
     </ul>
   </div>
 
-  <!-- MAIN CONTENT AREA -->
   <div class="main-content">
 
-    <!-- SCANNER PANEL -->
     <div id="panel-scanner" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-qrcode"></i> QR SCANNER TERMINAL</h2></div><button style="width:auto; padding: 10px 15px;" onclick="clearRecentScans()"><i class="fas fa-trash"></i> CLEAR LOG</button></div>
       <div class="scanner-dashboard">
@@ -166,41 +192,44 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Personnel</th><th>Time Logged</th><th>Action</th></tr></thead><tbody id="recent-scans"></tbody></table></div></div>
     </div>
 
-    <!-- DASHBOARD PANEL -->
     <div id="panel-dashboard" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-chart-pie"></i> COMMAND DASHBOARD</h2></div><div style="display:flex; gap:15px; align-items:center;"><span style="font-size:13px; color:var(--text-muted); font-family:'Inter',sans-serif;">DATE: <strong id="admin-active-day" style="color:var(--text);">--</strong></span><button style="width:auto; padding:10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i> REFRESH DATA</button></div></div>
       <div class="dashboard-grid anim-2"><div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div><div class="stat-label">Total Cadets</div><div class="stat-val" id="stat-total">--</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green);"><div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-user-check"></i></div><div><div class="stat-label">Present Today</div><div class="stat-val" id="stat-present">--</div><div class="stat-sub" id="stat-present-pct"></div></div></div><div class="stat-card" style="border-bottom-color:var(--status-yellow);"><div class="stat-icon" style="color:var(--status-yellow);"><i class="fas fa-clock"></i></div><div><div class="stat-label">Late Today</div><div class="stat-val" id="stat-late">--</div><div class="stat-sub" id="stat-late-pct"></div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red);"><div class="stat-icon" style="color:var(--status-red);"><i class="fas fa-user-times"></i></div><div><div class="stat-label">Absent Today</div><div class="stat-val" id="stat-absent">--</div><div class="stat-sub" id="stat-absent-pct"></div></div></div></div>
       <div class="charts-row anim-3"><div class="chart-card"><h4><i class="fas fa-chart-bar"></i> 7-DAY ATTENDANCE TREND</h4><div class="chart-container"><canvas id="chart-weekly"></canvas></div></div><div class="chart-card"><h4><i class="fas fa-chart-pie"></i> DAILY BREAKDOWN</h4><div class="chart-container"><canvas id="chart-donut"></canvas></div></div></div>
     </div>
 
-    <!-- ATTENDANCE PANEL -->
     <div id="panel-attendance" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-clipboard-list"></i> DAILY ATTENDANCE LOG</h2></div><button style="width:auto; padding: 10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i> REFRESH</button></div>
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead><tbody id="attendance-table"><tr><td colspan="6" style="text-align:center;">Loading records...</td></tr></tbody></table></div></div>
     </div>
 
-    <!-- MASTERLIST PANEL -->
     <div id="panel-masterlist" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-users"></i> UNIT ROSTER</h2></div><div style="display:flex; gap:10px; align-items:center;"><input type="text" id="search-masterlist" placeholder="Search cadet name or ID..." style="width:250px; margin:0; padding:10px;" oninput="filterMasterlist()"><button style="width:auto; padding: 10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i></button></div></div>
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Cadet ID</th><th>Full Name</th><th>Company</th><th>Contact</th><th>Actions</th></tr></thead><tbody id="masterlist-table"><tr><td colspan="5" style="text-align:center;">Loading roster...</td></tr></tbody></table></div></div>
     </div>
 
-    <!-- LEAVES PANEL -->
     <div id="panel-leaves" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2></div></div>
       <div class="dashboard-grid anim-2" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;"><div class="stat-card" style="border-bottom-color:var(--status-yellow); padding: 15px;"><div><div class="stat-val" id="lv-stat-pending" style="color:var(--status-yellow);">--</div><div class="stat-label">Pending</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green); padding: 15px;"><div><div class="stat-val" id="lv-stat-approved" style="color:var(--status-green);">--</div><div class="stat-label">Approved</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red); padding: 15px;"><div><div class="stat-val" id="lv-stat-rejected" style="color:var(--status-red);">--</div><div class="stat-label">Rejected</div></div></div></div>
-      <div class="anim-3" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); display:flex; gap:15px; flex-wrap:wrap; align-items:flex-end;"><div style="flex:1; min-width:200px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">SELECT CADET</label><select id="lv-id" style="margin-top:5px; margin-bottom:0;"><option value="">Loading roster...</option></select></div><div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">FROM DATE</label><input type="date" id="lv-from" style="margin-top:5px; margin-bottom:0;"></div><div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">TO DATE</label><input type="date" id="lv-to" style="margin-top:5px; margin-bottom:0;"></div><div style="flex:2; min-width:200px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">REASON</label><input type="text" id="lv-reason" placeholder="State reason..." style="margin-top:5px; margin-bottom:0;"></div><button class="btn-success" style="width:auto; padding:14px 20px; white-space:nowrap;" onclick="submitLeave()"><i class="fas fa-paper-plane"></i> SUBMIT</button></div>
+      
+      <!-- LEAVE SUBMIT SECTION (Hidden for Super Admins) -->
+      <div id="admin-leave-submit-section" class="anim-3" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); display:flex; gap:15px; flex-wrap:wrap; align-items:flex-end; display:none;">
+        <div style="flex:1; min-width:200px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">SELECT CADET</label><select id="lv-id" style="margin-top:5px; margin-bottom:0;"><option value="">Loading roster...</option></select></div>
+        <div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">FROM DATE</label><input type="date" id="lv-from" style="margin-top:5px; margin-bottom:0;"></div>
+        <div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">TO DATE</label><input type="date" id="lv-to" style="margin-top:5px; margin-bottom:0;"></div>
+        <div style="flex:2; min-width:200px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">REASON</label><input type="text" id="lv-reason" placeholder="State reason..." style="margin-top:5px; margin-bottom:0;"></div>
+        <button class="btn-success" style="width:auto; padding:14px 20px; white-space:nowrap;" onclick="submitLeave()"><i class="fas fa-paper-plane"></i> SUBMIT</button>
+      </div>
+      
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date Range</th><th>Cadet ID</th><th>Name</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaves-table"><tr><td colspan="6" style="text-align:center;">Loading requests...</td></tr></tbody></table></div></div>
     </div>
 
-    <!-- ID GENERATOR PANEL -->
     <div id="panel-idcards" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-id-card"></i> IDENTIFICATION GENERATOR</h2></div></div>
       <div class="anim-2" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap; box-shadow:0 4px 6px rgba(0,0,0,0.02);"><div style="flex:2; min-width:250px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">SELECT CADET:</label><select id="id-target-select" style="width:100%; margin-top:5px; margin-bottom:0;"><option value="ALL">Loading roster...</option></select></div><div style="display:flex; gap:10px;"><button class="btn-success" style="width:auto; padding:14px 20px;" onclick="generateIDPreview()"><i class="fas fa-magic"></i> PREVIEW</button><button class="btn-secondary" style="width:auto; padding:14px 20px;" onclick="printIDCards()"><i class="fas fa-print"></i> PRINT BATCH</button></div></div>
       <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0; font-family:'Inter',sans-serif;">Select a target and generate preview to render Identification Cards.</p></div>
     </div>
 
-    <!-- LEGACY PANEL -->
     <div id="panel-legacy" class="view-panel">
       <div class="header-bar anim-1">
         <div style="display:flex; align-items:center;">
@@ -240,7 +269,7 @@
       </div>
     </div>
 
-    <!-- PUBLIC POSTS PANEL (ADMIN DRAFTING & SUPER ADMIN REVIEW) -->
+    <!-- PUBLIC POSTS PANEL -->
     <div id="panel-posts" class="view-panel">
       <div class="header-bar anim-1">
         <div style="display:flex; align-items:center;">
@@ -249,21 +278,16 @@
         </div>
       </div>
       
-      <!-- ONLY ADMINS SEE THIS DRAFTING SECTION -->
       <div id="admin-draft-section" class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px; display:none;">
         <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-pen"></i> DRAFT NEW POST</h3>
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; font-family:'Inter',sans-serif;">Create a public post to showcase ROTC events. Posts require Commander approval to appear on the public landing page. You may select multiple images.</p>
-        
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">POST TITLE</label>
         <input type="text" id="post-title" placeholder="E.g. Tactical Training Alpha 2026">
-        
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;">POST DESCRIPTION</label>
         <textarea id="post-desc" rows="4" placeholder="Write the details of the activity here..."></textarea>
-        
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;">FEATURED IMAGE(S)</label>
         <input type="file" id="post-image-file" accept="image/*" multiple>
         <p style="font-size:11px; color:var(--text-muted); margin-top:5px; margin-bottom:15px;">Hold CTRL (or CMD) to select multiple images. System will auto-compress them.</p>
-        
         <div style="display:flex; gap:10px;">
           <button id="btn-submit-post" class="btn-success" onclick="submitPublicPost()" style="flex:2;"><i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL</button>
           <button id="btn-cancel-edit" class="btn-danger" onclick="cancelEdit()" style="flex:1; display:none;"><i class="fas fa-times"></i> CANCEL EDIT</button>
@@ -283,21 +307,18 @@
       </div></div>
     </div>
 
-    <!-- SUPER ADMIN ONLY: ACCOUNTS PANEL -->
     <div id="panel-accounts" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-user-shield"></i> PERSONNEL ACCESS CONTROL</h2></div><button style="width:auto; padding:10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i> REFRESH</button></div>
       <div class="anim-2" style="display:flex; gap:15px; margin-bottom:20px; flex-wrap:wrap; background:var(--card-bg); padding:20px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02);"><input type="text" id="new-user" placeholder="Assign Username" style="flex:1; margin:0;"><input type="password" id="new-pass" placeholder="Assign Password" style="flex:1; margin:0;"><select id="new-role" style="flex:1; margin:0;"><option value="Scanner">Scanner Terminal</option><option value="Admin">Command Admin</option><option value="Super Admin">Super Admin (Commander)</option></select><button style="width:auto; white-space:nowrap; padding:14px 20px;" onclick="createAcc()"><i class="fas fa-user-plus"></i> ADD PERSONNEL</button></div>
       <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Username</th><th>Clearance Level</th><th>Status</th><th>Action</th></tr></thead><tbody id="accounts-table"><tr><td colspan="4" style="text-align:center;">Loading access list...</td></tr></tbody></table></div></div>
     </div>
 
-    <!-- SUPER ADMIN ONLY: AUDIT LOG PANEL -->
     <div id="panel-audit" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-history"></i> SYSTEM AUDIT LOG</h2></div><button style="width:auto; padding: 10px 15px;" onclick="loadAuditLogs()"><i class="fas fa-sync"></i> REFRESH</button></div>
       <div class="tamper-warning" id="audit-tamper-warning"><i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom:10px; display:block;"></i> CRITICAL WARNING: CRYPTOGRAPHIC BLOCKCHAIN BROKEN.<br><span style="font-size: 13px; font-weight: normal;">The system detected unauthorized tampering or deletion in the raw database. Integrity is compromised.</span></div>
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Date & Time</th><th>User / Operator</th><th>Action Taken</th><th>Activity Details</th></tr></thead><tbody id="audit-table"><tr><td colspan="4" style="text-align:center;">Loading logs...</td></tr></tbody></table></div></div>
     </div>
 
-    <!-- SUPER ADMIN ONLY: BRANDING SETTINGS PANEL -->
     <div id="panel-settings" class="view-panel">
       <div class="header-bar anim-1">
         <div style="display:flex; align-items:center;">
@@ -335,6 +356,7 @@
   let session = {};
   let isDarkMode = false;
   let globalStudentCache = [];
+  let globalAdminPostCache = []; 
   let isScanning = false;
   let recentScanCount = 0;
   const MAX_RECENT_SCANS = 50;
@@ -399,7 +421,6 @@
     if(!croppedData[currentCropTarget]) document.getElementById(currentCropTarget).value = '';
   }
 
-  // Bulk Image Compressor for Posts
   function compressAutoImage(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -468,7 +489,7 @@
     if (panelId === 'panel-posts') loadPosts();
   }
 
-  // ─── POST MANAGEMENT ───
+  // ─── POST MANAGEMENT & PREVIEW ───
   async function submitPublicPost() {
     const title = document.getElementById('post-title').value.trim();
     const desc = document.getElementById('post-desc').value.trim();
@@ -519,26 +540,31 @@
   function loadPosts() {
     document.getElementById('posts-table').innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
     apiCall('getPostsAdmin', { user: session.user, pass: session.pass }, (res) => {
+      globalAdminPostCache = res.posts; 
       let html = '';
       res.posts.forEach(p => {
-        let actionBtn = '-';
+        let actionBtn = '';
         let feedbackHtml = '';
+        let previewBtn = `<button class="btn-info" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="previewPost('${p.id}')"><i class="fas fa-eye"></i> PREVIEW</button>`;
 
         if (session.role === 'Super Admin') {
           if (p.status === 'Pending' || p.status === 'Revise') {
             feedbackHtml = `<textarea id="feedback-${p.id}" placeholder="Type instructions or corrections here..." style="width:100%; height:60px; margin-top:10px; font-size:12px; padding:8px;">${p.feedback || ''}</textarea>`;
             actionBtn = `
+              ${previewBtn}
               <button class="btn-success" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="updatePost('${p.id}','Approved')">APPROVE</button>
               <button class="btn-warning" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="updatePost('${p.id}','Revise')">REVISE</button>
               <button class="btn-danger" style="padding:6px 10px; font-size:11px; width:100%;" onclick="updatePost('${p.id}','Rejected')">REJECT</button>
             `;
           } else {
+            actionBtn = previewBtn;
             feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px;"><b>Notes:</b> ${p.feedback}</div>` : '';
           }
         } else if (session.role === 'Admin') {
+          actionBtn = previewBtn;
           if (p.status === 'Revise') {
             feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${p.feedback}</div>`;
-            actionBtn = `<button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff;" onclick="editPost('${p.id}', \`${p.title.replace(/`/g, "'")}\`, \`${p.description.replace(/`/g, "'")}\`)">EDIT POST</button>`;
+            actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; margin-top:5px;" onclick="editPost('${p.id}', \`${p.title.replace(/`/g, "'")}\`, \`${p.description.replace(/`/g, "'")}\`)"><i class="fas fa-edit"></i> EDIT POST</button>`;
           } else if (p.status === 'Rejected') {
             feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${p.feedback}</div>` : '';
           }
@@ -581,6 +607,52 @@
     });
   }
 
+  // ─── POST PREVIEW MODAL LOGIC ───
+  let previewSlideIdx = 0;
+  
+  function previewPost(postId) {
+    const p = globalAdminPostCache.find(x => x.id === postId);
+    if (!p) return;
+    const images = p.image ? p.image.split(',') : [];
+    previewSlideIdx = 0;
+    let carouselHtml = '';
+    if (images.length > 0) {
+      let slides = images.map((img, i) => `<div class="preview-carousel-slide ${i === 0 ? 'active' : ''}" id="prev-slide-${i}"><img src="${img}"></div>`).join('');
+      let btns = images.length > 1 ? `<button class="preview-carousel-btn preview-carousel-prev" onclick="changePreviewSlide(-1, ${images.length})"><i class="fas fa-chevron-left"></i></button><button class="preview-carousel-btn preview-carousel-next" onclick="changePreviewSlide(1, ${images.length})"><i class="fas fa-chevron-right"></i></button>` : '';
+      let dots = images.length > 1 ? `<div class="preview-carousel-dots">` + images.map((_, i) => `<span class="preview-dot ${i === 0 ? 'active' : ''}" id="prev-dot-${i}" onclick="setPreviewSlide(${i}, ${images.length})"></span>`).join('') + `</div>` : '';
+      carouselHtml = `<div class="preview-carousel-container">${slides}${btns}${dots}</div>`;
+    }
+    const html = `
+      ${carouselHtml}
+      <div class="preview-post-date">${p.date}</div>
+      <h2 class="preview-post-title">${p.title}</h2>
+      <div class="preview-post-desc">${p.description}</div>
+    `;
+    document.getElementById('preview-dynamic-content').innerHTML = html;
+    const modal = document.getElementById('post-preview-modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+  }
+
+  window.changePreviewSlide = function(step, total) { setPreviewSlide(previewSlideIdx + step, total); }
+  window.setPreviewSlide = function(index, total) {
+    if(index >= total) index = 0;
+    if(index < 0) index = total - 1;
+    document.querySelectorAll('.preview-carousel-slide').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.preview-dot').forEach(d => d.classList.remove('active'));
+    document.getElementById(`prev-slide-${index}`).classList.add('active');
+    if (document.getElementById(`prev-dot-${index}`)) document.getElementById(`prev-dot-${index}`).classList.add('active');
+    previewSlideIdx = index;
+  }
+
+  function closePostPreview(force) {
+    const modal = document.getElementById('post-preview-modal');
+    if (force === true || force.target === modal) {
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
+    }
+  }
+
   // ─── LOGIN & HIERARCHY LOGIC ───
   function performLogin() {
     const u = document.getElementById('login-user').value.trim(), p = document.getElementById('login-pass').value;
@@ -602,9 +674,11 @@
           
           if (res.role === 'Super Admin') {
             document.getElementById('admin-draft-section').style.display = 'none';
+            document.getElementById('admin-leave-submit-section').style.display = 'none'; // HIDDEN FOR SUPER ADMIN
             document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block');
           } else {
             document.getElementById('admin-draft-section').style.display = 'block';
+            document.getElementById('admin-leave-submit-section').style.display = 'flex'; // VISIBLE FOR ADMIN
             document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none');
           }
 
