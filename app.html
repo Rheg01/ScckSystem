@@ -1,3 +1,699 @@
+
+// ─── MASTER SETUP ENGINE ─────────────────────────────────
+function INITIAL_SETUP() {
+  const props = PropertiesService.getScriptProperties();
+  if (!props.getProperty("UPLOADS_FOLDER_ID")) {
+    let folder = DriveApp.createFolder("SCCK_SYSTEM_UPLOADS");
+    folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    props.setProperty("UPLOADS_FOLDER_ID", folder.getId());
+  }
+  const accSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Accounts");
+  if(accSheet) accSheet.appendRow(["commander", hashData("scck2026"), "Super Admin", "Active"]);
+  logAction("SYSTEM", "Initialization", "System Fortress Initialized. Super Admin created.");
+}
+
+// ─── CRYPTOGRAPHIC ENGINE (SHA-256) ───────────────────────
+function hashData(input) {
+  const rawHash = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, input, Utilities.Charset.UTF_8);
+  let txtHash = '';
+  for (let i = 0; i < rawHash.length; i++) {
+    let hashVal = rawHash[i];
+    if (hashVal < 0) hashVal += 256;
+    if (hashVal.toString(16).length == 1) txtHash += '0';
+    txtHash += hashVal.toString(16);
+  }
+  return txtHash;
+}
+
+// ─── SHEET NAMES ─────────────────────────────────────────
+const S_ATTENDANCE = "Attendance";
+const S_ACCOUNTS   = "Accounts";
+const S_MASTERLIST = "Masterlist";
+const S_LEAVES     = "Leaves";
+const S_AUDIT      = "AuditLog"; 
+const S_LEG_CLASS  = "Legacy_Classes";
+const S_LEG_OFF    = "Legacy_Officers";
+const S_POSTS      = "Public_Posts";
+
+// ─── API ROUTER FOR GITHUB PAGES FRONTEND ─────────────────
+function doPost(e) {
+  try {
+    const params = JSON.parse(e.postData.contents);
+    const action = params.action;
+    let result = {};
+
+    if (action === "systemLogin") result = systemLogin(params.user, params.pass);
+    else if (action === "getAdminDashboardData") result = getAdminDashboardData(params.user, params.pass);
+    else if (action === "markAttendance") result = markAttendance(params.scannedData, params.user, params.pass);
+    else if (action === "updateStudentInfo") result = updateStudentInfo(params.id, params.company, params.contact, params.user, params.pass);
+    else if (action === "deleteStudentData") result = deleteStudentData(params.id, params.user, params.pass);
+    else if (action === "createAccount") result = { message: createAccount(params.newUser, params.newPass, params.role, params.user, params.pass) };
+    else if (action === "updateAccountStatus") result = { message: updateAccountStatus(params.targetUser, params.newStatus, params.user, params.pass) };
+    else if (action === "submitLeaveRequest") result = submitLeaveRequest(params.studentId, params.fromDate, params.toDate, params.reason, params.user, params.pass);
+    else if (action === "getLeaveRequests") result = getLeaveRequests(params.user, params.pass);
+    else if (action === "updateLeaveStatus") result = updateLeaveStatus(params.leaveId, params.status, params.user, params.pass);
+    else if (action === "getStudentsForIDCards") result = getStudentsForIDCards(params.user, params.pass);
+    else if (action === "getAuditLogs") result = getAuditLogs(params.user, params.pass);
+    else if (action === "getSettings") result = getSettings();
+    else if (action === "saveSettings") result = saveSettings(params.logoData, params.bgData, params.navLogoData, params.clearBg, params.user, params.pass);
+    else if (action === "getProfile") result = getProfile(params.targetUser, params.user, params.pass);
+    else if (action === "saveProfile") result = saveProfile(params.profileData, params.user, params.pass);
+    else if (action === "addLegacyClass") result = addLegacyClass(params.year, params.name, params.logoData, params.user, params.pass);
+    else if (action === "getLegacyClasses") result = getLegacyClasses(params.user, params.pass);
+    else if (action === "addLegacyOfficer") result = addLegacyOfficer(params.classId, params.rank, params.name, params.designation, params.imageData, params.user, params.pass);
+    else if (action === "getLegacyData") result = getLegacyData(); 
+    else if (action === "submitPost") result = submitPost(params.title, params.description, params.imageArray, params.user, params.pass);
+    else if (action === "getPostsAdmin") result = getPostsAdmin(params.user, params.pass);
+    else if (action === "updatePostStatus") result = updatePostStatus(params.postId, params.status, params.feedback, params.user, params.pass);
+    else if (action === "resubmitPost") result = resubmitPost(params.postId, params.title, params.description, params.imageArray, params.user, params.pass);
+    else if (action === "getApprovedPosts") result = getApprovedPosts();
+    else throw new Error("Unknown action requested.");
+
+    return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ error: true, message: error.message })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ─── AUTHENTICATION & HIERARCHY ───────────────────────────
+function checkAuth(user, pass, requiredRole) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_ACCOUNTS);
+  if (!sheet) throw new Error("Accounts sheet missing from database.");
+  const data = sheet.getDataRange().getDisplayValues();
+  const inputHash = hashData(pass); 
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === user && data[i][1] === inputHash && data[i][3] === "Active") {
+      const role = data[i][2];
+      if (requiredRole === "Super Admin" && role !== "Super Admin") throw new Error("Super Admin privileges required.");
+      if (requiredRole === "Admin" && (role !== "Super Admin" && role !== "Admin")) throw new Error("Admin privileges required.");
+      return role;
+    }
+  }
+  throw new Error("Invalid credentials or inactive account.");
+}
+
+function systemLogin(user, pass) {
+  try {
+    const role = checkAuth(user, pass, "Any");
+    const todayDate = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "MM/dd/yyyy");
+    logAction(user, "System Login", `User authenticated successfully.`);
+    return { success: true, role: role, day: todayDate };
+  } catch(e) {
+    logAction(user || "UNKNOWN", "Failed Login", "Attempt failed: " + e.message);
+    return { error: true, message: e.message };
+  }
+}
+
+// ─── BLOCKCHAIN AUDIT LOG ENGINE ──────────────────────────
+function logAction(user, action, details) {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_AUDIT);
+    if (!sheet) return; 
+    const tz = Session.getScriptTimeZone();
+    const timestamp = Utilities.formatDate(new Date(), tz, "MM/dd/yyyy HH:mm:ss");
+    const lastRow = sheet.getLastRow();
+    let prevSignature = "GENESIS_BLOCK";
+    if (lastRow > 1) prevSignature = sheet.getRange(lastRow, 5).getValue() || "GENESIS_BLOCK";
+    const newSignature = hashData(prevSignature + timestamp + user + action + details);
+    sheet.appendRow([timestamp, user, action, details, newSignature]);
+  } catch (e) {}
+}
+
+function getAuditLogs(user, pass) {
+  try {
+    checkAuth(user, pass, "Super Admin"); 
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_AUDIT);
+    if (!sheet) return { logs: [] };
+    const data = sheet.getDataRange().getDisplayValues();
+    const logs = [];
+    let tampered = false;
+    let prevSignature = "GENESIS_BLOCK";
+    for (let i = 1; i < data.length; i++) {
+      let t = data[i][0], u = data[i][1], a = data[i][2], d = data[i][3], sig = data[i][4];
+      let expectedSig = hashData(prevSignature + t + u + a + d);
+      if (sig !== expectedSig) tampered = true;
+      prevSignature = sig;
+      logs.push({ timestamp: t, user: u, action: a, details: d });
+    }
+    return { logs: logs.reverse(), tampered: tampered }; 
+  } catch(e) { return { error: e.message }; }
+}
+
+// ─── GOOGLE DRIVE IMAGE UPLOADER ──────────────────────────
+function uploadImageToDrive(base64Data, fileNamePrefix) {
+  const props = PropertiesService.getScriptProperties();
+  let folderId = props.getProperty("UPLOADS_FOLDER_ID");
+  const cleanBase64 = base64Data.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, "");
+  const blob = Utilities.newBlob(Utilities.base64Decode(cleanBase64), "image/png", fileNamePrefix + "_" + new Date().getTime() + ".png");
+  const file = DriveApp.getFolderById(folderId).createFile(blob);
+  return "https://lh3.googleusercontent.com/d/" + file.getId();
+}
+
+function convertDriveLink(url) {
+  if (!url) return "";
+  let finalUrl = url.toString().split(',')[0].trim();
+  if (finalUrl.includes("drive.google.com")) {
+    let match = finalUrl.match(/id=([a-zA-Z0-9_-]+)/);
+    if (!match) match = finalUrl.match(/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) return "https://drive.google.com/thumbnail?id=" + match[1] + "&sz=w800";
+  }
+  return finalUrl;
+}
+
+function findImageColumnIndex(headers) {
+  for (let i = headers.length - 1; i >= 0; i--) { 
+    let h = headers[i].toString().toLowerCase().replace(/\s/g, '');
+    if ((h.includes("image") && !h.includes("qr")) || h.includes("photo") || h.includes("formal")) return i;
+  }
+  return 18; 
+}
+
+// ─── POST / NEWSFEED MANAGEMENT ───────────────────────────
+function submitPost(title, description, imageArray, user, pass) {
+  try {
+    checkAuth(user, pass, "Admin"); 
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
+    if(!sheet) throw new Error("Public_Posts tab missing in database.");
+    const postId = "PST_" + new Date().getTime();
+    
+    let imgUrls = [];
+    if (imageArray && imageArray.length > 0) {
+      for (let i = 0; i < imageArray.length; i++) {
+        imgUrls.push(uploadImageToDrive(imageArray[i], "POST_" + new Date().getTime() + "_" + i));
+      }
+    }
+    const finalImgString = imgUrls.join(","); 
+    const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "MM/dd/yyyy");
+    
+    sheet.appendRow([postId, title, description, finalImgString, "Pending", today, ""]);
+    logAction(user, "Post Drafted", `Drafted public post: ${title}`);
+    return { success: true, message: "Post drafted and pending approval." };
+  } catch(e) { return { error: e.message }; }
+}
+
+function resubmitPost(postId, title, description, imageArray, user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
+    if (!sheet) throw new Error("Public_Posts tab missing.");
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0] === postId) {
+        sheet.getRange(i + 1, 2).setValue(title);
+        sheet.getRange(i + 1, 3).setValue(description);
+        if (imageArray && imageArray.length > 0) {
+          let imgUrls = [];
+          for (let j = 0; j < imageArray.length; j++) {
+            imgUrls.push(uploadImageToDrive(imageArray[j], "POST_" + new Date().getTime() + "_" + j));
+          }
+          sheet.getRange(i + 1, 4).setValue(imgUrls.join(","));
+        }
+        sheet.getRange(i + 1, 5).setValue("Pending"); 
+        sheet.getRange(i + 1, 7).setValue(""); 
+        logAction(user, "Post Revised", `Admin revised and resubmitted post: ${title}`);
+        return { success: true, message: "Post revised and sent to Commander for review." };
+      }
+    }
+    return { success: false, message: "Original post not found." };
+  } catch(e) { return { error: e.message }; }
+}
+
+function getPostsAdmin(user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
+    if (!sheet) return { posts: [] }; 
+    const data = sheet.getDataRange().getDisplayValues();
+    const posts = [];
+    for (let i = 1; i < data.length; i++) {
+      posts.push({ id: data[i][0], title: data[i][1], description: data[i][2], image: data[i][3], status: data[i][4], date: data[i][5], feedback: data[i][6] || "" });
+    }
+    return { posts: posts.reverse() };
+  } catch(e) { return { error: e.message }; }
+}
+
+function updatePostStatus(postId, status, feedback, user, pass) {
+  try {
+    checkAuth(user, pass, "Super Admin"); 
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
+    if (!sheet) throw new Error("Public_Posts tab missing.");
+    const data = sheet.getDataRange().getDisplayValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0] === postId) { 
+        sheet.getRange(i + 1, 5).setValue(status); 
+        sheet.getRange(i + 1, 7).setValue(feedback || ""); 
+        logAction(user, "Post Reviewed", `Changed post ${postId} status to ${status}`);
+        return { success: true }; 
+      }
+    }
+    return { success: false, message: "Post not found." };
+  } catch(e) { return { success: false, message: e.message }; }
+}
+
+function getApprovedPosts() {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
+    if(!sheet) return { success: true, posts: [] }; 
+    const data = sheet.getDataRange().getDisplayValues();
+    const posts = [];
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][4] === "Approved") {
+        posts.push({ id: data[i][0], title: data[i][1], description: data[i][2], image: data[i][3], date: data[i][5] });
+      }
+    }
+    return { success: true, posts: posts.reverse() };
+  } catch(e) { return { error: e.message }; }
+}
+
+// ─── STANDARD SYSTEM FUNCTIONS ────────────────────────────
+function getSettings() {
+  try {
+    const props = PropertiesService.getScriptProperties().getProperties();
+    return { logoUrl: props.logoUrl || "https://cdn-icons-png.flaticon.com/512/1055/1055664.png", navLogoUrl: props.navLogoUrl || props.logoUrl || "https://cdn-icons-png.flaticon.com/512/1055/1055664.png", bgUrl: props.bgUrl || "" };
+  } catch(e) { return {}; }
+}
+
+function saveSettings(logoData, bgData, navLogoData, clearBg, user, pass) {
+  try {
+    checkAuth(user, pass, "Super Admin"); 
+    const props = PropertiesService.getScriptProperties();
+    let updates = {};
+    if (logoData) updates.logoUrl = uploadImageToDrive(logoData, "SYS_LOGO");
+    if (bgData) updates.bgUrl = uploadImageToDrive(bgData, "SYS_BG");
+    if (navLogoData) updates.navLogoUrl = uploadImageToDrive(navLogoData, "SYS_NAV_LOGO");
+    if (clearBg) updates.bgUrl = ""; 
+    if (Object.keys(updates).length > 0) props.setProperties(updates);
+    logAction(user, "Settings Updated", "Updated system branding interface.");
+    return { success: true, message: "System interface updated!" };
+  } catch(e) { return { error: e.message }; }
+}
+
+function addLegacyClass(year, name, logoData, user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEG_CLASS);
+    if (!sheet) throw new Error("Legacy_Classes tab missing.");
+    const classId = "CLS_" + new Date().getTime();
+    let logoUrl = logoData ? uploadImageToDrive(logoData, "CLASS_" + year) : "";
+    sheet.appendRow([classId, year, name, logoUrl]);
+    logAction(user, "Legacy Class Added", `Added Class: ${name} (${year})`);
+    return { success: true, message: "Class created successfully!" };
+  } catch(e) { return { error: e.message }; }
+}
+
+function getLegacyClasses(user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEG_CLASS);
+    if (!sheet) return { classes: [] };
+    const data = sheet.getDataRange().getDisplayValues();
+    const classes = [];
+    for (let i = 1; i < data.length; i++) classes.push({ id: data[i][0], year: data[i][1], name: data[i][2], logo: data[i][3] });
+    return { classes: classes };
+  } catch(e) { return { error: e.message }; }
+}
+
+function addLegacyOfficer(classId, rank, name, designation, imageData, user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEG_OFF);
+    if (!sheet) throw new Error("Legacy_Officers tab missing.");
+    const offId = "OFF_" + new Date().getTime();
+    let imgUrl = imageData ? uploadImageToDrive(imageData, "OFFICER_" + name.replace(/\s+/g,"_")) : "";
+    sheet.appendRow([offId, classId, rank, name, designation, imgUrl]);
+    logAction(user, "Legacy Officer Added", `Added ${rank} ${name} to Class ID: ${classId}`);
+    return { success: true, message: "Officer added successfully!" };
+  } catch(e) { return { error: e.message }; }
+}
+
+function getLegacyData() {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const cSheet = ss.getSheetByName(S_LEG_CLASS);
+    const oSheet = ss.getSheetByName(S_LEG_OFF);
+    
+    let classes = [];
+    
+    if (cSheet) {
+      const cData = cSheet.getDataRange().getDisplayValues();
+      for(let i=1; i<cData.length; i++) classes.push({ id: cData[i][0], year: cData[i][1], name: cData[i][2], logo: cData[i][3], officers: [] });
+    }
+    
+    if (oSheet) {
+      const oData = oSheet.getDataRange().getDisplayValues();
+      for(let i=1; i<oData.length; i++) {
+        const off = { classId: oData[i][1], rank: oData[i][2], name: oData[i][3], designation: oData[i][4], image: oData[i][5] };
+        const targetClass = classes.find(c => c.id === off.classId);
+        if (targetClass) targetClass.officers.push(off);
+      }
+    }
+    return { success: true, classes: classes, branding: getSettings() };
+  } catch(e) { return { error: e.message }; }
+}
+
+function getProfile(targetUser, user, pass) {
+  try {
+    checkAuth(user, pass, "Any");
+    const data = PropertiesService.getScriptProperties().getProperty('profile_' + targetUser);
+    return data ? JSON.parse(data) : {};
+  } catch(e) { return {}; }
+}
+
+function saveProfile(profileData, user, pass) {
+  try {
+    checkAuth(user, pass, "Any");
+    const props = PropertiesService.getScriptProperties();
+    const existing = JSON.parse(props.getProperty('profile_' + user) || "{}");
+    if (profileData.imageData) {
+      profileData.image = uploadImageToDrive(profileData.imageData, "PROF_" + user);
+      delete profileData.imageData; 
+    } else profileData.image = existing.image || "";
+    props.setProperty('profile_' + user, JSON.stringify(profileData));
+    logAction(user, "Profile Updated", "Updated personal account profile details.");
+    return { success: true, message: "Profile saved successfully!" };
+  } catch(e) { return { error: e.message }; }
+}
+
+function getAdminDashboardData(user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const tz = Session.getScriptTimeZone();
+    const todayDate = Utilities.formatDate(new Date(), tz, "MM/dd/yyyy");
+    
+    const accSheet = ss.getSheetByName(S_ACCOUNTS);
+    const masterSheet = ss.getSheetByName(S_MASTERLIST) || ss.getSheetByName("MasterList");
+    const attSheet = ss.getSheetByName(S_ATTENDANCE);
+    
+    if (!accSheet || !masterSheet || !attSheet) throw new Error("A core database tab is missing or misspelled.");
+
+    const accounts = accSheet.getDataRange().getDisplayValues();
+    const masterData = masterSheet.getDataRange().getDisplayValues();
+    const attData = attSheet.getDataRange().getDisplayValues();
+
+    const attMap = {};
+    for (let j = 1; j < attData.length; j++) {
+      const rowId = attData[j][0].replace(/'/g, "").trim(), rowDate = attData[j][2];
+      if (!attMap[rowId]) attMap[rowId] = {};
+      attMap[rowId][rowDate] = { timeIn: attData[j][3] || "---", timeOut: attData[j][4] || "---", status: attData[j][5] || "Present" };
+    }
+
+    let mergedList = [], rawMasterlist = [], todayPresent = 0, todayLate = 0;
+    for (let i = 1; i < masterData.length; i++) {
+      const studentId = masterData[i][1] ? masterData[i][1].toString().trim() : "";
+      if (!studentId) continue;
+      
+      let mName = masterData[i][3] || ""; if (mName.toUpperCase() === "N/A") mName = "";
+      const fullName = [masterData[i][2] || "", mName, masterData[i][4] || ""].filter(Boolean).join(" ");
+      const company = masterData[i][5] || "", contact = masterData[i][10] ? masterData[i][10].trim() : (masterData[i][6] || "");
+
+      rawMasterlist.push({ id: studentId, name: fullName, company: company, contact: contact });
+      const todayRec = attMap[studentId] && attMap[studentId][todayDate];
+      const timeIn = todayRec ? todayRec.timeIn : "---", timeOut = todayRec ? todayRec.timeOut : "---", status = todayRec ? todayRec.status : "Absent";
+
+      if (status === "Present") todayPresent++; if (status === "Late") todayLate++;
+      mergedList.push({ id: studentId, name: fullName, in: timeIn, out: timeOut, status: status, course: company });
+    }
+    const weeklyData = buildWeeklyData(attData, masterData, tz);
+    return { status: "ok", accounts: accounts, masterlist: rawMasterlist, attendance: mergedList, activeDay: todayDate, weeklyData: weeklyData, stats: { total: rawMasterlist.length, present: todayPresent, late: todayLate, absent: rawMasterlist.length - (todayPresent + todayLate) } };
+  } catch(e) { return { error: true, message: e.message }; }
+}
+
+function buildWeeklyData(attData, masterData, tz) {
+  const labels = [], present = [], late = [], absent = [];
+  const totalStudents = Math.max(1, masterData.length - 1);
+  const dailyCounts = {};
+
+  for (let j = 1; j < attData.length; j++) {
+    const date = attData[j][2], status = attData[j][5];
+    if (!dailyCounts[date]) dailyCounts[date] = { p: 0, l: 0 };
+    if (status === "Present") dailyCounts[date].p++;
+    else if (status === "Late") dailyCounts[date].l++;
+  }
+
+  for (let d = 6; d >= 0; d--) {
+    const dt = new Date(); dt.setDate(dt.getDate() - d);
+    const dateStr = Utilities.formatDate(dt, tz, "MM/dd/yyyy");
+    labels.push(Utilities.formatDate(dt, tz, "EEE MM/dd"));
+    const counts = dailyCounts[dateStr] || { p: 0, l: 0 };
+    present.push(counts.p); late.push(counts.l); absent.push(Math.max(0, totalStudents - counts.p - counts.l));
+  }
+  return { labels: labels, present: present, late: late, absent: absent };
+}
+
+function updateStudentInfo(id, company, contact, user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_MASTERLIST) || SpreadsheetApp.getActiveSpreadsheet().getSheetByName("MasterList");
+    const data  = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][1].toString().trim() === id.toString().trim()) {
+        sheet.getRange(i + 1, 6).setValue(company); sheet.getRange(i + 1, 11).setValue(contact); 
+        logAction(user, "Cadet Updated", `Updated company/contact for Cadet ID: ${id}`);
+        return { success: true };
+      }
+    }
+    return { error: "Student not found." };
+  } catch(e) { return { error: e.message }; }
+}
+
+function deleteStudentData(id, user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_MASTERLIST) || SpreadsheetApp.getActiveSpreadsheet().getSheetByName("MasterList");
+    const data  = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][1].toString().trim() === id.toString().trim()) {
+        sheet.deleteRow(i + 1); 
+        logAction(user, "Cadet Discharged", `Permanently removed Cadet ID: ${id} from the masterlist.`);
+        return { success: true };
+      }
+    }
+    return { error: "Student not found." };
+  } catch(e) { return { error: e.message }; }
+}
+
+function createAccount(newUser, newPass, role, user, pass) {
+  checkAuth(user, pass, "Super Admin"); 
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_ACCOUNTS);
+  const data  = sheet.getDataRange().getDisplayValues();
+  for (let i = 1; i < data.length; i++) { if (data[i][0] === newUser) return "Username already exists."; }
+  sheet.appendRow([newUser, hashData(newPass), role, "Active"]);
+  logAction(user, "Account Created", `Provisioned new ${role} account for username: ${newUser}`);
+  return "Account created successfully.";
+}
+
+function updateAccountStatus(targetUser, newStatus, user, pass) {
+  checkAuth(user, pass, "Super Admin"); 
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_ACCOUNTS);
+  const data  = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === targetUser) { 
+      sheet.getRange(i + 1, 4).setValue(newStatus); 
+      logAction(user, "Account Status Update", `Changed clearance status of ${targetUser} to ${newStatus}`);
+      return "Status updated."; 
+    }
+  }
+  return "User not found.";
+}
+
+function markAttendance(scannedData, user, pass) {
+  try {
+    checkAuth(user, pass, "Any");
+    const cleanId = scannedData.toString().replace(/^[=+\-@\t\r]/, "").trim();
+    if (!cleanId) return { status: "warn", msg: "Invalid QR code format." };
+
+    const ss = SpreadsheetApp.getActiveSpreadsheet(), attSheet = ss.getSheetByName(S_ATTENDANCE), masterSheet = ss.getSheetByName(S_MASTERLIST) || ss.getSheetByName("MasterList");
+    const tz = Session.getScriptTimeZone();
+    let studentName = "", studentFound = false, matchedId = cleanId, studentImage = "";
+
+    if (masterSheet) {
+      const mData = masterSheet.getDataRange().getDisplayValues();
+      const imgColIdx = findImageColumnIndex(mData[0]); 
+      for (let i = 1; i < mData.length; i++) {
+        const sheetId = mData[i][1].toString().trim();
+        if (sheetId === cleanId || parseInt(sheetId, 10) === parseInt(cleanId, 10)) {
+          let mName = mData[i][3] || ""; if (mName.toUpperCase() === "N/A") mName = "";
+          studentName = [mData[i][2], mName, mData[i][4]].filter(Boolean).join(" ");
+          studentFound = true; matchedId = sheetId;
+          let rawImage = mData[i][imgColIdx] || "";
+          if (rawImage.trim() === "") {
+            for (let j = 0; j < mData[i].length; j++) { if (mData[i][j].includes("drive.google.com")) { rawImage = mData[i][j]; break; } }
+          }
+          studentImage = convertDriveLink(rawImage); break; 
+        }
+      }
+    }
+
+    if (!studentFound) {
+       logAction(user, "Scan Rejected", `Unauthorized QR scan attempt. Scanned Data: ${cleanId}`);
+       return { status: "warn", msg: "UNAUTHORIZED QR: Cadet not found in the Masterlist." };
+    }
+
+    const todayDate = Utilities.formatDate(new Date(), tz, "MM/dd/yyyy"), timestamp = Utilities.formatDate(new Date(), tz, "hh:mm:ss a");
+    const currentHour = parseInt(Utilities.formatDate(new Date(), tz, "H"), 10), currentMin = parseInt(Utilities.formatDate(new Date(), tz, "m"), 10);
+    const arrivalStatus = (currentHour > 8 || (currentHour === 8 && currentMin > 30)) ? "Late" : "Present";
+
+    const attData = attSheet.getDataRange().getDisplayValues();
+    for (let i = 1; i < attData.length; i++) {
+      const rowId = attData[i][0].replace(/'/g, "").trim();
+      if (rowId === matchedId && attData[i][2] === todayDate) {
+        if (attData[i][3] && attData[i][3] !== "---" && (!attData[i][4] || attData[i][4] === "---")) {
+          attSheet.getRange(i + 1, 5).setValue(timestamp);
+          logAction(user, "Time Out Logged", `Recorded TIME OUT for Cadet ID: ${matchedId} (${studentName})`);
+          return { msg: "TIME OUT Recorded!", status: "ok", id: matchedId, name: studentName, image: studentImage, timeIn: attData[i][3], timeOut: timestamp, date: todayDate, action: "TIME OUT" };
+        } else if (attData[i][3] !== "---" && attData[i][4] !== "---") return { msg: "Already completed Time In & Out today!", status: "warn", name: studentName, image: studentImage };
+      }
+    }
+
+    attSheet.appendRow(["'" + matchedId, studentName, todayDate, timestamp, "---", arrivalStatus]);
+    logAction(user, "Time In Logged", `Recorded ${arrivalStatus.toUpperCase()} TIME IN for Cadet ID: ${matchedId} (${studentName})`);
+    return { msg: "TIME IN Recorded!", status: "ok", id: matchedId, name: studentName, image: studentImage, timeIn: timestamp, timeOut: "---", date: todayDate, action: arrivalStatus.toUpperCase() };
+  } catch(e) { return { status: "warn", msg: e.message }; }
+}
+
+function submitLeaveRequest(studentId, fromDate, toDate, reason, user, pass) {
+  try {
+    checkAuth(user, pass, "Admin"); 
+    const ss = SpreadsheetApp.getActiveSpreadsheet(), mData = (ss.getSheetByName(S_MASTERLIST) || ss.getSheetByName("MasterList")).getDataRange().getDisplayValues();
+    let studentName = "Unknown";
+    for (let i = 1; i < mData.length; i++) { 
+      if (mData[i][1].toString().trim() === studentId.toString().trim()) { 
+        let mName = mData[i][3] || ""; if (mName.toUpperCase() === "N/A") mName = "";
+        studentName = [mData[i][2], mName, mData[i][4]].filter(Boolean).join(" "); break; 
+      } 
+    }
+    const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "MM/dd/yyyy"), leaveId = "LV" + new Date().getTime();
+    ss.getSheetByName(S_LEAVES).appendRow([leaveId, studentId, studentName, fromDate, toDate, reason, "Pending", today]);
+    logAction(user, "Leave Submitted", `Submitted leave request for Cadet ID: ${studentId} (${fromDate} to ${toDate})`);
+    return { success: true, message: "Leave request submitted successfully." };
+  } catch(e) { return { success: false, message: e.message }; }
+}
+
+function getLeaveRequests(user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEAVES);
+    if (!sheet) return { leaves: [] }; 
+    const data = sheet.getDataRange().getDisplayValues(), leaves = [];
+    for (let i = 1; i < data.length; i++) leaves.push({ id: data[i][0], studentId: data[i][1], name: data[i][2], from: data[i][3], to: data[i][4], reason: data[i][5], status: data[i][6] });
+    return { leaves: leaves.reverse() };
+  } catch(e) { return { error: e.message }; }
+}
+
+function updateLeaveStatus(leaveId, status, user, pass) {
+  try {
+    checkAuth(user, pass, "Super Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEAVES), data = sheet.getDataRange().getDisplayValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0] === leaveId) { 
+        sheet.getRange(i + 1, 7).setValue(status); 
+        logAction(user, "Leave Processed", `Changed leave request ${leaveId} status to ${status}`);
+        return { success: true }; 
+      }
+    }
+    return { success: false, message: "Leave record not found." };
+  } catch(e) { return { success: false, message: e.message }; }
+}
+
+function getStudentsForIDCards(user, pass) {
+  try {
+    checkAuth(user, pass, "Admin");
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_MASTERLIST) || SpreadsheetApp.getActiveSpreadsheet().getSheetByName("MasterList");
+    if (!sheet) return { students: [] };
+    const data = sheet.getDataRange().getDisplayValues(), students = [];
+    const imgColIdx = findImageColumnIndex(data[0]);
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][1]) {
+        let mName = data[i][3] || ""; if (mName.toUpperCase() === "N/A") mName = "";
+        let rawImage = data[i][imgColIdx] || "";
+        if (rawImage.trim() === "") { for (let j = 0; j < data[i].length; j++) { if (data[i][j].includes("drive.google.com")) { rawImage = data[i][j]; break; } } }
+        
+        // CORRECTED INDEX MAPPING: 7 = Course, 5 = Company
+        let courseVal = data[i][7] ? data[i][7].toString().trim() : "";
+        let compVal = data[i][5] ? data[i][5].toString().trim() : "";
+        
+        students.push({ 
+          id: data[i][1], 
+          name: [data[i][2], mName, data[i][4]].filter(Boolean).join(" "), 
+          course: courseVal, 
+          company: compVal,
+          image: convertDriveLink(rawImage) 
+        });
+      }
+    }
+    return { students: students };
+  } catch(e) { return { error: e.message }; }
+}
+
+// ─── ROBUST FORM EXTRACTOR ─────────────────────────────────
+function getFormField(responses, possibleKeys) {
+  for (let key in responses) {
+    let cleanKey = key.trim().toLowerCase();
+    for (let name of possibleKeys) {
+      if (cleanKey === name.toLowerCase()) {
+        return responses[key][0] ? responses[key][0].trim() : "";
+      }
+    }
+  }
+  return "";
+}
+
+function onCadetRegistration(e) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const responses = e.namedValues;
+    
+    const email = getFormField(responses, ["Email Address", "Email"]);
+    const studentNo = getFormField(responses, ["Student Number", "ID Number"]);
+    const fName = getFormField(responses, ["First Name"]);
+    const mNameRaw = getFormField(responses, ["Middle Name", "Middle name", "M.I.", "Middle Initial"]);
+    const lName = getFormField(responses, ["Last Name", "Last name"]);
+    const course = getFormField(responses, ["Course"]);
+    const gmail = getFormField(responses, ["Gmail Address", "Gmail"]);
+    const gName = getFormField(responses, ["Guardian's Full Name", "Guardian Name"]);
+    const gContact = getFormField(responses, ["Guardians Contact Number", "Guardian Contact Number"]);
+    const sex = getFormField(responses, ["Sex", "Gender"]);
+    const mothersName = getFormField(responses, ["Mothers Maiden Name", "Mother Name"]);
+    const fathersName = getFormField(responses, ["Fathers Name", "Father Name"]);
+    const address = getFormField(responses, ["Full Address", "Address"]);
+    const height = getFormField(responses, ["Height"]);
+    const weight = getFormField(responses, ["Weight", "Weight "]);
+    
+    const rawImageUpload = getFormField(responses, ["Please send your formal image for your ID", "Please send your formal image for your ID "]);
+    
+    let imageUrl = ""; 
+    if (rawImageUpload) imageUrl = rawImageUpload.split(",")[0].trim();
+    
+    const displayMName = mNameRaw.toUpperCase() === "N/A" ? "" : mNameRaw;
+    const fullName = [fName, displayMName, lName].filter(Boolean).join(" ");
+
+    if (!email || !studentNo) return;
+    const qrUrl = "https://quickchart.io/qr?size=300&margin=2&text=" + encodeURIComponent(studentNo);
+    const fullDataRow = [email, studentNo, fName, mNameRaw, lName, "", "", course, gmail, gName, gContact, sex, mothersName, fathersName, address, height, weight, qrUrl, imageUrl];
+
+    const masterSheet = ss.getSheetByName("Masterlist") || ss.getSheetByName("MasterList");
+    if (masterSheet) masterSheet.appendRow(fullDataRow);
+    
+    if (sex.toLowerCase() === "male" && ss.getSheetByName("Male")) ss.getSheetByName("Male").appendRow(fullDataRow);
+    else if (sex.toLowerCase() === "female" && ss.getSheetByName("Female")) ss.getSheetByName("Female").appendRow(fullDataRow);
+
+    const htmlBody = `<div style="font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 0 auto; text-align: center; border: 3px solid #1b2015; border-radius: 12px; padding: 30px; background-color: #f4f7f9;"><h2 style="color: #2d3821; margin-bottom: 5px; font-size: 24px;">SCCK ROTC COMMAND CENTER</h2><p style="color: #d4af37; font-weight: bold; letter-spacing: 1px; margin-top: 0;">VISITOR & ATTENDANCE SYSTEM</p><p style="font-size: 16px; color: #1a2c45; margin-top: 25px;">Welcome, <strong>${fullName}</strong>.</p><p style="font-size: 14px; color: #6b7f96;">Your registration was successful. Below is your official assigned QR Code.</p><div style="margin: 30px 0; background: #ffffff; padding: 20px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"><img src="${qrUrl}" alt="Your QR Code" style="width: 250px; height: 250px; display: block;"></div><p style="font-size: 22px; font-weight: bold; color: #1b2015; margin: 10px 0;">ID: ${studentNo}</p></div>`;
+    MailApp.sendEmail({ to: email, subject: "SCCK ROTC - Your Official QR ID", htmlBody: htmlBody });
+    logAction("SYSTEM", "New Cadet Registered", `Auto-segregated ${fullName} (${sex}) and emailed QR code for ID: ${studentNo}`);
+  } catch (error) { logAction("SYSTEM", "Registration Automation Failed", `Failed routing data: ${error.message}`); }
+}
+
+```
+
+---
+
+### 2. The Command Center (`app.html`)
+
+*Updated to hide ID Generator from Super Admin, fix the Edit button logic, and display Course + Company on ID Cards.*
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +756,7 @@
     .tamper-warning { background: #b71c1c; color: white; padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 20px; border: 2px solid #ff5252; box-shadow: 0 0 15px rgba(211,47,47,0.5); display: none; animation: pulse 2s infinite; }
     @keyframes pulse { 0% { box-shadow: 0 0 15px rgba(211,47,47,0.5); } 50% { box-shadow: 0 0 25px rgba(211,47,47,1); } 100% { box-shadow: 0 0 15px rgba(211,47,47,0.5); } }
 
-    /* POST PREVIEW MODAL (Mirrors Landing Page UI) */
+    /* POST PREVIEW MODAL */
     .post-preview-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 50000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
     .post-preview-overlay.show { display: flex; opacity: 1; }
     .post-preview-content { background: var(--card-bg); width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; border-radius: 12px; padding: 40px; border: 2px solid var(--army-gold); position: relative; transform: scale(0.95) translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 20px 60px rgba(0,0,0,0.7); color: var(--text); }
@@ -93,7 +789,6 @@
 
 <div id="mobile-overlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
 
-<!-- CROPPER MODAL -->
 <div class="cropper-modal" id="cropper-modal">
   <div class="cropper-content">
     <h2 style="color: var(--army-gold); margin-bottom: 15px;"><i class="fas fa-crop-alt"></i> ADJUST IMAGE</h2>
@@ -107,7 +802,6 @@
   </div>
 </div>
 
-<!-- POST PREVIEW MODAL -->
 <div class="post-preview-overlay" id="post-preview-modal" onclick="closePostPreview(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()">
     <i class="fas fa-times close-preview-btn" onclick="closePostPreview(true)"></i>
@@ -115,7 +809,6 @@
   </div>
 </div>
 
-<!-- LOGIN SCREEN -->
 <div id="view-login">
   <div class="login-box">
     <div class="login-logo-container">
@@ -139,7 +832,6 @@
   </div>
 </div>
 
-<!-- MAIN DASHBOARD CONTAINER -->
 <div id="app-container" class="app-container" style="display:none;">
   
   <div class="sidebar">
@@ -157,9 +849,10 @@
       <li><button onclick="switchTab('panel-attendance',this)"><i class="fas fa-clipboard-list"></i> <span>ATTENDANCE LOG</span></button></li>
       <li><button onclick="switchTab('panel-masterlist',this)"><i class="fas fa-users"></i> <span>UNIT ROSTER</span></button></li>
       <li><button onclick="switchTab('panel-leaves',this)"><i class="fas fa-calendar-alt"></i> <span>LEAVE REQUESTS</span></button></li>
-      <li><button onclick="switchTab('panel-idcards',this)"><i class="fas fa-id-card"></i> <span>ID GENERATOR</span></button></li>
-      <li><button onclick="switchTab('panel-legacy',this)"><i class="fas fa-landmark"></i> <span>LEGACY MANAGEMENT</span></button></li>
       
+      <li class="admin-only"><button onclick="switchTab('panel-idcards',this)"><i class="fas fa-id-card"></i> <span>ID GENERATOR</span></button></li>
+      
+      <li><button onclick="switchTab('panel-legacy',this)"><i class="fas fa-landmark"></i> <span>LEGACY MANAGEMENT</span></button></li>
       <li><button onclick="switchTab('panel-posts',this)"><i class="fas fa-images"></i> <span>PUBLIC POSTS</span></button></li>
       
       <li class="super-admin-only"><button onclick="switchTab('panel-accounts',this)"><i class="fas fa-user-shield"></i> <span>PERSONNEL ACCESS</span></button></li>
@@ -212,7 +905,6 @@
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2></div></div>
       <div class="dashboard-grid anim-2" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;"><div class="stat-card" style="border-bottom-color:var(--status-yellow); padding: 15px;"><div><div class="stat-val" id="lv-stat-pending" style="color:var(--status-yellow);">--</div><div class="stat-label">Pending</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green); padding: 15px;"><div><div class="stat-val" id="lv-stat-approved" style="color:var(--status-green);">--</div><div class="stat-label">Approved</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red); padding: 15px;"><div><div class="stat-val" id="lv-stat-rejected" style="color:var(--status-red);">--</div><div class="stat-label">Rejected</div></div></div></div>
       
-      <!-- LEAVE SUBMIT SECTION (Hidden for Super Admins) -->
       <div id="admin-leave-submit-section" class="anim-3" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); display:flex; gap:15px; flex-wrap:wrap; align-items:flex-end; display:none;">
         <div style="flex:1; min-width:200px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">SELECT CADET</label><select id="lv-id" style="margin-top:5px; margin-bottom:0;"><option value="">Loading roster...</option></select></div>
         <div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">FROM DATE</label><input type="date" id="lv-from" style="margin-top:5px; margin-bottom:0;"></div>
@@ -224,7 +916,7 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date Range</th><th>Cadet ID</th><th>Name</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaves-table"><tr><td colspan="6" style="text-align:center;">Loading requests...</td></tr></tbody></table></div></div>
     </div>
 
-    <div id="panel-idcards" class="view-panel">
+    <div id="panel-idcards" class="view-panel admin-only">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-id-card"></i> IDENTIFICATION GENERATOR</h2></div></div>
       <div class="anim-2" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap; box-shadow:0 4px 6px rgba(0,0,0,0.02);"><div style="flex:2; min-width:250px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">SELECT CADET:</label><select id="id-target-select" style="width:100%; margin-top:5px; margin-bottom:0;"><option value="ALL">Loading roster...</option></select></div><div style="display:flex; gap:10px;"><button class="btn-success" style="width:auto; padding:14px 20px;" onclick="generateIDPreview()"><i class="fas fa-magic"></i> PREVIEW</button><button class="btn-secondary" style="width:auto; padding:14px 20px;" onclick="printIDCards()"><i class="fas fa-print"></i> PRINT BATCH</button></div></div>
       <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0; font-family:'Inter',sans-serif;">Select a target and generate preview to render Identification Cards.</p></div>
@@ -269,7 +961,6 @@
       </div>
     </div>
 
-    <!-- PUBLIC POSTS PANEL -->
     <div id="panel-posts" class="view-panel">
       <div class="header-bar anim-1">
         <div style="display:flex; align-items:center;">
@@ -335,7 +1026,6 @@
       </div>
     </div>
 
-    <!-- PROFILE PANEL -->
     <div id="panel-profile" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-user-circle"></i> MY PROFILE</h2></div></div>
       <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); max-width: 600px;">
@@ -519,10 +1209,13 @@
     }, (err) => Swal.fire('Error', err.message, 'error'));
   }
 
-  function editPost(id, title, desc) {
+  // BUG FIX: Uses background cache instead of pushing text through HTML string.
+  function editPost(id) {
+    const p = globalAdminPostCache.find(x => x.id === id);
+    if (!p) return;
     editingPostId = id;
-    document.getElementById('post-title').value = title;
-    document.getElementById('post-desc').value = desc;
+    document.getElementById('post-title').value = p.title;
+    document.getElementById('post-desc').value = p.description;
     document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST';
     document.getElementById('btn-cancel-edit').style.display = 'inline-block';
     document.getElementById('admin-draft-section').scrollIntoView({behavior: 'smooth'});
@@ -564,7 +1257,7 @@
           actionBtn = previewBtn;
           if (p.status === 'Revise') {
             feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${p.feedback}</div>`;
-            actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; margin-top:5px;" onclick="editPost('${p.id}', \`${p.title.replace(/`/g, "'")}\`, \`${p.description.replace(/`/g, "'")}\`)"><i class="fas fa-edit"></i> EDIT POST</button>`;
+            actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; margin-top:5px;" onclick="editPost('${p.id}')"><i class="fas fa-edit"></i> EDIT POST</button>`;
           } else if (p.status === 'Rejected') {
             feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${p.feedback}</div>` : '';
           }
@@ -674,12 +1367,14 @@
           
           if (res.role === 'Super Admin') {
             document.getElementById('admin-draft-section').style.display = 'none';
-            document.getElementById('admin-leave-submit-section').style.display = 'none'; // HIDDEN FOR SUPER ADMIN
+            document.getElementById('admin-leave-submit-section').style.display = 'none'; 
             document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none'); // HIDES ID GENERATOR
           } else {
             document.getElementById('admin-draft-section').style.display = 'block';
-            document.getElementById('admin-leave-submit-section').style.display = 'flex'; // VISIBLE FOR ADMIN
+            document.getElementById('admin-leave-submit-section').style.display = 'flex'; 
             document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); // SHOWS ID GENERATOR
           }
 
           switchTab('panel-dashboard', document.querySelectorAll('#sidebar-menu-admin button')[0]);
@@ -717,7 +1412,10 @@
   function submitLeave() { const id=document.getElementById('lv-id').value.trim(), f=document.getElementById('lv-from').value, t=document.getElementById('lv-to').value, x=document.getElementById('lv-reason').value.trim(); if(!id||!f||!t||!x) return Swal.fire('Notice', 'Fill fields.', 'warning'); Swal.fire({ title: 'TRANSMITTING...', didOpen: () => Swal.showLoading() }); apiCall('submitLeaveRequest', { studentId: id, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); ['id','from','to','reason'].forEach(k => document.getElementById(`lv-${k}`).value=''); loadLeavesData(); }, (err) => Swal.fire('Error', err.message, 'error') ); }
   function updateLeave(id, s) { Swal.fire({ title: `Set status to ${s}?`, showCancelButton: true }).then(r => { if(r.isConfirmed) apiCall('updateLeaveStatus', { leaveId: id, status: s, user: session.user, pass: session.pass }, () => loadLeavesData()); }); }
   function fetchStudentsForDropdown() { document.getElementById('id-target-select').innerHTML='<option value="ALL">Fetching data...</option>'; document.getElementById('lv-id').innerHTML='<option value="">Fetching data...</option>'; apiCall('getStudentsForIDCards', { user: session.user, pass: session.pass }, (res) => { globalStudentCache = res.students; let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; res.students.forEach(s => { o+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; lo+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; }); document.getElementById('id-target-select').innerHTML=o; document.getElementById('lv-id').innerHTML=lo; }); }
-  function generateIDPreview() { const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; c.innerHTML=f.map(s => { let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern" id="qr-${s.id}"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; }).join(''); setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015' })), 300); }
+  
+  // FIX: Renders Course and Company accurately.
+  function generateIDPreview() { const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; c.innerHTML=f.map(s => { let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern" id="qr-${s.id}"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; }).join(''); setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015' })), 300); }
+  
   function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
   function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${l.user}</b></td><td><span class="badge badge-action">${l.action}</span></td><td style="color:var(--text-muted); font-size:13px;">${l.details}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }, (err) => document.getElementById('audit-table').innerHTML=`<tr><td colspan="4" style="text-align:center; color:var(--status-red);">${err.message}</td></tr>` ); }
   function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${c.name} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }); }
@@ -733,3 +1431,7 @@
 </script>
 </body>
 </html>
+
+```
+
+*Always remember to deploy your Apps Script as a **New Version**.*
