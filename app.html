@@ -115,10 +115,17 @@
     <div class="login-logo-container"><img src="" class="app-logo" id="system-logo-login" alt="Logo"></div>
     <h2>SCCK ROTC UNIT</h2>
     <p>Command Center & Attendance</p>
+    
     <div style="text-align: left; margin-bottom: 8px;"><label style="font-size: 12px; font-weight: 700; color: var(--text-muted); font-family: 'Inter', sans-serif;">IDENTIFICATION</label></div>
     <input type="text" id="login-user" placeholder="Enter Username" onkeydown="if(event.key==='Enter')performLogin()">
+    
     <div style="text-align: left; margin-bottom: 8px;"><label style="font-size: 12px; font-weight: 700; color: var(--text-muted); font-family: 'Inter', sans-serif;">PASSPHRASE</label></div>
-    <input type="password" id="login-pass" placeholder="Enter Password" onkeydown="if(event.key==='Enter')performLogin()">
+    <!-- UPGRADED PASSWORD INPUT CONTAINER -->
+    <div style="position: relative; margin: 8px 0 16px 0;">
+      <input type="password" id="login-pass" placeholder="Enter Password" onkeydown="if(event.key==='Enter')performLogin()" style="margin: 0; padding-right: 45px;">
+      <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;" onmouseover="this.style.color='var(--army-gold)'" onmouseout="this.style.color='var(--text-muted)'"></i>
+    </div>
+    
     <button onclick="performLogin()" id="btn-login" style="margin-top: 10px;"><i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS</button>
     <div id="login-err" style="color: var(--status-red); margin-top: 15px; font-size: 14px; font-weight: bold; font-family: 'Inter', sans-serif;"></div>
     <div style="margin-top:20px;"><a href="index.html" style="font-size:12px; color:var(--text-muted); text-decoration:none; font-family:'Inter',sans-serif; border-bottom:1px dashed var(--text-muted);">Return to Public Landing Page</a></div>
@@ -345,6 +352,22 @@
   const croppedData = {}; 
   
   let editingPostId = null;
+
+  // --- PASSWORD TOGGLE FUNCTION ---
+  function togglePasswordVisibility() {
+    const passInput = document.getElementById('login-pass');
+    const toggleIcon = document.getElementById('toggle-pass-icon');
+    
+    if (passInput.type === 'password') {
+      passInput.type = 'text';
+      toggleIcon.classList.remove('fa-eye');
+      toggleIcon.classList.add('fa-eye-slash');
+    } else {
+      passInput.type = 'password';
+      toggleIcon.classList.remove('fa-eye-slash');
+      toggleIcon.classList.add('fa-eye');
+    }
+  }
 
   window.onload = () => {
     initCropperInputs();
