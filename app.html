@@ -120,7 +120,6 @@
     <input type="text" id="login-user" placeholder="Enter Username" onkeydown="if(event.key==='Enter')performLogin()">
     
     <div style="text-align: left; margin-bottom: 8px;"><label style="font-size: 12px; font-weight: 700; color: var(--text-muted); font-family: 'Inter', sans-serif;">PASSPHRASE</label></div>
-    <!-- UPGRADED PASSWORD INPUT CONTAINER -->
     <div style="position: relative; margin: 8px 0 16px 0;">
       <input type="password" id="login-pass" placeholder="Enter Password" onkeydown="if(event.key==='Enter')performLogin()" style="margin: 0; padding-right: 45px;">
       <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;" onmouseover="this.style.color='var(--army-gold)'" onmouseout="this.style.color='var(--text-muted)'"></i>
@@ -169,7 +168,17 @@
   <div class="main-content">
 
     <div id="panel-scanner" class="view-panel">
-      <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-qrcode"></i> QR SCANNER TERMINAL</h2></div><button style="width:auto; padding: 10px 15px;" onclick="clearRecentScans()"><i class="fas fa-trash"></i> CLEAR LOG</button></div>
+      <div class="header-bar anim-1">
+        <div style="display:flex; align-items:center;">
+          <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+          <h2><i class="fas fa-qrcode"></i> QR SCANNER TERMINAL</h2>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <!-- 🔥 NEW OFFLINE SYNC BUTTON 🔥 -->
+          <button id="btn-sync-offline" class="btn-warning" style="display:none; width:auto; padding: 10px 15px;" onclick="syncOfflineScans()"><i class="fas fa-wifi"></i> SYNC OFFLINE SCANS (0)</button>
+          <button style="width:auto; padding: 10px 15px;" onclick="clearRecentScans()"><i class="fas fa-trash"></i> CLEAR LOG</button>
+        </div>
+      </div>
       <div class="scanner-dashboard">
         <div class="scanner-left anim-2"><h4 style="margin-bottom:15px; color:var(--text-muted);"><i class="fas fa-camera"></i> OPTICAL INPUT</h4><div class="camera-wrap" style="position: relative; border: 4px solid var(--army-dark); border-radius: 6px; overflow: hidden; background: #000; min-height: 250px;"><video id="qr-video" autoplay playsinline muted style="width: 100%; display: block; object-fit: cover; max-height: 400px;"></video><div class="camera-overlay" id="msg" style="position: absolute; bottom: 10px; left: 10px; right: 10px; text-align: center; background: rgba(232, 240, 254, 0.9); padding: 8px; border-radius: 4px; font-weight: bold; color: var(--army-primary);">CAMERA OFFLINE</div></div><div id="camera-error" style="display:none; text-align:center; padding:25px; color:var(--status-red); background:rgba(211,47,47,0.1); border-radius:6px; margin-top:15px; border:1px dashed var(--status-red);"><i class="fas fa-video-slash" style="font-size:36px; display:block; margin-bottom:10px;"></i><strong id="camera-error-title" style="font-family:'Oswald',sans-serif; font-size:18px;">CAMERA UNAVAILABLE</strong><p id="camera-error-detail" style="margin-top:8px; font-size:13px; font-family:'Inter',sans-serif; color:var(--text);"></p></div><div style="display:flex; gap:10px; margin-top:12px;"><button id="btn-start-cam" class="btn-success" style="flex:1;" onclick="startScanner()">📷 ACTIVATE CAMERA</button><button id="btn-stop-cam" class="btn-danger" style="flex:1; display:none;" onclick="stopScanner(true)">⏹ DEACTIVATE</button></div><div style="margin-top: 10px;"><input type="file" id="qr-file-input" accept="image/*" capture="environment" style="display:none;" onchange="handleQRImageUpload(event)"><button class="btn-warning" style="width:100%;" onclick="document.getElementById('qr-file-input').click()"><i class="fas fa-upload"></i> UPLOAD / CAPTURE QR</button></div></div>
         <div class="scanner-right anim-3"><h4 style="margin-bottom:15px; color:var(--text-muted);"><i class="fas fa-id-badge"></i> PERSONNEL DATA</h4><div class="detail-card"><div class="detail-avatar"><i class="fas fa-user" id="scan-avatar-icon"></i><img id="scan-avatar" src="" alt="Cadet Photo"></div><h3 id="scan-name" style="color:var(--army-primary); margin-bottom:20px; font-size:22px; text-align:center;">AWAITING SCAN...</h3><div class="detail-row"><span class="detail-label">Cadet ID</span><span class="detail-value" id="scan-id">--</span></div><div class="detail-row"><span class="detail-label">Date</span><span class="detail-value" id="scan-date">--</span></div><div class="detail-row"><span class="detail-label">Time In</span><span class="detail-value" id="scan-in" style="color:var(--status-green);">--</span></div><div class="detail-row"><span class="detail-label">Time Out</span><span class="detail-value" id="scan-out" style="color:var(--army-primary);">--</span></div><div class="detail-row"><span class="detail-label">Status</span><span class="detail-value" id="scan-status">--</span></div></div></div>
@@ -185,17 +194,45 @@
     </div>
 
     <div id="panel-attendance" class="view-panel">
-      <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-clipboard-list"></i> DAILY ATTENDANCE LOG</h2></div><button style="width:auto; padding: 10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i> REFRESH</button></div>
+      <div class="header-bar anim-1">
+        <div style="display:flex; align-items:center;">
+          <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+          <h2><i class="fas fa-clipboard-list"></i> DAILY ATTENDANCE LOG</h2>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <!-- 🔥 NEW CSV EXPORT BUTTON 🔥 -->
+          <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToCSV('attendance-table', 'Attendance_Report')"><i class="fas fa-file-csv"></i> EXPORT CSV</button>
+          <button style="width:auto; padding: 10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i> REFRESH</button>
+        </div>
+      </div>
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead><tbody id="attendance-table"><tr><td colspan="6" style="text-align:center;">Loading records...</td></tr></tbody></table></div></div>
     </div>
 
     <div id="panel-masterlist" class="view-panel">
-      <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-users"></i> UNIT ROSTER</h2></div><div style="display:flex; gap:10px; align-items:center;"><input type="text" id="search-masterlist" placeholder="Search cadet name or ID..." style="width:250px; margin:0; padding:10px;" oninput="filterMasterlist()"><button style="width:auto; padding: 10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i></button></div></div>
+      <div class="header-bar anim-1">
+        <div style="display:flex; align-items:center;">
+          <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+          <h2><i class="fas fa-users"></i> UNIT ROSTER</h2>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <input type="text" id="search-masterlist" placeholder="Search cadet name or ID..." style="width:250px; margin:0; padding:10px;" oninput="filterMasterlist()">
+          <!-- 🔥 NEW CSV EXPORT BUTTON 🔥 -->
+          <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToCSV('masterlist-table', 'Unit_Roster')"><i class="fas fa-file-csv"></i> EXPORT CSV</button>
+          <button style="width:auto; padding: 10px 15px;" onclick="loadDashboardData()"><i class="fas fa-sync"></i></button>
+        </div>
+      </div>
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Cadet ID</th><th>Full Name</th><th>Company</th><th>Contact</th><th>Actions</th></tr></thead><tbody id="masterlist-table"><tr><td colspan="5" style="text-align:center;">Loading roster...</td></tr></tbody></table></div></div>
     </div>
 
     <div id="panel-leaves" class="view-panel">
-      <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2></div></div>
+      <div class="header-bar anim-1">
+        <div style="display:flex; align-items:center;">
+          <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+          <h2><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2>
+        </div>
+        <!-- 🔥 NEW CSV EXPORT BUTTON 🔥 -->
+        <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToCSV('leaves-table', 'Leave_Requests')"><i class="fas fa-file-csv"></i> EXPORT CSV</button>
+      </div>
       <div class="dashboard-grid anim-2" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;"><div class="stat-card" style="border-bottom-color:var(--status-yellow); padding: 15px;"><div><div class="stat-val" id="lv-stat-pending" style="color:var(--status-yellow);">--</div><div class="stat-label">Pending</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green); padding: 15px;"><div><div class="stat-val" id="lv-stat-approved" style="color:var(--status-green);">--</div><div class="stat-label">Approved</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red); padding: 15px;"><div><div class="stat-val" id="lv-stat-rejected" style="color:var(--status-red);">--</div><div class="stat-label">Rejected</div></div></div></div>
       
       <div id="admin-leave-submit-section" class="anim-3" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); display:none; gap:15px; flex-wrap:wrap; align-items:flex-end;">
@@ -353,11 +390,42 @@
   
   let editingPostId = null;
 
+  // --- HTML EXPORT TO CSV MODULE ---
+  function exportTableToCSV(tableId, filename) {
+    let csv = [];
+    let rows = document.querySelectorAll(`#${tableId} tr`);
+    if(rows.length === 0) return Swal.fire('Notice', 'No data available to export.', 'info');
+    
+    for (let i = 0; i < rows.length; i++) {
+      let row = [], cols = rows[i].querySelectorAll("td, th");
+      for (let j = 0; j < cols.length; j++) {
+        // Strip out the "Actions" or hidden button columns automatically if they have buttons
+        if(cols[j].querySelector('button') && j === cols.length - 1) continue; 
+        
+        // Clean text and handle commas
+        let data = cols[j].innerText.replace(/"/g, '""');
+        row.push('"' + data + '"');
+      }
+      csv.push(row.join(","));
+    }
+    downloadCSV(csv.join("\n"), filename + ".csv");
+  }
+
+  function downloadCSV(csv, filename) {
+    let csvFile = new Blob([csv], {type: "text/csv"});
+    let downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
   // --- PASSWORD TOGGLE FUNCTION ---
   function togglePasswordVisibility() {
     const passInput = document.getElementById('login-pass');
     const toggleIcon = document.getElementById('toggle-pass-icon');
-    
     if (passInput.type === 'password') {
       passInput.type = 'text';
       toggleIcon.classList.remove('fa-eye');
@@ -369,13 +437,56 @@
     }
   }
 
+  // --- INITIALIZATION & PERSISTENT LOGIN ---
   window.onload = () => {
     initCropperInputs();
     apiCall('getSettings', {}, (res) => {
       if(res.logoUrl) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = res.logoUrl; logoImg.style.display = 'block'; }
       if(res.bgUrl) document.getElementById('view-login').style.backgroundImage = `url('${res.bgUrl}')`;
     });
+
+    // Check for active persistent session
+    const savedSession = localStorage.getItem('scck_session');
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession);
+        if (parsed.expiry > Date.now()) {
+          session = { user: parsed.user, pass: parsed.pass, role: parsed.role };
+          document.getElementById('view-login').style.display = 'none'; 
+          document.getElementById('app-container').style.display = 'flex';
+          loadUserProfile();
+          setupRoleUI(parsed.role);
+          updateOfflineSyncUI();
+        } else {
+          localStorage.removeItem('scck_session');
+        }
+      } catch(e) {}
+    }
   };
+
+  function setupRoleUI(role) {
+    if (role === 'Super Admin' || role === 'Admin') {
+      document.getElementById('sidebar-menu-admin').style.display = 'block'; 
+      document.getElementById('sidebar-menu-scanner').style.display = 'none';
+      
+      if (role === 'Super Admin') {
+        document.getElementById('admin-draft-section').style.display = 'none';
+        document.getElementById('admin-leave-submit-section').style.display = 'none'; 
+        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none'); 
+      } else {
+        document.getElementById('admin-draft-section').style.display = 'block';
+        document.getElementById('admin-leave-submit-section').style.display = 'flex'; 
+        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); 
+      }
+      switchTab('panel-dashboard', document.querySelectorAll('#sidebar-menu-admin button')[0]);
+    } else {
+      document.getElementById('sidebar-menu-admin').style.display = 'none'; 
+      document.getElementById('sidebar-menu-scanner').style.display = 'block'; 
+      switchTab('panel-scanner', document.querySelector('#sidebar-menu-scanner button'));
+    }
+  }
 
   function initCropperInputs() {
     const inputs = ['prof-image-file', 'set-logo-file', 'set-nav-logo-file', 'set-bg-file', 'leg-class-logo', 'leg-off-photo'];
@@ -654,7 +765,7 @@
     }
   }
 
-  // ─── LOGIN & HIERARCHY LOGIC ───
+  // ─── LOGIN LOGIC & LOCAL SESSION ───
   function performLogin() {
     const u = document.getElementById('login-user').value.trim(), p = document.getElementById('login-pass').value;
     const btn = document.getElementById('btn-login'), err = document.getElementById('login-err');
@@ -665,37 +776,57 @@
       (res) => {
         btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS';
         session = { user: u, pass: p, role: res.role };
+        
+        // 🔥 MODULE 2: PERSISTENT LOGIN STORAGE (Valid for 12 hours)
+        localStorage.setItem('scck_session', JSON.stringify({ user: u, pass: p, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
+        
         document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
         document.getElementById('view-login').style.display = 'none'; document.getElementById('app-container').style.display = 'flex';
         loadUserProfile();
-        
-        if (res.role === 'Super Admin' || res.role === 'Admin') {
-          document.getElementById('sidebar-menu-admin').style.display = 'block'; 
-          document.getElementById('sidebar-menu-scanner').style.display = 'none';
-          
-          if (res.role === 'Super Admin') {
-            document.getElementById('admin-draft-section').style.display = 'none';
-            document.getElementById('admin-leave-submit-section').style.display = 'none'; 
-            document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block');
-            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none'); 
-          } else {
-            document.getElementById('admin-draft-section').style.display = 'block';
-            document.getElementById('admin-leave-submit-section').style.display = 'flex'; 
-            document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); 
-          }
-
-          switchTab('panel-dashboard', document.querySelectorAll('#sidebar-menu-admin button')[0]);
-        } else {
-          document.getElementById('sidebar-menu-admin').style.display = 'none'; 
-          document.getElementById('sidebar-menu-scanner').style.display = 'block'; 
-          switchTab('panel-scanner', document.querySelector('#sidebar-menu-scanner button'));
-        }
+        setupRoleUI(res.role);
+        updateOfflineSyncUI();
       },
       (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; err.innerText = "Error: " + e.message; }
     );
   }
-  function logout() { session = {}; stopScanner(false); document.getElementById('app-container').style.display = 'none'; document.getElementById('view-login').style.display = 'flex'; }
+  
+  function logout() { 
+    session = {}; 
+    localStorage.removeItem('scck_session'); // Clear token
+    stopScanner(false); 
+    document.getElementById('app-container').style.display = 'none'; 
+    document.getElementById('view-login').style.display = 'flex'; 
+  }
+
+  // ─── OFFLINE SCANNING LOGIC ───
+  function updateOfflineSyncUI() {
+    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
+    const btn = document.getElementById('btn-sync-offline');
+    if (btn) {
+      if (offlineScans.length > 0) {
+        btn.style.display = 'block';
+        btn.innerHTML = `<i class="fas fa-wifi"></i> SYNC OFFLINE SCANS (${offlineScans.length})`;
+      } else {
+        btn.style.display = 'none';
+      }
+    }
+  }
+
+  function syncOfflineScans() {
+    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
+    if (offlineScans.length === 0) return;
+    
+    Swal.fire({ title: 'SYNCING DATA...', html: `Uploading ${offlineScans.length} scans...`, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    
+    apiCall('bulkMarkAttendance', { scans: offlineScans, user: session.user, pass: session.pass }, (res) => {
+       localStorage.removeItem('scck_offline_scans');
+       updateOfflineSyncUI();
+       Swal.fire('Synced!', `Successfully uploaded offline records.`, 'success');
+       if(document.getElementById('panel-dashboard').classList.contains('active-panel')) loadDashboardData();
+    }, (err) => {
+       Swal.fire('Sync Failed', err.message, 'error');
+    });
+  }
 
   // ─── REMAINING SYSTEM FUNCTIONS ───
   function showCameraError(t, d) { document.getElementById('qr-video').style.display='none'; document.getElementById('camera-error').style.display='block'; document.getElementById('camera-error-title').innerText=t; document.getElementById('camera-error-detail').innerHTML=d; document.getElementById('msg').innerText='CAMERA FAILED'; document.getElementById('btn-start-cam').style.display='block'; document.getElementById('btn-stop-cam').style.display='none'; }
@@ -705,7 +836,38 @@
   function handleQRImageUpload(event) { const f = event.target.files[0]; if(!f) return; const m = document.getElementById('msg'); m.innerHTML='<i class="fas fa-spinner fa-spin"></i> ANALYZING IMAGE...'; m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; QrScanner.scanImage(f, { returnDetailedScanResult: true }).then(r => onScanSuccess(r.data)).catch(e => { Swal.fire('Scan Failed', 'No valid QR code found.', 'error'); m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }); event.target.value=''; }
   function clearRecentScans() { document.getElementById('recent-scans').innerHTML=''; recentScanCount=0; document.getElementById('scan-count').innerText='0'; }
   
-  function onScanSuccess(text) { if(isScanning) return; isScanning=true; const m=document.getElementById('msg'); m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='TIME OUT'?'badge-timeout':'badge-present'); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); }
+  function onScanSuccess(text) { 
+    if(isScanning) return; isScanning=true; 
+    const m=document.getElementById('msg'); 
+    
+    // 🔥 MODULE 3: OFFLINE SCAN DETECTION
+    if (!navigator.onLine) {
+      let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
+      const now = new Date();
+      // Format to match exact server layout
+      const offDate = ('0' + (now.getMonth() + 1)).slice(-2) + '/' + ('0' + now.getDate()).slice(-2) + '/' + now.getFullYear();
+      let hours = now.getHours();
+      let ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      let mins = ('0' + now.getMinutes()).slice(-2);
+      let secs = ('0' + now.getSeconds()).slice(-2);
+      let offTime = ('0' + hours).slice(-2) + ':' + mins + ':' + secs + ' ' + ampm;
+      
+      offlineScans.push({ scannedData: text, offlineDate: offDate, offlineTime: offTime });
+      localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
+      
+      m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff';
+      m.innerHTML='<i class="fas fa-save"></i> SAVED OFFLINE';
+      document.getElementById('scan-name').innerText='OFFLINE SCAN CACHED';
+      document.getElementById('scan-id').innerText=text;
+      
+      updateOfflineSyncUI();
+      setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 2000);
+      return;
+    }
+
+    m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='TIME OUT'?'badge-timeout':'badge-present'); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); }
 
   function loadDashboardData() { if(session.role!=='Admin'&&session.role!=='Super Admin') return; apiCall('getAdminDashboardData', { user: session.user, pass: session.pass }, (res) => { document.getElementById('admin-active-day').innerText=res.activeDay; const t=res.stats.total||1, p=res.stats.present, l=res.stats.late, a=res.stats.absent; document.getElementById('stat-total').innerText=res.stats.total; document.getElementById('stat-present').innerText=p; document.getElementById('stat-present-pct').innerText=Math.round((p/t)*100)+'%'; document.getElementById('stat-late').innerText=l; document.getElementById('stat-late-pct').innerText=Math.round((l/t)*100)+'%'; document.getElementById('stat-absent').innerText=a; document.getElementById('stat-absent-pct').innerText=Math.round((a/t)*100)+'%'; renderDonut(p,l,a); if(res.weeklyData) renderWeekly(res.weeklyData); let ah=''; res.attendance.forEach(r => { let bc=r.status==='Present'?'badge-present':(r.status==='Late'?'badge-late':'badge-absent'); let tc=r.status==='Late'?'var(--status-yellow)':'var(--status-green)'; ah+=`<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.course}</td><td style="color:${tc}; font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; }); document.getElementById('attendance-table').innerHTML=ah||'<tr><td colspan="6" style="text-align:center;">No records.</td></tr>'; let mh=''; res.masterlist.forEach(r => { mh+=`<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.company}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-info" onclick="showQR('${r.id}','${r.name}')"><i class="fas fa-qrcode"></i></button><button class="btn-icon btn-warning" onclick="editStudent('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button><button class="btn-icon btn-danger" onclick="deleteStudentPrompt('${r.id}')"><i class="fas fa-trash"></i></button></td></tr>`; }); document.getElementById('masterlist-table').innerHTML=mh||'<tr><td colspan="5" style="text-align:center;">No cadets found.</td></tr>'; let ach=''; for(let i=1; i<res.accounts.length; i++) { let r=res.accounts[i]; let btn=r[3]==='Active'?`<button class="btn-danger" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${r[0]}','Disabled')">REVOKE</button>`:`<button class="btn-success" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${r[0]}','Active')">GRANT</button>`; let sb=r[3]==='Active'?'<span class="badge badge-present">ACTIVE</span>':'<span class="badge badge-absent">REVOKED</span>'; ach+=`<tr><td>${r[0]}</td><td><b>${r[2]}</b></td><td>${sb}</td><td>${btn}</td></tr>`; } document.getElementById('accounts-table').innerHTML=ach||'<tr><td colspan="4" style="text-align:center;">No accounts.</td></tr>'; }, (err) => Swal.fire('Error', err.message, 'error') ); }
   function renderDonut(p,l,a) { const ctx=document.getElementById('chart-donut').getContext('2d'); if(donutChart) donutChart.destroy(); donutChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Present','Late','Absent'], datasets: [{ data: [p,l,a], backgroundColor: ['#388e3c','#f57f17','#d32f2f'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: isDarkMode?'#e0e0e0':'#2c3539', font: { family: 'Inter', size: 13, weight: '600' } } } } } }); }
