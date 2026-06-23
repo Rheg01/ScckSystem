@@ -179,13 +179,11 @@
     let legacyCache = [];
     let postCache = [];
 
-    // --- HASHTAG PARSER ---
     function formatHashtags(text) {
       if (!text) return "";
       return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>');
     }
 
-    // --- ZERO-LATENCY BRANDING CACHE APPLICATION ---
     function applyBranding(branding) {
       const gateLogo = document.getElementById('gate-logo');
       if(gateLogo && branding.logoUrl) gateLogo.src = branding.logoUrl;
@@ -203,11 +201,17 @@
       }
     }
 
+    // --- ZERO-LATENCY INSTANT RENDERING (POSTS & LEGACY) ---
     const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
     if (cachedBranding) applyBranding(cachedBranding);
 
+    const cachedPosts = JSON.parse(localStorage.getItem('scck_posts') || 'null');
+    if (cachedPosts) { postCache = cachedPosts; renderPostGrid(cachedPosts); }
 
-    // --- THEME ENGINE ---
+    const cachedLegacy = JSON.parse(localStorage.getItem('scck_legacy') || 'null');
+    if (cachedLegacy) { legacyCache = cachedLegacy; renderLegacyGrid(cachedLegacy); }
+
+
     function toggleTheme() {
       const isLight = document.body.classList.toggle('light-mode');
       const icon = document.getElementById('theme-icon');
@@ -238,28 +242,26 @@
     }
 
     window.onload = () => {
+      // Background Sync for Data
       apiCall('getLegacyData', {}, (data) => {
         if (data.branding) {
           localStorage.setItem('scck_branding', JSON.stringify(data.branding));
           applyBranding(data.branding);
         }
-
         if (data.classes && data.classes.length > 0) { 
+          localStorage.setItem('scck_legacy', JSON.stringify(data.classes)); // Update Cache
           legacyCache = data.classes; 
           renderLegacyGrid(data.classes); 
-        } else {
-          document.getElementById('legacy-grid-container').innerHTML = '<p style="text-align:center; width:100%; color:var(--text-muted);">No legacy records available.</p>';
         }
-      }, (err) => { document.getElementById('legacy-grid-container').innerHTML = '<p style="text-align:center; width:100%; color:#ef5350;">Failed to sync with command database.</p>'; });
+      });
 
       apiCall('getApprovedPosts', {}, (data) => {
         if (data.success && data.posts && data.posts.length > 0) { 
+          localStorage.setItem('scck_posts', JSON.stringify(data.posts)); // Update Cache
           postCache = data.posts; 
           renderPostGrid(data.posts); 
-        } else {
-          document.getElementById('post-grid-container').innerHTML = '<p style="text-align:center; width:100%; color:var(--text-muted);">No public activities posted yet.</p>';
         }
-      }, (err) => { document.getElementById('post-grid-container').innerHTML = '<p style="text-align:center; width:100%; color:#ef5350;">Failed to load activities.</p>'; });
+      });
     };
 
     function renderLegacyGrid(classes) {
@@ -280,7 +282,6 @@
         const img = coverImg ? `<div class="post-img-container"><img src="${coverImg}" class="post-img"></div>` : `<div class="post-img-container" style="display:flex; align-items:center; justify-content:center; background:#111;"><i class="fas fa-camera" style="font-size:40px; color:#333;"></i></div>`;
         const iconBadge = p.image && p.image.split(',').length > 1 ? `<div style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.75); color:white; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; backdrop-filter:blur(4px); z-index:2;"><i class="fas fa-images"></i> ${p.image.split(',').length}</div>` : '';
         
-        // 🔥 INJECTING HASHTAG HIGHLIGHTS 🔥
         const styledDesc = formatHashtags(p.description);
 
         html += `
@@ -313,7 +314,6 @@
         carouselHtml = `<div class="carousel-container">${slides}${btns}${dots}</div>`;
       }
       
-      // 🔥 INJECTING HASHTAG HIGHLIGHTS 🔥
       const styledDesc = formatHashtags(p.description);
 
       document.getElementById('modal-dynamic-content').innerHTML = `${carouselHtml}<div class="full-post-date">${p.date}</div><h2 class="full-post-title">${p.title}</h2><div class="full-post-desc">${styledDesc}</div>`;
