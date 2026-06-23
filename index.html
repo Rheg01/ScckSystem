@@ -35,7 +35,7 @@
     .gate-glow { position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 250px; height: 250px; background: radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 70%); z-index: 0; }
     .gate-content { position: relative; z-index: 1; }
     
-    .gate-logo { width: 120px; height: 120px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5)); animation: float 6s ease-in-out infinite; display: inline-block;}
+    .gate-logo { width: 120px; height: 120px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5)); animation: float 6s ease-in-out infinite; display: inline-block; transition: opacity 0.5s ease;}
     @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
     
     .gate-title { font-size: 38px; color: var(--army-gold); margin-bottom: 15px; letter-spacing: 2px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); line-height: 1.1; }
@@ -54,7 +54,7 @@
     body.light-mode .header { background: rgba(27, 32, 21, 0.95); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
     
     .header .logo-group { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-    .header .logo-group img { width: 50px; height: 50px; object-fit: contain; }
+    .header .logo-group img { width: 50px; height: 50px; object-fit: contain; transition: opacity 0.5s ease; }
     .logo-text { display: flex; flex-direction: column; justify-content: center; }
     .logo-text .line1 { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; }
     .logo-text .line2 { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.5px; margin-top: -2px; }
@@ -156,7 +156,6 @@
 </head>
 <body>
 
-  <!-- PHASE 1: THE GATE ENTRANCE -->
   <div id="gate-screen">
     <div class="gate-card">
       <div class="gate-glow"></div>
@@ -169,7 +168,6 @@
     </div>
   </div>
 
-  <!-- PHASE 2 & 3: THE MAIN SITE CONTENT -->
   <div id="main-wrapper">
     <header class="header" id="navbar">
       <a href="#" class="logo-group">
@@ -206,12 +204,38 @@
     let legacyCache = [];
     let postCache = [];
 
+    // --- ZERO-LATENCY BRANDING CACHE APPLICATION ---
+    function applyBranding(branding) {
+      const gateLogo = document.getElementById('gate-logo');
+      if(gateLogo && branding.logoUrl) gateLogo.src = branding.logoUrl;
+
+      const navLogo = document.getElementById('nav-logo');
+      if(navLogo && branding.navLogoUrl) navLogo.src = branding.navLogoUrl;
+
+      const gateScreen = document.getElementById('gate-screen');
+      if(gateScreen && branding.bgUrl) {
+        if (!document.body.classList.contains('light-mode')) {
+            gateScreen.style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${branding.bgUrl}')`;
+            gateScreen.style.backgroundSize = 'cover';
+            gateScreen.style.backgroundPosition = 'center';
+        }
+      }
+    }
+
+    // Check localStorage immediately upon script execution for instant load
+    const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
+    if (cachedBranding) applyBranding(cachedBranding);
+
+
     // --- THEME ENGINE ---
     function toggleTheme() {
       const isLight = document.body.classList.toggle('light-mode');
       const icon = document.getElementById('theme-icon');
       icon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
       localStorage.setItem('scck_theme', isLight ? 'light' : 'dark');
+      
+      // Re-apply background logic since light mode kills the background image
+      if (cachedBranding) applyBranding(cachedBranding);
     }
 
     if (localStorage.getItem('scck_theme') === 'light') {
@@ -222,12 +246,7 @@
     // --- CINEMATIC ENTRANCE ---
     function enterSite() {
       document.getElementById('gate-screen').classList.add('unlocked');
-      
-      // Ensures the main content becomes visible correctly without clipping
-      setTimeout(() => {
-        document.getElementById('gate-screen').style.display = 'none';
-      }, 800);
-
+      setTimeout(() => { document.getElementById('gate-screen').style.display = 'none'; }, 800);
       document.getElementById('main-wrapper').classList.add('unlocked');
       document.getElementById('navbar').classList.add('unlocked');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -245,21 +264,8 @@
     window.onload = () => {
       apiCall('getLegacyData', {}, (data) => {
         if (data.branding) {
-          const gateLogo = document.getElementById('gate-logo');
-          if(gateLogo && data.branding.logoUrl) gateLogo.src = data.branding.logoUrl;
-
-          const navLogo = document.getElementById('nav-logo');
-          if(navLogo && data.branding.navLogoUrl) navLogo.src = data.branding.navLogoUrl;
-
-          const gateScreen = document.getElementById('gate-screen');
-          if(gateScreen && data.branding.bgUrl) {
-            // Apply the custom background image ONLY to the Dark Mode Gate
-            if (!document.body.classList.contains('light-mode')) {
-                gateScreen.style.backgroundImage = `linear-gradient(rgba(10, 12, 8, 0.7), rgba(10, 12, 8, 0.7)), url('${data.branding.bgUrl}')`;
-                gateScreen.style.backgroundSize = 'cover';
-                gateScreen.style.backgroundPosition = 'center';
-            }
-          }
+          localStorage.setItem('scck_branding', JSON.stringify(data.branding));
+          applyBranding(data.branding); // Silent background update
         }
 
         if (data.classes && data.classes.length > 0) { 
