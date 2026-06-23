@@ -127,7 +127,6 @@
   </div>
 </div>
 
-<!-- 🔥 NEW: DISCIPLINE LEDGER MODAL 🔥 -->
 <div class="post-preview-overlay" id="discipline-modal" onclick="closeDisciplineModal(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()" style="max-width: 600px; padding: 30px;">
     <i class="fas fa-times close-preview-btn" onclick="closeDisciplineModal(true)"></i>
@@ -455,6 +454,12 @@
   let editingPostId = null;
   let currentDiscStudentId = null;
 
+  // --- HASHTAG PARSER ---
+  function formatHashtags(text) {
+    if (!text) return "";
+    return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>');
+  }
+
   function exportTableToCSV(tableId, filename) {
     let csv = [];
     let rows = document.querySelectorAll(`#${tableId} tr`);
@@ -712,71 +717,96 @@
     document.getElementById('btn-cancel-edit').style.display = 'none';
   }
 
+  // --- SEPARATED RENDER FUNCTION FOR OPTIMISTIC UI ---
+  function renderAdminPostsHTML() {
+    let html = '';
+    globalAdminPostCache.forEach(p => {
+      let actionBtn = '';
+      let feedbackHtml = '';
+      let previewBtn = `<button class="btn-info" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="previewPost('${p.id}')"><i class="fas fa-eye"></i> PREVIEW</button>`;
+
+      if (session.role === 'Super Admin') {
+        if (p.status === 'Pending' || p.status === 'Revise') {
+          feedbackHtml = `<textarea id="feedback-${p.id}" placeholder="Type instructions or corrections here..." style="width:100%; height:60px; margin-top:10px; font-size:12px; padding:8px;">${p.feedback || ''}</textarea>`;
+          actionBtn = `
+            ${previewBtn}
+            <button class="btn-success" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="updatePost('${p.id}','Approved')">APPROVE</button>
+            <button class="btn-warning" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="updatePost('${p.id}','Revise')">REVISE</button>
+            <button class="btn-danger" style="padding:6px 10px; font-size:11px; width:100%;" onclick="updatePost('${p.id}','Rejected')">REJECT</button>
+          `;
+        } else {
+          actionBtn = previewBtn;
+          feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px;"><b>Notes:</b> ${p.feedback}</div>` : '';
+        }
+      } else if (session.role === 'Admin') {
+        actionBtn = previewBtn;
+        if (p.status === 'Revise') {
+          feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${p.feedback}</div>`;
+          actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; margin-top:5px;" onclick="editPost('${p.id}')"><i class="fas fa-edit"></i> EDIT POST</button>`;
+        } else if (p.status === 'Rejected') {
+          feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${p.feedback}</div>` : '';
+        }
+      }
+
+      let badgeClass = p.status === 'Approved' ? 'badge-present' : (p.status === 'Rejected' ? 'badge-absent' : (p.status === 'Revise' ? 'badge-late' : 'badge-timeout'));
+      let firstImg = p.image ? p.image.split(',')[0] : '';
+      let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : 'No Image';
+      
+      // 🔥 INJECTING HASHTAG HIGHLIGHTS 🔥
+      let styledDesc = formatHashtags(p.description);
+
+      html += `<tr>
+        <td style="font-size:12px; width:80px;">${p.date}</td>
+        <td style="width:90px;">${imgHtml}</td>
+        <td><b>${p.title}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${styledDesc}</span>${feedbackHtml}</td>
+        <td style="width:90px;"><span class="badge ${badgeClass}">${p.status}</span></td>
+        <td style="width:100px;">${actionBtn}</td>
+      </tr>`;
+    });
+    document.getElementById('posts-table').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No posts found.</td></tr>';
+  }
+
   function loadPosts() {
     document.getElementById('posts-table').innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
     apiCall('getPostsAdmin', { user: session.user, pass: session.pass }, (res) => {
       globalAdminPostCache = res.posts; 
-      let html = '';
-      res.posts.forEach(p => {
-        let actionBtn = '';
-        let feedbackHtml = '';
-        let previewBtn = `<button class="btn-info" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="previewPost('${p.id}')"><i class="fas fa-eye"></i> PREVIEW</button>`;
-
-        if (session.role === 'Super Admin') {
-          if (p.status === 'Pending' || p.status === 'Revise') {
-            feedbackHtml = `<textarea id="feedback-${p.id}" placeholder="Type instructions or corrections here..." style="width:100%; height:60px; margin-top:10px; font-size:12px; padding:8px;">${p.feedback || ''}</textarea>`;
-            actionBtn = `
-              ${previewBtn}
-              <button class="btn-success" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="updatePost('${p.id}','Approved')">APPROVE</button>
-              <button class="btn-warning" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="updatePost('${p.id}','Revise')">REVISE</button>
-              <button class="btn-danger" style="padding:6px 10px; font-size:11px; width:100%;" onclick="updatePost('${p.id}','Rejected')">REJECT</button>
-            `;
-          } else {
-            actionBtn = previewBtn;
-            feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px;"><b>Notes:</b> ${p.feedback}</div>` : '';
-          }
-        } else if (session.role === 'Admin') {
-          actionBtn = previewBtn;
-          if (p.status === 'Revise') {
-            feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${p.feedback}</div>`;
-            actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; margin-top:5px;" onclick="editPost('${p.id}')"><i class="fas fa-edit"></i> EDIT POST</button>`;
-          } else if (p.status === 'Rejected') {
-            feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${p.feedback}</div>` : '';
-          }
-        }
-
-        let badgeClass = p.status === 'Approved' ? 'badge-present' : (p.status === 'Rejected' ? 'badge-absent' : (p.status === 'Revise' ? 'badge-late' : 'badge-timeout'));
-        let firstImg = p.image ? p.image.split(',')[0] : '';
-        let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : 'No Image';
-        
-        html += `<tr>
-          <td style="font-size:12px; width:80px;">${p.date}</td>
-          <td style="width:90px;">${imgHtml}</td>
-          <td><b>${p.title}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${p.description}</span>${feedbackHtml}</td>
-          <td style="width:90px;"><span class="badge ${badgeClass}">${p.status}</span></td>
-          <td style="width:100px;">${actionBtn}</td>
-        </tr>`;
-      });
-      document.getElementById('posts-table').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No posts found.</td></tr>';
+      renderAdminPostsHTML();
     });
   }
 
+  // 🔥 OPTIMISTIC UI UPDATE 🔥
   function updatePost(id, status) {
-    let feedback = '';
-    if (document.getElementById(`feedback-${id}`)) {
-      feedback = document.getElementById(`feedback-${id}`).value.trim();
-    }
-    
+    let feedback = document.getElementById(`feedback-${id}`) ? document.getElementById(`feedback-${id}`).value.trim() : '';
     if (status === 'Revise' && !feedback) {
       return Swal.fire('Notice', 'Please provide correction instructions for the Admin before clicking Revise.', 'warning');
     }
 
     Swal.fire({ title: `Set status to ${status}?`, showCancelButton: true, confirmButtonText: 'CONFIRM' }).then(r => {
       if (r.isConfirmed) {
-        Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() });
-        apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, pass: session.pass }, () => {
-          Swal.fire('Success', `Post marked as ${status}.`, 'success');
+        
+        // 1. Instantly Update Local Cache
+        const postIndex = globalAdminPostCache.findIndex(x => x.id === id);
+        if(postIndex !== -1) {
+            globalAdminPostCache[postIndex].status = status;
+            globalAdminPostCache[postIndex].feedback = feedback;
+        }
+
+        // 2. Instantly Re-render Table
+        renderAdminPostsHTML();
+
+        // 3. Show non-blocking toast
+        Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Syncing to database...', showConfirmButton: false, timer: 1500 });
+
+        // 4. Send API call silently
+        apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, pass: session.pass }, 
+        () => {
+          // Silent success
+          Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000 });
+        }, 
+        () => {
+          // Revert on fail
           loadPosts();
+          Swal.fire('Error', 'Failed to update database. Reverting changes.', 'error');
         });
       }
     });
@@ -795,11 +825,15 @@
       let dots = images.length > 1 ? `<div class="preview-carousel-dots">` + images.map((_, i) => `<span class="preview-dot ${i === 0 ? 'active' : ''}" id="prev-dot-${i}" onclick="setPreviewSlide(${i}, ${images.length})"></span>`).join('') + `</div>` : '';
       carouselHtml = `<div class="preview-carousel-container">${slides}${btns}${dots}</div>`;
     }
+
+    // 🔥 INJECTING HASHTAG HIGHLIGHTS 🔥
+    let styledDesc = formatHashtags(p.description);
+
     const html = `
       ${carouselHtml}
       <div class="preview-post-date">${p.date}</div>
       <h2 class="preview-post-title">${p.title}</h2>
-      <div class="preview-post-desc">${p.description}</div>
+      <div class="preview-post-desc">${styledDesc}</div>
     `;
     document.getElementById('preview-dynamic-content').innerHTML = html;
     const modal = document.getElementById('post-preview-modal');
@@ -980,9 +1014,8 @@
     Swal.fire({ title: 'RECORDING...', didOpen: () => Swal.showLoading() });
     apiCall('addDiscipline', { studentId: currentDiscStudentId, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => {
       Swal.fire('Success', 'Discipline action recorded.', 'success');
-      loadDashboardData(); // Refreshes roster
-      loadDisciplineHistory(currentDiscStudentId); // Refreshes modal table
-      // Update score in modal instantly for UX
+      loadDashboardData(); 
+      loadDisciplineHistory(currentDiscStudentId); 
       let currScore = parseInt(document.getElementById('disc-cadet-score').innerText);
       document.getElementById('disc-cadet-score').innerText = currScore + points;
     }, (err) => Swal.fire('Error', err.message, 'error'));
