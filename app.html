@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,8 +27,8 @@
     .login-logo-container { width: 100px; height: 100px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; } .app-logo { max-width: 100%; max-height: 100%; object-fit: contain; display: none; transition: opacity 0.5s ease; } 
     .login-box h2 { color: var(--army-primary); font-size: 26px; margin-bottom: 5px; } .login-box p { color: var(--text-muted); font-size: 13px; margin-bottom: 25px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
     input[type="text"], input[type="password"], input[type="number"], input[type="date"], select, textarea { width: 100%; padding: 14px; margin: 8px 0 16px 0; border: 2px solid var(--border); border-radius: 4px; font-size: 14px; outline: none; background: var(--bg); color: var(--text); transition: all 0.3s; font-family: 'Inter', sans-serif; resize: vertical; } input:focus, select:focus, textarea:focus { border-color: var(--army-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); } input[type="file"] { width: 100%; padding: 10px; margin: 8px 0 16px 0; border: 2px dashed var(--border); border-radius: 4px; font-size: 13px; color: var(--text-muted); background: var(--light); cursor: pointer; }
-    button { background: var(--army-primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; } button:hover { background: var(--army-light); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); } button:active { transform: translateY(1px); box-shadow: none; }
-    .btn-danger { background: var(--status-red); } .btn-danger:hover { background: #b71c1c; } .btn-success { background: var(--status-green); } .btn-success:hover { background: #2e7d32; } .btn-warning { background: var(--status-yellow); color: #fff; } .btn-warning:hover { background: #f9a825; } .btn-secondary { background: #607d8b; color: white; } .btn-secondary:hover { background: #455a64; } .btn-info { background: #0288d1; color: white; } .btn-info:hover { background: #01579b; }
+    button { background: var(--army-primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; } button:hover:not(:disabled) { background: var(--army-light); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); } button:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
+    .btn-danger { background: var(--status-red); } .btn-danger:hover:not(:disabled) { background: #b71c1c; } .btn-success { background: var(--status-green); } .btn-success:hover:not(:disabled) { background: #2e7d32; } .btn-warning { background: var(--status-yellow); color: #fff; } .btn-warning:hover:not(:disabled) { background: #f9a825; } .btn-secondary { background: #607d8b; color: white; } .btn-secondary:hover:not(:disabled) { background: #455a64; } .btn-info { background: #0288d1; color: white; } .btn-info:hover:not(:disabled) { background: #01579b; }
     
     .app-container { display: flex; height: 100vh; } .sidebar { width: 260px; background: var(--army-dark); color: #e0e0e0; display: flex; flex-direction: column; transition: left 0.3s ease; border-right: 2px solid var(--army-gold); z-index: 10000; } .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); } .sidebar-header h3 { color: var(--army-gold); font-size: 18px; margin-top: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;} .sidebar-logo { width: 70px; height: 70px; margin: 0 auto; border-radius: 50%; overflow: hidden; background: var(--army-primary); display: flex; align-items: center; justify-content: center; border: 2px solid var(--army-gold); } .sidebar-logo img { width: 100%; height: 100%; object-fit: cover; }
     .sidebar-menu { list-style: none; padding: 15px; flex: 1; overflow-y: auto; } .sidebar-menu button { background: transparent; color: #b0bec5; text-align: left; padding: 14px 15px; display: flex; align-items: center; gap: 12px; font-size: 15px; margin-bottom: 4px; border-radius: 4px; } .sidebar-menu button:hover { background: rgba(255,255,255,0.05); color: white; } .sidebar-menu button.active { background: var(--army-primary); color: var(--army-gold); border-left: 4px solid var(--army-gold); }
@@ -165,7 +164,7 @@
              <option value="Merit|3|Outstanding Uniform Inspection">Outstanding Uniform Inspection (+3 pts)</option>
           </optgroup>
        </select>
-       <button class="btn-success" onclick="submitDiscipline()"><i class="fas fa-gavel"></i> RECORD ACTION</button>
+       <button id="btn-submit-discipline" class="btn-success" onclick="submitDiscipline()"><i class="fas fa-gavel"></i> RECORD ACTION</button>
     </div>
 
     <h4 style="font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; color:var(--text-muted);"><i class="fas fa-history"></i> ACTION HISTORY</h4>
@@ -812,13 +811,11 @@
 
     Swal.fire({ title: `Set status to ${status}?`, showCancelButton: true, confirmButtonText: 'CONFIRM' }).then(r => {
       if (r.isConfirmed) {
-        
         const postIndex = globalAdminPostCache.findIndex(x => x.id === id);
         if(postIndex !== -1) {
             globalAdminPostCache[postIndex].status = status;
             globalAdminPostCache[postIndex].feedback = feedback;
             
-            // 🔥 REAL-TIME BADGE DECREMENT (Super Admin only)
             if (session.role === 'Super Admin') {
                 let bp = document.getElementById('badge-posts');
                 let currentCount = parseInt(bp.innerText || "0");
@@ -988,7 +985,6 @@
     if(session.role!=='Admin'&&session.role!=='Super Admin') return; 
     apiCall('getAdminDashboardData', { user: session.user, pass: session.pass }, (res) => { 
       
-      // 🔥 EXCLUSIVE SUPER ADMIN ALERTS 🔥
       if (res.alerts) {
          let bl = document.getElementById('badge-leaves');
          let bp = document.getElementById('badge-posts');
@@ -1007,26 +1003,42 @@
   function closeDisciplineModal(force) { const modal = document.getElementById('discipline-modal'); if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); } }
   function loadDisciplineHistory(id) { document.getElementById('disc-history-table').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:10px 0;"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>'; apiCall('getDiscipline', { studentId: id, user: session.user, pass: session.pass }, (res) => { let h = ''; res.records.forEach(r => { let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)'; let typeBadge = r.type === 'Merit' ? '<span class="badge badge-present">MERIT</span>' : '<span class="badge badge-absent">DEMERIT</span>'; h += `<tr style="border-bottom: 1px solid var(--border);"> <td style="padding:8px 0;">${r.date}</td> <td style="padding:8px 0;">${typeBadge}</td> <td style="padding:8px 0; color:var(--text-muted);">${r.reason} <br><small>by ${r.admin}</small></td> <td style="padding:8px 0; font-weight:bold; color:${ptsColor};">${r.points > 0 ? '+'+r.points : r.points}</td> </tr>`; }); document.getElementById('disc-history-table').innerHTML = h || '<tr><td colspan="4" style="text-align:center; padding:10px 0;">No records found.</td></tr>'; }); }
   
+  // 🔥 FIX: INSTANT BUTTON LOCK (DEBOUNCE) TO PREVENT DOUBLE-CLICKS 🔥
   function submitDiscipline() { 
     const val = document.getElementById('disc-action-select').value; 
     if (!val) return Swal.fire('Notice', 'Please select an action from the dropdown.', 'warning'); 
+    
+    const btn = document.getElementById('btn-submit-discipline');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECORDING...';
+    btn.style.opacity = '0.7';
+    btn.style.cursor = 'not-allowed';
+
     const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
     Swal.fire({ title: 'RECORDING...', didOpen: () => Swal.showLoading() }); 
+    
     apiCall('addDiscipline', { studentId: currentDiscStudentId, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => { 
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-gavel"></i> RECORD ACTION';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+
         Swal.fire('Success', 'Discipline action recorded.', 'success'); 
-        
-        // 🔥 FIX 1: AUTO-CLEAR DROPDOWN 🔥
-        document.getElementById('disc-action-select').value = "";
+        document.getElementById('disc-action-select').value = ""; // Auto-clear dropdown
         
         loadDashboardData(); 
         loadDisciplineHistory(currentDiscStudentId); 
         let currScore = parseInt(document.getElementById('disc-cadet-score').innerText); 
         document.getElementById('disc-cadet-score').innerText = currScore + points; 
-    }, (err) => Swal.fire('Error', err.message, 'error')); 
+    }, (err) => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-gavel"></i> RECORD ACTION';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        Swal.fire('Error', err.message, 'error');
+    }); 
   }
 
-  function renderDonut(p,l,a) { const ctx=document.getElementById('chart-donut').getContext('2d'); if(donutChart) donutChart.destroy(); donutChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Present','Late','Absent'], datasets: [{ data: [p,l,a], backgroundColor: ['#388e3c','#f57f17','#d32f2f'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: isDarkMode?'#e0e0e0':'#2c3539', font: { family: 'Inter', size: 13, weight: '600' } } } } } }); }
-  function renderWeekly(d) { const ctx=document.getElementById('chart-weekly').getContext('2d'), c=isDarkMode?'#e0e0e0':'#2c3539', gc=isDarkMode?'#3a4230':'#d4d8cc'; if(weeklyChart) weeklyChart.destroy(); weeklyChart = new Chart(ctx, { type: 'bar', data: { labels: d.labels, datasets: [{ label: 'Present', data: d.present, backgroundColor: '#388e3c' }, { label: 'Late', data: d.late, backgroundColor: '#f57f17' }, { label: 'Absent', data: d.absent, backgroundColor: '#d32f2f' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: c, font: { family: 'Inter', size: 12, weight: '600' } } } }, scales: { x: { stacked: true, ticks: { color: c }, grid: { color: gc } }, y: { stacked: true, ticks: { color: c }, grid: { color: gc } } } } }); }
   function filterMasterlist() { const q=document.getElementById('search-masterlist').value.toLowerCase(), r=document.getElementById('masterlist-table').getElementsByTagName('tr'); for(let x of r) x.style.display=x.innerText.toLowerCase().includes(q)?'':'none'; }
   function createAcc() { const u=document.getElementById('new-user').value.trim(), p=document.getElementById('new-pass').value, r=document.getElementById('new-role').value; if(!u||!p) return Swal.fire('Notice', 'Fill fields.', 'warning'); Swal.fire({ title: 'CREATING...', didOpen: () => Swal.showLoading() }); apiCall('createAccount', { newUser: u, newPass: p, role: r, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('new-user').value=''; document.getElementById('new-pass').value=''; loadDashboardData(); }, (err) => Swal.fire('Error', err.message, 'error') ); }
   function changeAccStatus(u, s) { Swal.fire({ title: `Change ${u} to ${s}?`, showCancelButton: true }).then(r => { if(r.isConfirmed) apiCall('updateAccountStatus', { targetUser: u, newStatus: s, user: session.user, pass: session.pass }, () => loadDashboardData()); }); }
@@ -1036,7 +1048,6 @@
   function loadLeavesData() { document.getElementById('leaves-table').innerHTML='<tr><td colspan="6" style="text-align:center;">Loading...</td></tr>'; apiCall('getLeaveRequests', { user: session.user, pass: session.pass }, (res) => { let p=0, a=0, r=0, h=''; res.leaves.forEach(lv => { if(lv.status==='Pending') p++; else if(lv.status==='Approved') a++; else if(lv.status==='Rejected') r++; let ab='-'; if(lv.status==='Pending'&&session.role==='Super Admin') ab=`<button class="btn-success" style="padding:6px 10px; font-size:11px;" onclick="updateLeave('${lv.id}','Approved')">APPROVE</button> <button class="btn-danger" style="padding:6px 10px; font-size:11px;" onclick="updateLeave('${lv.id}','Rejected')">DENY</button>`; let bc=lv.status==='Approved'?'badge-approved':(lv.status==='Rejected'?'badge-rejected':'badge-pending'); h+=`<tr><td>${lv.from?new Date(lv.from).toLocaleDateString():''} – ${lv.to?new Date(lv.to).toLocaleDateString():''}</td><td><b>${lv.studentId}</b></td><td>${lv.name}</td><td>${lv.reason}</td><td><span class="badge ${bc}">${lv.status}</span></td><td>${ab}</td></tr>`; }); document.getElementById('leaves-table').innerHTML=h||'<tr><td colspan="6" style="text-align:center;">No requests.</td></tr>'; document.getElementById('lv-stat-pending').innerText=p; document.getElementById('lv-stat-approved').innerText=a; document.getElementById('lv-stat-rejected').innerText=r; }); }
   function submitLeave() { const id=document.getElementById('lv-id').value.trim(), f=document.getElementById('lv-from').value, t=document.getElementById('lv-to').value, x=document.getElementById('lv-reason').value.trim(); if(!id||!f||!t||!x) return Swal.fire('Notice', 'Fill fields.', 'warning'); Swal.fire({ title: 'TRANSMITTING...', didOpen: () => Swal.showLoading() }); apiCall('submitLeaveRequest', { studentId: id, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); ['id','from','to','reason'].forEach(k => document.getElementById(`lv-${k}`).value=''); loadLeavesData(); }, (err) => Swal.fire('Error', err.message, 'error') ); }
   
-  // 🔥 FIX 3: REAL-TIME NOTIFICATION DECREMENT FOR LEAVES 🔥
   function updateLeave(id, s) { 
       Swal.fire({ title: `Set status to ${s}?`, showCancelButton: true }).then(r => { 
           if(r.isConfirmed) { 
@@ -1071,5 +1082,3 @@
 </script>
 </body>
 </html>
-
-```
