@@ -1003,7 +1003,6 @@
   function closeDisciplineModal(force) { const modal = document.getElementById('discipline-modal'); if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); } }
   function loadDisciplineHistory(id) { document.getElementById('disc-history-table').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:10px 0;"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>'; apiCall('getDiscipline', { studentId: id, user: session.user, pass: session.pass }, (res) => { let h = ''; res.records.forEach(r => { let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)'; let typeBadge = r.type === 'Merit' ? '<span class="badge badge-present">MERIT</span>' : '<span class="badge badge-absent">DEMERIT</span>'; h += `<tr style="border-bottom: 1px solid var(--border);"> <td style="padding:8px 0;">${r.date}</td> <td style="padding:8px 0;">${typeBadge}</td> <td style="padding:8px 0; color:var(--text-muted);">${r.reason} <br><small>by ${r.admin}</small></td> <td style="padding:8px 0; font-weight:bold; color:${ptsColor};">${r.points > 0 ? '+'+r.points : r.points}</td> </tr>`; }); document.getElementById('disc-history-table').innerHTML = h || '<tr><td colspan="4" style="text-align:center; padding:10px 0;">No records found.</td></tr>'; }); }
   
-  // 🔥 FIX: INSTANT BUTTON LOCK (DEBOUNCE) TO PREVENT DOUBLE-CLICKS 🔥
   function submitDiscipline() { 
     const val = document.getElementById('disc-action-select').value; 
     if (!val) return Swal.fire('Notice', 'Please select an action from the dropdown.', 'warning'); 
@@ -1024,7 +1023,7 @@
         btn.style.cursor = 'pointer';
 
         Swal.fire('Success', 'Discipline action recorded.', 'success'); 
-        document.getElementById('disc-action-select').value = ""; // Auto-clear dropdown
+        document.getElementById('disc-action-select').value = ""; 
         
         loadDashboardData(); 
         loadDisciplineHistory(currentDiscStudentId); 
@@ -1038,6 +1037,9 @@
         Swal.fire('Error', err.message, 'error');
     }); 
   }
+
+  function renderDonut(p,l,a) { const ctx=document.getElementById('chart-donut').getContext('2d'); if(donutChart) donutChart.destroy(); donutChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Present','Late','Absent'], datasets: [{ data: [p,l,a], backgroundColor: ['#388e3c','#f57f17','#d32f2f'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: isDarkMode?'#e0e0e0':'#2c3539', font: { family: 'Inter', size: 13, weight: '600' } } } } } }); }
+  function renderWeekly(d) { const ctx=document.getElementById('chart-weekly').getContext('2d'), c=isDarkMode?'#e0e0e0':'#2c3539', gc=isDarkMode?'#3a4230':'#d4d8cc'; if(weeklyChart) weeklyChart.destroy(); weeklyChart = new Chart(ctx, { type: 'bar', data: { labels: d.labels, datasets: [{ label: 'Present', data: d.present, backgroundColor: '#388e3c' }, { label: 'Late', data: d.late, backgroundColor: '#f57f17' }, { label: 'Absent', data: d.absent, backgroundColor: '#d32f2f' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: c, font: { family: 'Inter', size: 12, weight: '600' } } } }, scales: { x: { stacked: true, ticks: { color: c }, grid: { color: gc } }, y: { stacked: true, ticks: { color: c }, grid: { color: gc } } } } }); }
 
   function filterMasterlist() { const q=document.getElementById('search-masterlist').value.toLowerCase(), r=document.getElementById('masterlist-table').getElementsByTagName('tr'); for(let x of r) x.style.display=x.innerText.toLowerCase().includes(q)?'':'none'; }
   function createAcc() { const u=document.getElementById('new-user').value.trim(), p=document.getElementById('new-pass').value, r=document.getElementById('new-role').value; if(!u||!p) return Swal.fire('Notice', 'Fill fields.', 'warning'); Swal.fire({ title: 'CREATING...', didOpen: () => Swal.showLoading() }); apiCall('createAccount', { newUser: u, newPass: p, role: r, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('new-user').value=''; document.getElementById('new-pass').value=''; loadDashboardData(); }, (err) => Swal.fire('Error', err.message, 'error') ); }
