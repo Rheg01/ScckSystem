@@ -403,13 +403,17 @@
       
       <div id="admin-draft-section" class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px; display:none;">
         <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-pen"></i> DRAFT NEW POST</h3>
-        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; font-family:'Inter',sans-serif;">Create a public post to showcase ROTC events. Posts require Commander approval to appear on the public landing page. You may select multiple images.</p>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; font-family:'Inter',sans-serif;">Create a public post to showcase ROTC events. Posts require Commander approval to appear on the public landing page.</p>
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">POST TITLE</label>
         <input type="text" id="post-title" placeholder="E.g. Tactical Training Alpha 2026">
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;">POST DESCRIPTION</label>
         <textarea id="post-desc" rows="4" placeholder="Write the details of the activity here..."></textarea>
         
-        <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;">FEATURED IMAGE(S)</label>
+        <!-- 🔥 NEW VIDEO EMBED INPUT 🔥 -->
+        <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;"><i class="fas fa-video"></i> VIDEO URL (Optional)</label>
+        <input type="text" id="post-video-url" placeholder="Paste YouTube or Google Drive video link here...">
+
+        <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;"><i class="fas fa-images"></i> FEATURED IMAGE(S)</label>
         <input type="file" id="post-image-file" accept="image/*" multiple>
         
         <div id="image-staging-grid" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px; margin-top: 10px;"></div>
@@ -427,7 +431,7 @@
 
       <div class="table-card anim-4"><div class="table-wrapper">
         <table>
-          <thead><tr><th>Date</th><th>Image</th><th>Post Details</th><th>Status</th><th>Action</th></tr></thead>
+          <thead><tr><th>Date</th><th>Media</th><th>Post Details</th><th>Status</th><th>Action</th></tr></thead>
           <tbody id="posts-table"><tr><td colspan="5" style="text-align:center;">Loading posts...</td></tr></tbody>
         </table>
       </div></div>
@@ -531,6 +535,16 @@
             }
         }
     });
+  }
+
+  // 🔥 VIDEO URL CONVERTER 🔥
+  function createEmbed(url) {
+      if (!url) return '';
+      let finalUrl = url;
+      if (url.includes('youtube.com/watch?v=')) finalUrl = url.replace('watch?v=', 'embed/').split('&')[0];
+      else if (url.includes('youtu.be/')) finalUrl = url.replace('youtu.be/', 'youtube.com/embed/');
+      else if (url.includes('drive.google.com/file/d/')) finalUrl = url.replace('/view', '/preview');
+      return `<iframe src="${finalUrl}" style="width:100%; height:450px; border:none; border-radius:8px;" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
   }
 
   document.getElementById('post-image-file').addEventListener('change', async function(e) {
@@ -852,17 +866,19 @@
   }
 
 
+  // 🔥 UPDATED POST CREATOR W/ VIDEO HANDLING 🔥
   async function submitPublicPost() {
     const title = document.getElementById('post-title').value.trim();
     const desc = document.getElementById('post-desc').value.trim();
+    const vid = document.getElementById('post-video-url').value.trim();
     
     if (!title || !desc) return Swal.fire('Notice', 'Title and description are required.', 'warning');
-    if (!editingPostId && stagedImages.length === 0) return Swal.fire('Notice', 'At least one image is required for a new post.', 'warning');
+    if (!editingPostId && stagedImages.length === 0 && !vid) return Swal.fire('Notice', 'At least one image or video URL is required.', 'warning');
     
     Swal.fire({ title: 'UPLOADING TO COMMAND...', html: 'This may take a moment...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     
     let actionName = editingPostId ? 'resubmitPost' : 'submitPost';
-    let payload = { title: title, description: desc, imageArray: stagedImages, user: session.user, pass: session.pass };
+    let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, pass: session.pass };
     if (editingPostId) payload.postId = editingPostId;
 
     apiCall(actionName, payload, (res) => {
@@ -878,6 +894,7 @@
     editingPostId = id;
     document.getElementById('post-title').value = p.title;
     document.getElementById('post-desc').value = p.description;
+    document.getElementById('post-video-url').value = p.videoUrl || '';
     document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST';
     document.getElementById('btn-cancel-edit').style.display = 'inline-block';
     
@@ -890,6 +907,7 @@
     editingPostId = null;
     document.getElementById('post-title').value = '';
     document.getElementById('post-desc').value = '';
+    document.getElementById('post-video-url').value = '';
     document.getElementById('post-image-file').value = '';
     stagedImages = [];
     document.getElementById('image-staging-grid').innerHTML = '';
@@ -942,16 +960,18 @@
       }
 
       let badgeClass = p.status === 'Approved' ? 'badge-present' : (p.status === 'Rejected' ? 'badge-absent' : (p.status === 'Revise' ? 'badge-late' : 'badge-timeout'));
+      
       let firstImg = p.image ? p.image.split(',')[0] : '';
-      let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : 'No Image';
+      let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : '<div style="width:80px; height:60px; background:#111; border-radius:4px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-video" style="color:#555;"></i></div>';
       
       let pinnedLabel = isPinned ? `<div style="font-size:10px; color:var(--army-gold); font-weight:bold; margin-bottom:3px;"><i class="fas fa-thumbtack"></i> PINNED</div>` : '';
+      let vidLabel = p.videoUrl ? `<div style="font-size:10px; color:#0288d1; font-weight:bold; margin-bottom:3px;"><i class="fas fa-video"></i> VIDEO ATTACHED</div>` : '';
       let styledDesc = formatHashtags(p.description);
 
       html += `<tr>
         <td style="font-size:12px; width:80px;">${p.date}</td>
         <td style="width:90px;">${imgHtml}</td>
-        <td>${pinnedLabel}<b>${p.title}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${styledDesc}</span>${feedbackHtml}</td>
+        <td>${pinnedLabel}${vidLabel}<b>${p.title}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${styledDesc}</span>${feedbackHtml}</td>
         <td style="width:90px;"><span class="badge ${badgeClass}">${p.status}</span></td>
         <td style="width:100px;">${actionBtn}</td>
       </tr>`;
@@ -1034,18 +1054,28 @@
     });
   }
 
+  // 🔥 UPDATED: ADMIN PREVIEW NOW RENDERS VIDEO 🔥
   let previewSlideIdx = 0;
   function previewPost(postId) {
     const p = globalAdminPostCache.find(x => x.id === postId);
     if (!p) return;
     const images = p.image ? p.image.split(',') : [];
     previewSlideIdx = 0;
+    
     let carouselHtml = '';
-    if (images.length > 0) {
-      let slides = images.map((img, i) => `<div class="preview-carousel-slide ${i === 0 ? 'active' : ''}" id="prev-slide-${i}"><img src="${img}"></div>`).join('');
-      let btns = images.length > 1 ? `<button class="preview-carousel-btn preview-carousel-prev" onclick="changePreviewSlide(-1, ${images.length})"><i class="fas fa-chevron-left"></i></button><button class="preview-carousel-btn preview-carousel-next" onclick="changePreviewSlide(1, ${images.length})"><i class="fas fa-chevron-right"></i></button>` : '';
-      let dots = images.length > 1 ? `<div class="preview-carousel-dots">` + images.map((_, i) => `<span class="preview-dot ${i === 0 ? 'active' : ''}" id="prev-dot-${i}" onclick="setPreviewSlide(${i}, ${images.length})"></span>`).join('') + `</div>` : '';
-      carouselHtml = `<div class="preview-carousel-container">${slides}${btns}${dots}</div>`;
+    let slidesArr = [];
+    
+    if (p.videoUrl) slidesArr.push(`<div class="preview-carousel-slide" id="prev-slide-${slidesArr.length}">${createEmbed(p.videoUrl)}</div>`);
+    images.forEach(img => {
+        if(img) slidesArr.push(`<div class="preview-carousel-slide" id="prev-slide-${slidesArr.length}"><img src="${img}"></div>`);
+    });
+
+    if (slidesArr.length > 0) {
+        slidesArr[0] = slidesArr[0].replace('preview-carousel-slide"', 'preview-carousel-slide active"');
+        let slides = slidesArr.join('');
+        let btns = slidesArr.length > 1 ? `<button class="preview-carousel-btn preview-carousel-prev" onclick="changePreviewSlide(-1, ${slidesArr.length})"><i class="fas fa-chevron-left"></i></button><button class="preview-carousel-btn preview-carousel-next" onclick="changePreviewSlide(1, ${slidesArr.length})"><i class="fas fa-chevron-right"></i></button>` : '';
+        let dots = slidesArr.length > 1 ? `<div class="preview-carousel-dots">` + slidesArr.map((_, i) => `<span class="preview-dot ${i === 0 ? 'active' : ''}" id="prev-dot-${i}" onclick="setPreviewSlide(${i}, ${slidesArr.length})"></span>`).join('') + `</div>` : '';
+        carouselHtml = `<div class="preview-carousel-container">${slides}${btns}${dots}</div>`;
     }
 
     let styledDesc = formatHashtags(p.description);
@@ -1078,6 +1108,13 @@
     if (force === true || force.target === modal) {
       modal.classList.remove('show');
       setTimeout(() => modal.style.display = 'none', 300);
+      
+      // Stop iframe video playback when closing modal
+      const iframe = modal.querySelector('iframe');
+      if (iframe) {
+        let iframeSrc = iframe.src;
+        iframe.src = iframeSrc; 
+      }
     }
   }
 
@@ -1310,11 +1347,6 @@
         loadDisciplineHistory(currentDiscStudentId); 
         let currScore = parseInt(document.getElementById('disc-cadet-score').innerText); 
         document.getElementById('disc-cadet-score').innerText = currScore + points; 
-    }, (err) => {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-gavel"></i> RECORD ACTION';
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
     }); 
   }
 
