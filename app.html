@@ -409,9 +409,8 @@
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;">POST DESCRIPTION</label>
         <textarea id="post-desc" rows="4" placeholder="Write the details of the activity here..."></textarea>
         
-        <!-- 🔥 NEW VIDEO EMBED INPUT 🔥 -->
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;"><i class="fas fa-video"></i> VIDEO URL (Optional)</label>
-        <input type="text" id="post-video-url" placeholder="Paste YouTube or Google Drive video link here...">
+        <input type="text" id="post-video-url" placeholder="Paste YouTube, Facebook, or Google Drive video link here...">
 
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top:10px;"><i class="fas fa-images"></i> FEATURED IMAGE(S)</label>
         <input type="file" id="post-image-file" accept="image/*" multiple>
@@ -516,7 +515,6 @@
     })
     .then(response => response.json())
     .then(data => { 
-      // STRICT CHECK: IF ERROR FLAG IS TRUE, THROW A RED SHIELD
       if (data.error && data.error !== false) {
           throw new Error(data.message || "Unknown Database Failure");
       }
@@ -527,7 +525,6 @@
         if (onFailure) {
             onFailure(error); 
         } else {
-            // FALLBACK ERROR CATCHER
             if(error.message.includes('DENIED')) {
                 Swal.fire({ title: 'CLEARANCE DENIED', text: error.message, icon: 'error', background: '#1b0002', color: '#ff5252', confirmButtonColor: '#d32f2f' });
             } else {
@@ -537,14 +534,21 @@
     });
   }
 
-  // 🔥 VIDEO URL CONVERTER 🔥
+  // 🔥 URL CONVERTER (INCLUDES FACEBOOK BYPASS) 🔥
   function createEmbed(url) {
       if (!url) return '';
       let finalUrl = url;
-      if (url.includes('youtube.com/watch?v=')) finalUrl = url.replace('watch?v=', 'embed/').split('&')[0];
-      else if (url.includes('youtu.be/')) finalUrl = url.replace('youtu.be/', 'youtube.com/embed/');
-      else if (url.includes('drive.google.com/file/d/')) finalUrl = url.replace('/view', '/preview');
-      return `<iframe src="${finalUrl}" style="width:100%; height:450px; border:none; border-radius:8px;" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      if (url.includes('youtube.com/watch?v=')) {
+          finalUrl = url.replace('watch?v=', 'embed/').split('&')[0];
+      } else if (url.includes('youtu.be/')) {
+          finalUrl = url.replace('youtu.be/', 'youtube.com/embed/');
+      } else if (url.includes('drive.google.com/file/d/')) {
+          finalUrl = url.replace('/view', '/preview');
+      } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
+          // Facebook specific iframe plugin formatting
+          finalUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
+      }
+      return `<iframe src="${finalUrl}" style="width:100%; height:450px; border:none; border-radius:8px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
   }
 
   document.getElementById('post-image-file').addEventListener('change', async function(e) {
@@ -866,7 +870,6 @@
   }
 
 
-  // 🔥 UPDATED POST CREATOR W/ VIDEO HANDLING 🔥
   async function submitPublicPost() {
     const title = document.getElementById('post-title').value.trim();
     const desc = document.getElementById('post-desc').value.trim();
