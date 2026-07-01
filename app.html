@@ -499,13 +499,11 @@
   let currentDiscStudentId = null;
   let stagedImages = [];
 
-  // 🔥 THE NEW SYNC WRAPPER ENGINE 🔥
   window.forceRefresh = function(targetFunc) {
       Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Syncing database...', showConfirmButton: false, timer: 1500 });
       targetFunc();
   }
 
-  // 🔥 THE NEW STRICT ERROR CATCHER 🔥
   function apiCall(action, payload, onSuccess, onFailure) {
     payload.action = action;
     fetch(GAS_API_URL, { 
@@ -534,7 +532,6 @@
     });
   }
 
-  // 🔥 URL CONVERTER (INCLUDES FACEBOOK BYPASS) 🔥
   function createEmbed(url) {
       if (!url) return '';
       let finalUrl = url;
@@ -545,7 +542,6 @@
       } else if (url.includes('drive.google.com/file/d/')) {
           finalUrl = url.replace('/view', '/preview');
       } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
-          // Facebook specific iframe plugin formatting
           finalUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
       }
       return `<iframe src="${finalUrl}" style="width:100%; height:450px; border:none; border-radius:8px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
@@ -586,20 +582,50 @@
     return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>');
   }
 
+  // 🔥 UPDATED CSV EXPORT LOGIC WITH AUTOMATIC COMPANY SORTING 🔥
   function exportTableToCSV(tableId, filename) {
-    let csv = [];
-    let rows = document.querySelectorAll(`#${tableId} tr`);
-    if(rows.length === 0) return Swal.fire('Notice', 'No data available to export.', 'info');
-    for (let i = 0; i < rows.length; i++) {
-      let row = [], cols = rows[i].querySelectorAll("td, th");
+    let table = document.getElementById(tableId).closest('table');
+    let rows = table.querySelectorAll('tr');
+    
+    if (rows.length <= 1) return Swal.fire('Notice', 'No data available to export.', 'info');
+
+    let headerRow = [];
+    let headers = rows[0].querySelectorAll("th, td");
+    for (let j = 0; j < headers.length; j++) {
+      if(headers[j].querySelector('button') && j === headers.length - 1) continue; 
+      headerRow.push('"' + headers[j].innerText.replace(/"/g, '""') + '"');
+    }
+
+    let bodyData = [];
+    for (let i = 1; i < rows.length; i++) {
+      let cols = rows[i].querySelectorAll("td, th");
+      if (cols.length === 1 && cols[0].colSpan > 1) continue; 
+
+      let rowArr = [];
+      let rawTextArray = []; 
       for (let j = 0; j < cols.length; j++) {
         if(cols[j].querySelector('button') && j === cols.length - 1) continue; 
-        let data = cols[j].innerText.replace(/"/g, '""');
-        row.push('"' + data + '"');
+        let text = cols[j].innerText;
+        rawTextArray.push(text);
+        rowArr.push('"' + text.replace(/"/g, '""') + '"');
       }
-      csv.push(row.join(","));
+      bodyData.push({ csvLine: rowArr.join(","), rawCols: rawTextArray });
     }
-    downloadCSV(csv.join("\n"), filename + ".csv");
+
+    if (bodyData.length === 0) return Swal.fire('Notice', 'No data available to export.', 'info');
+
+    if (tableId === 'attendance-table' || tableId === 'masterlist-table') {
+      bodyData.sort((a, b) => {
+         let compA = a.rawCols[2] ? a.rawCols[2].toLowerCase() : "";
+         let compB = b.rawCols[2] ? b.rawCols[2].toLowerCase() : "";
+         return compA.localeCompare(compB);
+      });
+    }
+
+    let finalCsv = [headerRow.join(",")];
+    bodyData.forEach(row => finalCsv.push(row.csvLine));
+
+    downloadCSV(finalCsv.join("\n"), filename + ".csv");
   }
 
   function downloadCSV(csv, filename) {
@@ -1057,7 +1083,6 @@
     });
   }
 
-  // 🔥 UPDATED: ADMIN PREVIEW NOW RENDERS VIDEO 🔥
   let previewSlideIdx = 0;
   function previewPost(postId) {
     const p = globalAdminPostCache.find(x => x.id === postId);
