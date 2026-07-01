@@ -8,6 +8,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -272,7 +275,7 @@
           <h2><i class="fas fa-clipboard-list"></i> DAILY ATTENDANCE LOG</h2>
         </div>
         <div style="display:flex; gap:10px;">
-          <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToCSV('attendance-table', 'Attendance_Report')"><i class="fas fa-file-csv"></i> EXPORT CSV</button>
+          <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToExcel('attendance-table', 'Attendance_Report')"><i class="fas fa-file-excel"></i> EXPORT EXCEL</button>
           <button style="width:auto; padding: 10px 15px;" onclick="forceRefresh(loadDashboardData)"><i class="fas fa-sync"></i> REFRESH</button>
         </div>
       </div>
@@ -287,7 +290,7 @@
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
           <input type="text" id="search-masterlist" placeholder="Search cadet name or ID..." style="width:250px; margin:0; padding:10px;" oninput="filterMasterlist()">
-          <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToCSV('masterlist-table', 'Unit_Roster')"><i class="fas fa-file-csv"></i> EXPORT CSV</button>
+          <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToExcel('masterlist-table', 'Unit_Roster')"><i class="fas fa-file-excel"></i> EXPORT EXCEL</button>
           <button style="width:auto; padding: 10px 15px;" onclick="forceRefresh(loadDashboardData)"><i class="fas fa-sync"></i> REFRESH</button>
         </div>
       </div>
@@ -301,7 +304,7 @@
           <h2><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2>
         </div>
         <div style="display:flex; gap:10px;">
-          <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToCSV('leaves-table', 'Leave_Requests')"><i class="fas fa-file-csv"></i> EXPORT CSV</button>
+          <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToExcel('leaves-table', 'Leave_Requests')"><i class="fas fa-file-excel"></i> EXPORT EXCEL</button>
           <button style="width:auto; padding: 10px 15px;" onclick="forceRefresh(loadLeavesData)"><i class="fas fa-sync"></i> REFRESH</button>
         </div>
       </div>
@@ -582,19 +585,22 @@
     return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>');
   }
 
-  // 🔥 UPDATED CSV EXPORT LOGIC WITH AUTOMATIC COMPANY SORTING 🔥
-  function exportTableToCSV(tableId, filename) {
+  // 🔥 NEW: EXCEL EXPORT ENGINE WITH SHEETJS STYLING 🔥
+  function exportTableToExcel(tableId, filename) {
     let table = document.getElementById(tableId).closest('table');
     let rows = table.querySelectorAll('tr');
     
     if (rows.length <= 1) return Swal.fire('Notice', 'No data available to export.', 'info');
 
+    let aoa = []; 
+
     let headerRow = [];
     let headers = rows[0].querySelectorAll("th, td");
     for (let j = 0; j < headers.length; j++) {
       if(headers[j].querySelector('button') && j === headers.length - 1) continue; 
-      headerRow.push('"' + headers[j].innerText.replace(/"/g, '""') + '"');
+      headerRow.push(headers[j].innerText.trim());
     }
+    aoa.push(headerRow);
 
     let bodyData = [];
     for (let i = 1; i < rows.length; i++) {
@@ -602,41 +608,59 @@
       if (cols.length === 1 && cols[0].colSpan > 1) continue; 
 
       let rowArr = [];
-      let rawTextArray = []; 
       for (let j = 0; j < cols.length; j++) {
         if(cols[j].querySelector('button') && j === cols.length - 1) continue; 
-        let text = cols[j].innerText;
-        rawTextArray.push(text);
-        rowArr.push('"' + text.replace(/"/g, '""') + '"');
+        rowArr.push(cols[j].innerText.trim());
       }
-      bodyData.push({ csvLine: rowArr.join(","), rawCols: rawTextArray });
+      bodyData.push(rowArr);
     }
 
     if (bodyData.length === 0) return Swal.fire('Notice', 'No data available to export.', 'info');
 
+    // Automatic Alphabetical Company Sort
     if (tableId === 'attendance-table' || tableId === 'masterlist-table') {
       bodyData.sort((a, b) => {
-         let compA = a.rawCols[2] ? a.rawCols[2].toLowerCase() : "";
-         let compB = b.rawCols[2] ? b.rawCols[2].toLowerCase() : "";
+         let compA = a[2] ? a[2].toLowerCase() : "";
+         let compB = b[2] ? b[2].toLowerCase() : "";
          return compA.localeCompare(compB);
       });
     }
 
-    let finalCsv = [headerRow.join(",")];
-    bodyData.forEach(row => finalCsv.push(row.csvLine));
+    bodyData.forEach(r => aoa.push(r));
 
-    downloadCSV(finalCsv.join("\n"), filename + ".csv");
-  }
+    let ws = XLSX.utils.aoa_to_sheet(aoa);
+    let range = XLSX.utils.decode_range(ws['!ref']);
 
-  function downloadCSV(csv, filename) {
-    let csvFile = new Blob([csv], {type: "text/csv"});
-    let downloadLink = document.createElement("a");
-    downloadLink.download = filename;
-    downloadLink.href = window.URL.createObjectURL(csvFile);
-    downloadLink.style.display = "none";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        let cellAddress = {c:C, r:R};
+        let cellRef = XLSX.utils.encode_cell(cellAddress);
+        if (!ws[cellRef]) continue;
+
+        if (R === 0) {
+          ws[cellRef].s = {
+            font: { bold: true, color: { rgb: "FFFFFFFF" } },
+            fill: { fgColor: { rgb: "FF2D3821" } },
+            alignment: { horizontal: "center" }
+          };
+          continue;
+        }
+
+        let val = String(ws[cellRef].v).toUpperCase();
+        if (val === "PRESENT" || val === "APPROVED") {
+          ws[cellRef].s = { fill: { fgColor: { rgb: "FF388E3C" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
+        } else if (val === "LATE" || val === "PENDING") {
+          ws[cellRef].s = { fill: { fgColor: { rgb: "FFF57F17" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
+        } else if (val === "VERY LATE" || val === "ABSENT" || val === "REJECTED") {
+          ws[cellRef].s = { fill: { fgColor: { rgb: "FFD32F2F" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
+        }
+      }
+    }
+
+    ws['!cols'] = [{wch: 15}, {wch: 30}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}];
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Unit Data");
+    XLSX.writeFile(wb, filename + ".xlsx");
   }
 
   function togglePasswordVisibility() {
@@ -1137,7 +1161,6 @@
       modal.classList.remove('show');
       setTimeout(() => modal.style.display = 'none', 300);
       
-      // Stop iframe video playback when closing modal
       const iframe = modal.querySelector('iframe');
       if (iframe) {
         let iframeSrc = iframe.src;
