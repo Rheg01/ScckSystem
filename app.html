@@ -67,7 +67,10 @@
     .id-photo-placeholder { font-size: 40px; color: var(--text-muted); }
     .id-name-modern { text-align: center; font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: bold; color: var(--text); line-height: 1.1; padding: 0 10px; text-transform: uppercase; }
     .id-course-modern { text-align: center; font-size: 11px; color: var(--army-primary); font-weight: 700; text-transform: uppercase; margin-top: 5px; letter-spacing: 0.5px;}
-    .qr-container-modern { margin: auto auto 15px auto; width: 85px; height: 85px; background: white; padding: 4px; border-radius: 6px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    
+    /* 🔥 UPDATED QR CONTAINER FOR LOGO CENTERING 🔥 */
+    .qr-container-modern { margin: auto auto 15px auto; width: 85px; height: 85px; background: white; padding: 4px; border-radius: 6px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; }
+    
     .id-footer-modern { background: var(--army-dark); color: #fff; text-align: center; font-size: 9px; padding: 8px; font-weight: bold; letter-spacing: 1px; }
 
     .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; } .mobile-overlay.show { display: block; }
@@ -585,7 +588,6 @@
     return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>');
   }
 
-  // 🔥 NEW: EXCEL EXPORT ENGINE WITH SHEETJS STYLING 🔥
   function exportTableToExcel(tableId, filename) {
     let table = document.getElementById(tableId).closest('table');
     let rows = table.querySelectorAll('tr');
@@ -617,7 +619,6 @@
 
     if (bodyData.length === 0) return Swal.fire('Notice', 'No data available to export.', 'info');
 
-    // Automatic Alphabetical Company Sort
     if (tableId === 'attendance-table' || tableId === 'masterlist-table') {
       bodyData.sort((a, b) => {
          let compA = a[2] ? a[2].toLowerCase() : "";
@@ -805,7 +806,7 @@
 
   function applyTheme(dark) {
     isDarkMode = dark; document.body.classList.toggle('dark-mode', dark);
-    document.getElementById('theme-icon').className = dark ? 'fas fa-sun' : 'fas fa-moon';
+    document.getElementById('theme-icon').className = dark ? 'fas fa-sun' : 'fas moon';
     document.getElementById('theme-text').innerText = dark ? 'LIGHT MODE' : 'DARK MODE';
     try { localStorage.setItem('sccks_dark', dark ? '1' : '0'); } catch(e){}
     if (weeklyChart) weeklyChart.update(); if (donutChart) donutChart.update();
@@ -1431,7 +1432,24 @@
       });
   }
 
-  function showQR(id, name) { Swal.fire({ title: name, html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${id}</p><div id="swal-qr" style="display:flex; justify-content:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary);"></div>`, confirmButtonColor: 'var(--army-primary)', confirmButtonText: 'CLOSE', didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821' }) }); }
+  // 🔥 UPDATED: LOGO ADDED TO SWAL MODAL 🔥
+  function showQR(id, name) { 
+      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}');
+      let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+      
+      Swal.fire({ 
+          title: name, 
+          html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${id}</p>
+                 <div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;">
+                    <div id="swal-qr"></div>
+                    <img src="${sysLogo}" style="position:absolute; width:45px; height:45px; background:white; padding:4px; border-radius:8px; z-index:10;">
+                 </div>`, 
+          confirmButtonColor: 'var(--army-primary)', 
+          confirmButtonText: 'CLOSE', 
+          didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821', correctLevel: QRCode.CorrectLevel.H }) 
+      }); 
+  }
+  
   function editStudent(id, coy, con) { Swal.fire({ title: 'UPDATE DOSSIER', html: `<div style="text-align:left;"><label>Company</label><input id="swal-company" class="swal2-input" value="${coy}"></div><div style="text-align:left;"><label>Contact</label><input id="swal-contact" class="swal2-input" value="${con}"></div>`, showCancelButton: true, confirmButtonText: 'SAVE', preConfirm: () => [ document.getElementById('swal-company').value, document.getElementById('swal-contact').value ] }).then(r => { if(r.isConfirmed) { Swal.fire({ title: 'UPDATING...', didOpen: () => Swal.showLoading() }); apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, pass: session.pass }, () => { Swal.fire('Saved!', 'Dossier updated.', 'success'); loadDashboardData(); }); } }); }
   function deleteStudentPrompt(id) { Swal.fire({ title: 'CONFIRM DISCHARGE?', text: 'Type DELETE', input: 'text', showCancelButton: true, confirmButtonColor: 'var(--status-red)', confirmButtonText: 'DISCHARGE', inputValidator: v => v!=='DELETE'?'Type DELETE':null }).then(r => { if(r.isConfirmed) { Swal.fire({ title: 'REMOVING...', didOpen: () => Swal.showLoading() }); apiCall('deleteStudentData', { id: id, user: session.user, pass: session.pass }, () => { Swal.fire('Removed!', 'Cadet discharged.', 'success'); loadDashboardData(); }); } }); }
   function loadLeavesData() { document.getElementById('leaves-table').innerHTML='<tr><td colspan="6" style="text-align:center;">Loading...</td></tr>'; apiCall('getLeaveRequests', { user: session.user, pass: session.pass }, (res) => { let p=0, a=0, r=0, h=''; res.leaves.forEach(lv => { if(lv.status==='Pending') p++; else if(lv.status==='Approved') a++; else if(lv.status==='Rejected') r++; let ab='-'; if(lv.status==='Pending'&&session.role==='Super Admin') ab=`<button class="btn-success" style="padding:6px 10px; font-size:11px;" onclick="updateLeave('${lv.id}','Approved')">APPROVE</button> <button class="btn-danger" style="padding:6px 10px; font-size:11px;" onclick="updateLeave('${lv.id}','Rejected')">DENY</button>`; let bc=lv.status==='Approved'?'badge-approved':(lv.status==='Rejected'?'badge-rejected':'badge-pending'); h+=`<tr><td>${lv.from?new Date(lv.from).toLocaleDateString():''} – ${lv.to?new Date(lv.to).toLocaleDateString():''}</td><td><b>${lv.studentId}</b></td><td>${lv.name}</td><td>${lv.reason}</td><td><span class="badge ${bc}">${lv.status}</span></td><td>${ab}</td></tr>`; }); document.getElementById('leaves-table').innerHTML=h||'<tr><td colspan="6" style="text-align:center;">No requests.</td></tr>'; document.getElementById('lv-stat-pending').innerText=p; document.getElementById('lv-stat-approved').innerText=a; document.getElementById('lv-stat-rejected').innerText=r; }); }
@@ -1455,7 +1473,25 @@
   }
 
   function fetchStudentsForDropdown() { document.getElementById('id-target-select').innerHTML='<option value="ALL">Fetching data...</option>'; document.getElementById('lv-id').innerHTML='<option value="">Fetching data...</option>'; apiCall('getStudentsForIDCards', { user: session.user, pass: session.pass }, (res) => { globalStudentCache = res.students; let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; res.students.forEach(s => { o+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; lo+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; }); document.getElementById('id-target-select').innerHTML=o; document.getElementById('lv-id').innerHTML=lo; }); }
-  function generateIDPreview() { const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; c.innerHTML=f.map(s => { let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern" id="qr-${s.id}"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; }).join(''); setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015' })), 300); }
+  
+  // 🔥 UPDATED: LOGO OVERLAY ADDED TO ID CARD GENERATOR 🔥
+  function generateIDPreview() { 
+      const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); 
+      c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; 
+      const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); 
+      if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; 
+      
+      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}');
+      let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+
+      c.innerHTML=f.map(s => { 
+          let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; 
+          return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; 
+      }).join(''); 
+      
+      setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H })), 300); 
+  }
+  
   function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
   function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${l.user}</b></td><td><span class="badge badge-action">${l.action}</span></td><td style="color:var(--text-muted); font-size:13px;">${l.details}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }); }
   
