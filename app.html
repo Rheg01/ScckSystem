@@ -20,7 +20,7 @@
   let currentDiscStudentId = null;
   let stagedImages = [];
 
-  // --- NEW: XSS Sanitization Helper ---
+  // --- CORRECTED: XSS Sanitization Helper ---
   function escapeHTML(str) {
       if (!str) return '';
       return str.toString().replace(/[&<>'"]/g, 
@@ -457,7 +457,6 @@
       }
     });
   }
-
 
   async function submitPublicPost() {
     const title = document.getElementById('post-title').value.trim();
