@@ -20,7 +20,7 @@
   let currentDiscStudentId = null;
   let stagedImages = [];
 
-  // --- CORRECTED: XSS Sanitization Helper ---
+  // --- ACTUALLY CORRECTED: XSS Sanitization Helper ---
   function escapeHTML(str) {
       if (!str) return '';
       return str.toString().replace(/[&<>'"]/g, 
