@@ -68,7 +68,6 @@
     .id-name-modern { text-align: center; font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: bold; color: var(--text); line-height: 1.1; padding: 0 10px; text-transform: uppercase; }
     .id-course-modern { text-align: center; font-size: 11px; color: var(--army-primary); font-weight: 700; text-transform: uppercase; margin-top: 5px; letter-spacing: 0.5px;}
     
-    /* 🔥 UPDATED QR CONTAINER FOR LOGO CENTERING 🔥 */
     .qr-container-modern { margin: auto auto 15px auto; width: 85px; height: 85px; background: white; padding: 4px; border-radius: 6px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; }
     
     .id-footer-modern { background: var(--army-dark); color: #fff; text-align: center; font-size: 9px; padding: 8px; font-weight: bold; letter-spacing: 1px; }
@@ -132,6 +131,33 @@
   <div class="post-preview-content" onclick="event.stopPropagation()">
     <i class="fas fa-times close-preview-btn" onclick="closePostPreview(true)"></i>
     <div id="preview-dynamic-content"></div>
+  </div>
+</div>
+
+<div class="post-preview-overlay" id="edit-officer-modal" onclick="closeEditOfficerModal(event)">
+  <div class="post-preview-content" onclick="event.stopPropagation()" style="max-width: 500px; padding: 30px;">
+    <h3 style="color:var(--army-primary); margin-bottom:15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;"><i class="fas fa-user-edit"></i> EDIT LEGACY OFFICER</h3>
+    <input type="hidden" id="edit-off-id">
+    
+    <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">RANK</label>
+    <input type="text" id="edit-off-rank">
+    
+    <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">FULL NAME</label>
+    <input type="text" id="edit-off-name">
+    
+    <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">DESIGNATION</label>
+    <input type="text" id="edit-off-desig">
+    
+    <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">COURSE</label>
+    <input type="text" id="edit-off-course">
+    
+    <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">OFFICER BIOGRAPHY</label>
+    <textarea id="edit-off-bio" rows="4"></textarea>
+    
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+      <button class="btn-warning" onclick="requestOfficerEditOTP()" style="flex:2;"><i class="fas fa-key"></i> REQUEST OTP & SAVE</button>
+      <button class="btn-danger" onclick="closeEditOfficerModal(true)" style="flex:1;">CANCEL</button>
+    </div>
   </div>
 </div>
 
@@ -865,7 +891,11 @@
 
       let oHtml = '';
       res.officers.forEach(o => {
-        let actionBtn = session.role === 'Super Admin' ? `<button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteLegacyOfficer('${o.id}')"><i class="fas fa-trash"></i></button>` : '';
+        // FIXED: Super Admin now gets the Edit Button with OTP verification
+        let actionBtn = session.role === 'Super Admin' ? `
+          <button class="btn-warning" style="padding:4px 8px; font-size:11px; color:#fff; margin-right:5px;" onclick="openEditOfficerModal('${o.id}', '${o.rank}', '${o.name}', '${o.designation}', '${o.course}', \`${o.bio.replace(/`/g, "'").replace(/'/g, "\\'")}\`)"><i class="fas fa-edit"></i></button>
+          <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteLegacyOfficer('${o.id}')"><i class="fas fa-trash"></i></button>
+        ` : '';
         oHtml += `<tr>
           <td>${o.classId}</td>
           <td><b>${o.rank} ${o.name}</b></td>
@@ -874,6 +904,67 @@
         </tr>`;
       });
       document.getElementById('legacy-officers-tbody').innerHTML = oHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
+    });
+  }
+
+  // OTP Verification functions for Editing Legacy Officers
+  window.openEditOfficerModal = function(id, rank, name, desig, course, bio) {
+    document.getElementById('edit-off-id').value = id;
+    document.getElementById('edit-off-rank').value = rank;
+    document.getElementById('edit-off-name').value = name;
+    document.getElementById('edit-off-desig').value = desig;
+    document.getElementById('edit-off-course').value = course;
+    document.getElementById('edit-off-bio').value = bio;
+    const modal = document.getElementById('edit-officer-modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+  }
+
+  window.closeEditOfficerModal = function(force) {
+    const modal = document.getElementById('edit-officer-modal');
+    if (force === true || force.target === modal) {
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
+    }
+  }
+
+  window.requestOfficerEditOTP = function() {
+    Swal.fire({ title: 'SECURING CONNECTION...', html: 'Requesting OTP verification...', didOpen: () => Swal.showLoading() });
+    apiCall('requestEditOTP', { user: session.user, pass: session.pass }, (res) => {
+        Swal.fire({
+            title: 'ENTER VERIFICATION CODE',
+            text: 'A 6-digit OTP has been sent to the database owner\'s email.',
+            input: 'text',
+            inputPlaceholder: '6-Digit OTP',
+            showCancelButton: true,
+            confirmButtonText: 'VERIFY & SAVE',
+            preConfirm: (otp) => {
+                if (!otp) Swal.showValidationMessage('OTP is required to proceed');
+                return otp;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) submitOfficerEditWithOTP(result.value);
+        });
+    });
+  }
+
+  window.submitOfficerEditWithOTP = function(otp) {
+    Swal.fire({ title: 'VERIFYING & SAVING...', didOpen: () => Swal.showLoading() });
+    const payload = {
+        offId: document.getElementById('edit-off-id').value,
+        rank: document.getElementById('edit-off-rank').value,
+        name: document.getElementById('edit-off-name').value,
+        desig: document.getElementById('edit-off-desig').value,
+        course: document.getElementById('edit-off-course').value,
+        bio: document.getElementById('edit-off-bio').value,
+        otp: otp,
+        user: session.user, 
+        pass: session.pass
+    };
+    apiCall('submitOfficerEdit', payload, (res) => {
+        Swal.fire('Success', res.message, 'success');
+        closeEditOfficerModal(true);
+        loadLegacyAdminData();
     });
   }
 
@@ -1357,11 +1448,18 @@
         let btn=r[3]==='Active'?`<button class="btn-danger" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${r[0]}','Disabled')">REVOKE</button>`:`<button class="btn-success" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${r[0]}','Active')">GRANT</button>`; 
         let sb=r[3]==='Active'?'<span class="badge badge-present">ACTIVE</span>':'<span class="badge badge-absent">REVOKED</span>'; 
         
-        let legAccess = r[4] || "Denied";
-        let legBtn = legAccess === "Granted" ? 
-            `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Granted')">ACCESS: ON</button>` : 
-            `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Denied')">ACCESS: OFF</button>`;
-        if(r[2] === "Super Admin") legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">BYPASS GRANTED</span>`;
+        // FIXED: Scanners no longer get the Legacy Access button
+        let legBtn = '';
+        if (r[2] === "Scanner") {
+            legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">NOT APPLICABLE</span>`;
+        } else if (r[2] === "Super Admin") {
+            legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">BYPASS GRANTED</span>`;
+        } else {
+            let legAccess = r[4] || "Denied";
+            legBtn = legAccess === "Granted" ? 
+                `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Granted')">ACCESS: ON</button>` : 
+                `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Denied')">ACCESS: OFF</button>`;
+        }
 
         ach+=`<tr><td>${r[0]}</td><td><b>${r[2]}</b></td><td>${legBtn}</td><td>${sb}</td><td>${btn}</td></tr>`; 
       } 
@@ -1432,7 +1530,6 @@
       });
   }
 
-  // 🔥 UPDATED: LOGO ADDED TO SWAL MODAL 🔥
   function showQR(id, name) { 
       let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}');
       let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
@@ -1474,7 +1571,6 @@
 
   function fetchStudentsForDropdown() { document.getElementById('id-target-select').innerHTML='<option value="ALL">Fetching data...</option>'; document.getElementById('lv-id').innerHTML='<option value="">Fetching data...</option>'; apiCall('getStudentsForIDCards', { user: session.user, pass: session.pass }, (res) => { globalStudentCache = res.students; let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; res.students.forEach(s => { o+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; lo+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; }); document.getElementById('id-target-select').innerHTML=o; document.getElementById('lv-id').innerHTML=lo; }); }
   
-  // 🔥 UPDATED: LOGO OVERLAY ADDED TO ID CARD GENERATOR 🔥
   function generateIDPreview() { 
       const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); 
       c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; 
