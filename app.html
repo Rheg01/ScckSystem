@@ -106,7 +106,33 @@
     .preview-post-title { font-size: 32px; margin-bottom: 20px; line-height: 1.2; border-bottom: 1px solid var(--border); padding-bottom: 15px;}
     .preview-post-desc { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.8; white-space: pre-wrap; }
 
-    @media print { body * { visibility: hidden; } #id-grid-container, #id-grid-container * { visibility: visible; } #id-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: grid; grid-template-columns: repeat(3, 240px); gap: 20px; justify-content: center; margin: 0; padding: 0; } .id-card-modern { page-break-inside: avoid; border: 1px solid #000; box-shadow: none; } .id-card-top { background: #1b2015 !important; border-bottom: 4px solid #d4af37 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} .id-footer-modern { background: #1b2015 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} }
+    /* FORM GENERATOR CSS */
+    .form-grid { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-top: 30px; }
+    .print-form-page { width: 100%; max-width: 800px; background: #fff; color: #000; padding: 40px; border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-family: 'Times New Roman', serif; position: relative; text-shadow: none; line-height: 1.5; }
+    .print-form-header { text-align: center; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; font-size: 16px; font-family: 'Times New Roman', serif; color: #000; }
+    .print-form-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-family: 'Times New Roman', serif; color: #000; flex-wrap: wrap; }
+    .print-form-group { display: flex; flex: 1; margin-right: 15px; align-items: flex-end;}
+    .print-form-group:last-child { margin-right: 0; }
+    .print-form-label { font-weight: bold; margin-right: 5px; white-space: nowrap; font-family: 'Times New Roman', serif; }
+    .editable-field { border-bottom: 1px solid #000; flex: 1; padding-left: 5px; min-height: 20px; font-family: 'Times New Roman', serif; outline: none; transition: background 0.2s; white-space: nowrap; overflow: hidden; }
+    .editable-field:focus { background: #fffde7; border-bottom: 2px solid #fbc02d; }
+    .print-form-section { margin-top: 25px; font-weight: bold; font-size: 14px; margin-bottom: 10px; font-family: 'Times New Roman', serif; color: #000; }
+    
+    @media print { 
+        body * { visibility: hidden; } 
+        /* ID Card Print */
+        .active-panel#panel-idcards #id-grid-container, .active-panel#panel-idcards #id-grid-container * { visibility: visible; } 
+        .active-panel#panel-idcards #id-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: grid; grid-template-columns: repeat(3, 240px); gap: 20px; justify-content: center; margin: 0; padding: 0; } 
+        .id-card-modern { page-break-inside: avoid; border: 1px solid #000; box-shadow: none; } 
+        .id-card-top { background: #1b2015 !important; border-bottom: 4px solid #d4af37 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} 
+        .id-footer-modern { background: #1b2015 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} 
+        
+        /* Form Print */
+        .active-panel#panel-forms #form-grid-container, .active-panel#panel-forms #form-grid-container * { visibility: visible; color: #000 !important; }
+        .active-panel#panel-forms #form-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: block; margin: 0; padding: 0; }
+        .print-form-page { page-break-after: always; box-shadow: none; border: none; padding: 0; max-width: 100%; width: 100%; margin-bottom: 0; }
+        .editable-field { border-bottom: 1px solid #000 !important; background: transparent !important; }
+    }
     @media (max-width: 768px) { .sidebar { position: fixed; top: 0; left: -260px; height: 100vh; z-index: 10000; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } .sidebar.open { left: 0; } .mobile-menu-btn { display: block; } .main-content { padding: 15px; width: 100%; } }
   </style>
 </head>
@@ -218,6 +244,7 @@
       
       <li><button onclick="switchTab('panel-leaves',this)"><i class="fas fa-calendar-alt"></i> <span>LEAVE REQUESTS</span> <span id="badge-leaves" class="nav-badge" style="display:none;">0</span></button></li>
       <li class="admin-only"><button onclick="switchTab('panel-idcards',this)"><i class="fas fa-id-card"></i> <span>ID GENERATOR</span></button></li>
+      <li class="admin-only"><button onclick="switchTab('panel-forms',this)"><i class="fas fa-file-alt"></i> <span>FORM GENERATOR</span></button></li>
       
       <li><button onclick="switchTab('panel-legacy',this)"><i class="fas fa-landmark"></i> <span>LEGACY MANAGEMENT</span> <span id="badge-legacy" class="nav-badge" style="display:none;">0</span></button></li>
       
@@ -328,6 +355,27 @@
       </div>
       <div class="anim-2" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap; box-shadow:0 4px 6px rgba(0,0,0,0.02);"><div style="flex:2; min-width:250px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">SELECT CADET:</label><select id="id-target-select" style="width:100%; margin-top:5px; margin-bottom:0;"><option value="ALL">Loading roster...</option></select></div><div style="display:flex; gap:10px;"><button class="btn-success" style="width:auto; padding:14px 20px;" onclick="generateIDPreview()"><i class="fas fa-magic"></i> PREVIEW</button><button class="btn-secondary" style="width:auto; padding:14px 20px;" onclick="printIDCards()"><i class="fas fa-print"></i> PRINT BATCH</button></div></div>
       <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0; font-family:'Inter',sans-serif;">Select a target and generate preview to render Identification Cards.</p></div>
+    </div>
+
+    <div id="panel-forms" class="view-panel">
+      <div class="header-bar anim-1">
+          <div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-file-alt"></i> REGISTRATION DOSSIER GENERATOR</h2></div>
+          <button style="width:auto; padding: 10px 15px;" onclick="forceRefresh(fetchFormDossierData)"><i class="fas fa-sync"></i> REFRESH DATA</button>
+      </div>
+      <div class="anim-2" style="background:var(--card-bg); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
+        <div style="flex:2; min-width:250px;">
+            <label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">SELECT CADET:</label>
+            <select id="form-target-select" style="width:100%; margin-top:5px; margin-bottom:0;"><option value="ALL">Loading roster...</option></select>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn-info" style="width:auto; padding:14px 20px;" onclick="generateFormPreview()"><i class="fas fa-eye"></i> PREVIEW / EDIT</button>
+            <button class="btn-secondary" style="width:auto; padding:14px 20px;" onclick="printForms()"><i class="fas fa-print"></i> PRINT FORMS</button>
+            <button class="btn-success" style="width:auto; padding:14px 20px;" onclick="exportToDrive()"><i class="fas fa-file-export"></i> EXPORT TO DRIVE</button>
+        </div>
+      </div>
+      <div class="form-grid anim-3" id="form-grid-container">
+        <p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0; font-family:'Inter',sans-serif;">Select a target and generate preview to render printable Registration Forms.</p>
+      </div>
     </div>
 
     <div id="panel-legacy" class="view-panel">
@@ -486,6 +534,7 @@
   let session = {};
   let isDarkMode = false;
   let globalStudentCache = [];
+  let globalFormCache = [];
   let globalAdminPostCache = []; 
   let isScanning = false;
   let recentScanCount = 0;
@@ -502,7 +551,6 @@
   let currentDiscStudentId = null;
   let stagedImages = [];
 
-  // --- ACTUALLY CORRECTED: XSS Sanitization Helper ---
   function escapeHTML(str) {
       if (!str) return '';
       return str.toString().replace(/[&<>'"]/g, 
@@ -524,7 +572,6 @@
   function apiCall(action, payload, onSuccess, onFailure) {
     payload.action = action;
     
-    // Automatically inject secure token for all requests
     if (session && session.user && session.token) {
         payload.user = session.user;
         payload.token = session.token;
@@ -611,11 +658,8 @@
   function exportTableToExcel(tableId, filename) {
     let table = document.getElementById(tableId).closest('table');
     let rows = table.querySelectorAll('tr');
-    
     if (rows.length <= 1) return Swal.fire('Notice', 'No data available to export.', 'info');
-
     let aoa = []; 
-
     let headerRow = [];
     let headers = rows[0].querySelectorAll("th, td");
     for (let j = 0; j < headers.length; j++) {
@@ -623,12 +667,10 @@
       headerRow.push(headers[j].innerText.trim());
     }
     aoa.push(headerRow);
-
     let bodyData = [];
     for (let i = 1; i < rows.length; i++) {
       let cols = rows[i].querySelectorAll("td, th");
       if (cols.length === 1 && cols[0].colSpan > 1) continue; 
-
       let rowArr = [];
       for (let j = 0; j < cols.length; j++) {
         if(cols[j].querySelector('button') && j === cols.length - 1) continue; 
@@ -636,9 +678,7 @@
       }
       bodyData.push(rowArr);
     }
-
     if (bodyData.length === 0) return Swal.fire('Notice', 'No data available to export.', 'info');
-
     if (tableId === 'attendance-table' || tableId === 'masterlist-table') {
       bodyData.sort((a, b) => {
          let compA = a[2] ? a[2].toLowerCase() : "";
@@ -646,27 +686,18 @@
          return compA.localeCompare(compB);
       });
     }
-
     bodyData.forEach(r => aoa.push(r));
-
     let ws = XLSX.utils.aoa_to_sheet(aoa);
     let range = XLSX.utils.decode_range(ws['!ref']);
-
     for (let R = range.s.r; R <= range.e.r; ++R) {
       for (let C = range.s.c; C <= range.e.c; ++C) {
         let cellAddress = {c:C, r:R};
         let cellRef = XLSX.utils.encode_cell(cellAddress);
         if (!ws[cellRef]) continue;
-
         if (R === 0) {
-          ws[cellRef].s = {
-            font: { bold: true, color: { rgb: "FFFFFFFF" } },
-            fill: { fgColor: { rgb: "FF2D3821" } },
-            alignment: { horizontal: "center" }
-          };
+          ws[cellRef].s = { font: { bold: true, color: { rgb: "FFFFFFFF" } }, fill: { fgColor: { rgb: "FF2D3821" } }, alignment: { horizontal: "center" } };
           continue;
         }
-
         let val = String(ws[cellRef].v).toUpperCase();
         if (val === "PRESENT" || val === "APPROVED") {
           ws[cellRef].s = { fill: { fgColor: { rgb: "FF388E3C" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
@@ -677,7 +708,6 @@
         }
       }
     }
-
     ws['!cols'] = [{wch: 15}, {wch: 30}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}];
     let wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Unit Data");
@@ -850,6 +880,7 @@
     if (['panel-dashboard','panel-attendance','panel-masterlist','panel-accounts'].includes(panelId)) loadDashboardData();
     if (panelId === 'panel-leaves') { loadLeavesData(); fetchStudentsForDropdown(); }
     if (panelId === 'panel-idcards') fetchStudentsForDropdown();
+    if (panelId === 'panel-forms') fetchFormDossierData();
     if (panelId === 'panel-audit') loadAuditLogs();
     if (panelId === 'panel-profile') loadUserProfile();
     if (panelId === 'panel-legacy') { loadLegacyClassesForDropdown(); loadLegacyAdminData(); }
@@ -1171,7 +1202,7 @@
     document.querySelectorAll('.preview-carousel-slide').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.preview-dot').forEach(d => d.classList.remove('active'));
     document.getElementById(`prev-slide-${index}`).classList.add('active');
-    if (document.getElementById(`prev-dot-${index}`)) document.getElementById(`prev-dot-${index}`).classList.add('active');
+    if (document.getElementById(`prev-dot-${index}`)) document.getElementById(`prev-dot-${indexclassList.add('active')}`);
     previewSlideIdx = index;
   }
 
@@ -1503,7 +1534,30 @@
       }); 
   }
 
-  function fetchStudentsForDropdown() { document.getElementById('id-target-select').innerHTML='<option value="ALL">Fetching data...</option>'; document.getElementById('lv-id').innerHTML='<option value="">Fetching data...</option>'; apiCall('getStudentsForIDCards', { user: session.user, pass: session.pass }, (res) => { globalStudentCache = res.students; let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; res.students.forEach(s => { o+=`<option value="${s.id}">${escapeHTML(s.id)} – ${escapeHTML(s.name)}</option>`; lo+=`<option value="${s.id}">${escapeHTML(s.id)} – ${escapeHTML(s.name)}</option>`; }); document.getElementById('id-target-select').innerHTML=o; document.getElementById('lv-id').innerHTML=lo; }); }
+  function fetchStudentsForDropdown() { 
+      document.getElementById('id-target-select').innerHTML='<option value="ALL">Fetching data...</option>'; 
+      document.getElementById('lv-id').innerHTML='<option value="">Fetching data...</option>'; 
+      apiCall('getStudentsForIDCards', { user: session.user, pass: session.pass }, (res) => { 
+          globalStudentCache = res.students; 
+          let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; 
+          res.students.forEach(s => { 
+              o+=`<option value="${s.id}">${escapeHTML(s.id)} – ${escapeHTML(s.name)}</option>`; 
+              lo+=`<option value="${s.id}">${escapeHTML(s.id)} – ${escapeHTML(s.name)}</option>`; 
+          }); 
+          document.getElementById('id-target-select').innerHTML=o; 
+          document.getElementById('lv-id').innerHTML=lo; 
+      }); 
+  }
+
+  function fetchFormDossierData() {
+      document.getElementById('form-target-select').innerHTML='<option value="ALL">Fetching data...</option>';
+      apiCall('getFormDossierData', { user: session.user, pass: session.pass }, (res) => {
+          globalFormCache = res.students;
+          let o = '<option value="ALL">Entire Roster (Bulk)</option>';
+          res.students.forEach(s => { o += `<option value="${s.studentNo}">${escapeHTML(s.studentNo)} – ${escapeHTML(s.lName)}, ${escapeHTML(s.fName)}</option>`; });
+          document.getElementById('form-target-select').innerHTML = o;
+      });
+  }
   
   function generateIDPreview() { 
       const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); 
@@ -1521,39 +1575,8 @@
       
       setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H })), 300); 
   }
-  
-  function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
-  function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${escapeHTML(l.user)}</b></td><td><span class="badge badge-action">${escapeHTML(l.action)}</span></td><td style="color:var(--text-muted); font-size:13px;">${escapeHTML(l.details)}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }); }
-  
-  function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${escapeHTML(c.name)} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
-  
-  function submitLegacyClass() { 
-      const n=document.getElementById('leg-class-name').value.trim(), y=document.getElementById('leg-class-year').value.trim(), l=croppedData['leg-class-logo']; 
-      if(!n||!y||!l) return Swal.fire('Notice', 'Fields required.', 'warning'); 
-      Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() }); 
-      apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire('Success', res.message, 'success'); 
-          document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; loadLegacyAdminData(); 
-      }); 
-  }
-  
-  function submitLegacyOfficer() { 
-      const c=document.getElementById('leg-off-class').value, r=document.getElementById('leg-off-rank').value.trim(), n=document.getElementById('leg-off-name').value.trim(), d=document.getElementById('leg-off-desig').value.trim(), course=document.getElementById('leg-off-course').value.trim(), bio=document.getElementById('leg-off-bio').value.trim(), i=croppedData['leg-off-photo']; 
-      if(!c||!r||!n||!d||!i) return Swal.fire('Notice', 'Please fill all required fields and upload an image.', 'warning'); 
-      Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); 
-      apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire('Success', res.message, 'success'); 
-          document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; loadLegacyAdminData(); 
-      }); 
-  }
 
-  function loadUserProfile() { apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { document.getElementById('prof-name').value=res.name||""; document.getElementById('prof-rank').value=res.rank||""; document.getElementById('prof-age').value=res.age||""; document.getElementById('prof-course').value=res.course||""; document.getElementById('prof-position').value=res.position||""; document.getElementById('prof-contact').value=res.contact||""; updateSidebarProfile(res); }); }
-  function saveUserProfile() { const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; if(croppedData['prof-image-file']) d.imageData=croppedData['prof-image-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('prof-image-file').value=""; delete croppedData['prof-image-file']; document.getElementById('prof-image-status').innerHTML='Select an image...'; loadUserProfile(); }); }
-  function updateSidebarProfile(d) { document.getElementById('sidebar-profile-name').innerText=(d.name||session.user||"PERSONNEL").toUpperCase(); document.getElementById('sidebar-profile-role').innerText=(d.rank?d.rank+" - ":"")+(d.position||session.role||"SYSTEM ACTIVE"); if(d.image) { document.getElementById('sidebar-profile-img').src=d.image; document.getElementById('sidebar-profile-img').style.display='block'; document.getElementById('sidebar-icon').style.display='none'; } else { document.getElementById('sidebar-profile-img').style.display='none'; document.getElementById('sidebar-icon').style.display='block'; } }
-  function saveSystemSettings() { let p={ user: session.user, pass: session.pass, clearBg: false }; if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', p, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('set-logo-file').value=""; delete croppedData['set-logo-file']; document.getElementById('set-logo-status').innerHTML='Select an image...'; document.getElementById('set-bg-file').value=""; delete croppedData['set-bg-file']; document.getElementById('set-bg-status').innerHTML='Select an image...'; document.getElementById('set-nav-logo-file').value=""; delete croppedData['set-nav-logo-file']; document.getElementById('set-nav-logo-status').innerHTML='Select an image...'; apiCall('getSettings', {}, (n) => { if(n.logoUrl) { document.getElementById('system-logo-login').src=n.logoUrl; document.getElementById('system-logo-login').style.display='block'; } if(n.bgUrl) document.getElementById('view-login').style.backgroundImage=`url('${n.bgUrl}')`; }); }); }
-  function resetBackground() { Swal.fire({ title: 'RESETTING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', { clearBg: true, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', 'Background removed.', 'success'); document.getElementById('view-login').style.backgroundImage=`radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%)`; }); }
-
-  try { if (localStorage.getItem('sccks_dark') === '1') applyTheme(true); } catch(e) {}
-</script>
-</body>
-</html>
+  function generateFormPreview() {
+      const t = document.getElementById('form-target-select').value;
+      const c = document.getElementById('form-grid-container');
+      c.innerHTML = '<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING EDITABLE PREVIEW...</
