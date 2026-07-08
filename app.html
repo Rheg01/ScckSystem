@@ -104,33 +104,31 @@
     .preview-post-title { font-size: 32px; margin-bottom: 20px; line-height: 1.2; border-bottom: 1px solid var(--border); padding-bottom: 15px;}
     .preview-post-desc { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.8; white-space: pre-wrap; }
 
-    /* FORM GENERATOR CSS */
+    /* FORM GENERATOR CSS - STRICT TABLE LAYOUT */
     .form-grid { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-top: 30px; }
-    .print-form-page { width: 100%; max-width: 800px; background: #fff; color: #000; padding: 40px; border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-family: 'Times New Roman', serif; position: relative; text-shadow: none; line-height: 1.5; }
-    .print-form-header { text-align: center; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; font-size: 16px; font-family: 'Times New Roman', serif; color: #000; }
-    .print-form-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-family: 'Times New Roman', serif; color: #000; flex-wrap: wrap; }
-    .print-form-group { display: flex; flex: 1; margin-right: 15px; align-items: flex-end;}
-    .print-form-group:last-child { margin-right: 0; }
-    .print-form-label { font-weight: bold; margin-right: 5px; white-space: nowrap; font-family: 'Times New Roman', serif; }
-    .editable-field { border-bottom: 1px solid #000; flex: 1; padding-left: 5px; min-height: 20px; font-family: 'Times New Roman', serif; outline: none; transition: background 0.2s; white-space: nowrap; overflow: hidden; }
+    .print-form-page { width: 8.5in; min-height: 11in; background: #fff; color: #000; padding: 0.5in; border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-family: 'Arial', sans-serif; position: relative; text-shadow: none; line-height: 1.3; margin: 0 auto; box-sizing: border-box;}
+    .print-form-page table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 14px; font-family: 'Arial', sans-serif; color: #000; }
+    .print-form-page td { padding: 2px 4px; vertical-align: bottom; }
+    .print-form-header { text-align: center; font-weight: bold; text-transform: uppercase; font-size: 16px; text-decoration: underline; margin-bottom: 20px; }
+    .editable-field { border-bottom: 1px solid #000; min-height: 18px; display: inline-block; width: 100%; outline: none; transition: background 0.2s; white-space: pre-wrap; word-break: break-word; }
     .editable-field:focus { background: #fffde7; border-bottom: 2px solid #fbc02d; }
-    .print-form-section { margin-top: 25px; font-weight: bold; font-size: 14px; margin-bottom: 10px; font-family: 'Times New Roman', serif; color: #000; }
     
     @media print { 
         body * { visibility: hidden; } 
-        
+        /* ID Card Print */
         .active-panel#panel-idcards #id-grid-container, .active-panel#panel-idcards #id-grid-container * { visibility: visible; } 
         .active-panel#panel-idcards #id-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: grid; grid-template-columns: repeat(3, 240px); gap: 20px; justify-content: center; margin: 0; padding: 0; } 
         .id-card-modern { page-break-inside: avoid; border: 1px solid #000; box-shadow: none; } 
         .id-card-top { background: #1b2015 !important; border-bottom: 4px solid #d4af37 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} 
         .id-footer-modern { background: #1b2015 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} 
         
+        /* Form Print - FORCES TRUE A4/FOLIO SIZE */
         .active-panel#panel-forms #form-grid-container, .active-panel#panel-forms #form-grid-container * { visibility: visible; color: #000 !important; }
         .active-panel#panel-forms #form-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: block; margin: 0; padding: 0; }
-        .print-form-page { page-break-after: always; box-shadow: none; border: none; padding: 0; max-width: 100%; width: 100%; margin-bottom: 0; }
+        .print-form-page { page-break-after: always; box-shadow: none; border: none; padding: 0; width: 100%; min-height: auto; margin: 0; }
         .editable-field { border-bottom: 1px solid #000 !important; background: transparent !important; }
     }
-    @media (max-width: 768px) { .sidebar { position: fixed; top: 0; left: -260px; height: 100vh; z-index: 10000; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } .sidebar.open { left: 0; } .mobile-menu-btn { display: block; } .main-content { padding: 15px; width: 100%; } }
+    @media (max-width: 768px) { .sidebar { position: fixed; top: 0; left: -260px; height: 100vh; z-index: 10000; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } .sidebar.open { left: 0; } .mobile-menu-btn { display: block; } .main-content { padding: 15px; width: 100%; } .print-form-page { width: 100%; padding: 15px; font-size:12px; } }
   </style>
 </head>
 <body>
@@ -354,6 +352,7 @@
       <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0; font-family:'Inter',sans-serif;">Select a target and generate preview to render Identification Cards.</p></div>
     </div>
 
+    <!-- FORM GENERATOR PANEL -->
     <div id="panel-forms" class="view-panel">
       <div class="header-bar anim-1">
           <div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-file-alt"></i> REGISTRATION DOSSIER GENERATOR</h2></div>
@@ -528,201 +527,100 @@
 <script>
   const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw63y63Mk-wyqa1a846oBhnDTHj29dUEJznvrG52sjEtwONa6kOEzDVCy_GlnAMqPXPAg/exec";
 
-  let session = {};
-  let isDarkMode = false;
-  let globalStudentCache = [];
-  let globalFormCache = [];
-  let globalAdminPostCache = []; 
-  let isScanning = false;
-  let recentScanCount = 0;
-  const MAX_RECENT_SCANS = 50;
-  let weeklyChart = null;
-  let donutChart = null;
-  let qrScanner = null;
-
-  let currentCropper = null;
-  let currentCropTarget = '';
-  const croppedData = {}; 
-  
-  let editingPostId = null;
-  let currentDiscStudentId = null;
-  let stagedImages = [];
+  let session = {}; let isDarkMode = false; let globalStudentCache = []; let globalFormCache = []; let globalAdminPostCache = []; 
+  let isScanning = false; let recentScanCount = 0; const MAX_RECENT_SCANS = 50; let weeklyChart = null; let donutChart = null; let qrScanner = null;
+  let currentCropper = null; let currentCropTarget = ''; const croppedData = {}; let editingPostId = null; let currentDiscStudentId = null; let stagedImages = [];
 
   function escapeHTML(str) {
       if (!str) return '';
-      return str.toString().replace(/[&<>'"]/g, 
-          tag => ({
-              '&': '&amp;',
-              '<': '&lt;',
-              '>': '&gt;',
-              "'": '&#39;',
-              '"': '&quot;'
-          }[tag] || tag)
-      );
+      return str.toString().replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
   }
 
   window.forceRefresh = function(targetFunc) {
-      Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Syncing database...', showConfirmButton: false, timer: 1500 });
-      targetFunc();
+      Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Syncing database...', showConfirmButton: false, timer: 1500 }); targetFunc();
   }
 
   function apiCall(action, payload, onSuccess, onFailure) {
     payload.action = action;
-    
-    if (session && session.user && session.token) {
-        payload.user = session.user;
-        payload.token = session.token;
-    }
-
-    fetch(GAS_API_URL, { 
-      method: 'POST', 
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-      body: JSON.stringify(payload) 
-    })
+    if (session && session.user && session.token) { payload.user = session.user; payload.token = session.token; }
+    fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
     .then(response => response.json())
-    .then(data => { 
-      if (data.error && data.error !== false) {
-          throw new Error(data.message || "Unknown Database Failure");
-      }
-      onSuccess(data); 
-    })
+    .then(data => { if (data.error && data.error !== false) throw new Error(data.message || "Unknown Database Failure"); onSuccess(data); })
     .catch(error => { 
         console.error("API Error:", error); 
-        if (onFailure) {
-            onFailure(error); 
-        } else {
-            if(error.message.includes('DENIED') || error.message.includes('Session')) {
-                Swal.fire({ title: 'CLEARANCE DENIED', text: error.message, icon: 'error', background: '#1b0002', color: '#ff5252', confirmButtonColor: '#d32f2f' }).then(() => {
-                    if(error.message.includes('Session')) logout();
-                });
-            } else {
-                Swal.fire('Error', error.message, 'error');
-            }
+        if (onFailure) onFailure(error); 
+        else {
+            if(error.message.includes('DENIED') || error.message.includes('Session')) { Swal.fire({ title: 'CLEARANCE DENIED', text: error.message, icon: 'error', background: '#1b0002', color: '#ff5252', confirmButtonColor: '#d32f2f' }).then(() => { if(error.message.includes('Session')) logout(); }); } 
+            else { Swal.fire('Error', error.message, 'error'); }
         }
     });
   }
 
   function createEmbed(url) {
-      if (!url) return '';
-      let finalUrl = url;
-      if (url.includes('youtube.com/watch?v=')) {
-          finalUrl = url.replace('watch?v=', 'embed/').split('&')[0];
-      } else if (url.includes('youtu.be/')) {
-          finalUrl = url.replace('youtu.be/', 'youtube.com/embed/');
-      } else if (url.includes('drive.google.com/file/d/')) {
-          finalUrl = url.replace('/view', '/preview');
-      } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
-          finalUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
-      }
+      if (!url) return ''; let finalUrl = url;
+      if (url.includes('youtube.com/watch?v=')) finalUrl = url.replace('watch?v=', 'embed/').split('&')[0];
+      else if (url.includes('youtu.be/')) finalUrl = url.replace('youtu.be/', 'youtube.com/embed/');
+      else if (url.includes('drive.google.com/file/d/')) finalUrl = url.replace('/view', '/preview');
+      else if (url.includes('facebook.com') || url.includes('fb.watch')) finalUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
       return `<iframe src="${finalUrl}" style="width:100%; height:450px; border:none; border-radius:8px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
   }
 
   document.getElementById('post-image-file').addEventListener('change', async function(e) {
-    const files = e.target.files;
-    if(files.length === 0) return;
+    const files = e.target.files; if(files.length === 0) return;
     document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;"><i class="fas fa-spinner fa-spin"></i> Processing images...</span>';
     stagedImages = []; 
-    for(let i=0; i < files.length; i++) {
-      let b64 = await compressAutoImage(files[i]);
-      stagedImages.push(b64);
-    }
+    for(let i=0; i < files.length; i++) { let b64 = await compressAutoImage(files[i]); stagedImages.push(b64); }
     renderStagingGrid();
   });
 
   function renderStagingGrid() {
-    const grid = document.getElementById('image-staging-grid');
-    grid.innerHTML = '';
+    const grid = document.getElementById('image-staging-grid'); grid.innerHTML = '';
     stagedImages.forEach((b64, idx) => {
-      let isCover = (idx === 0);
-      let border = isCover ? 'border: 3px solid var(--army-gold);' : 'border: 1px solid var(--border);';
+      let isCover = (idx === 0); let border = isCover ? 'border: 3px solid var(--army-gold);' : 'border: 1px solid var(--border);';
       let coverBadge = isCover ? `<div style="position:absolute; top:0; left:0; background:var(--army-gold); color:#000; font-size:10px; font-weight:bold; padding:2px 5px; z-index:10;">COVER</div>` : '';
       let makeCoverBtn = isCover ? '' : `<button type="button" style="padding:4px; font-size:10px; margin-top:5px; background:var(--bg); color:var(--text); border:1px solid var(--border);" onclick="setCoverImage(${idx})">Set as Cover</button>`;
       grid.innerHTML += `<div style="position:relative; width: 100px; display:flex; flex-direction:column; animation: fadeUp 0.3s ease;"><div style="width:100px; height:100px; overflow:hidden; border-radius:4px; ${border} position:relative;">${coverBadge}<img src="${b64}" style="width:100%; height:100%; object-fit:cover;"></div>${makeCoverBtn}</div>`;
     });
   }
 
-  window.setCoverImage = function(idx) {
-    let selected = stagedImages.splice(idx, 1)[0];
-    stagedImages.unshift(selected); 
-    renderStagingGrid();
-  }
-
-  function formatHashtags(text) {
-    if (!text) return "";
-    return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>');
-  }
+  window.setCoverImage = function(idx) { let selected = stagedImages.splice(idx, 1)[0]; stagedImages.unshift(selected); renderStagingGrid(); }
+  function formatHashtags(text) { if (!text) return ""; return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>'); }
 
   function exportTableToExcel(tableId, filename) {
-    let table = document.getElementById(tableId).closest('table');
-    let rows = table.querySelectorAll('tr');
+    let table = document.getElementById(tableId).closest('table'); let rows = table.querySelectorAll('tr');
     if (rows.length <= 1) return Swal.fire('Notice', 'No data available to export.', 'info');
-    let aoa = []; 
-    let headerRow = [];
-    let headers = rows[0].querySelectorAll("th, td");
-    for (let j = 0; j < headers.length; j++) {
-      if(headers[j].querySelector('button') && j === headers.length - 1) continue; 
-      headerRow.push(headers[j].innerText.trim());
-    }
+    let aoa = [], headerRow = [], headers = rows[0].querySelectorAll("th, td");
+    for (let j = 0; j < headers.length; j++) { if(headers[j].querySelector('button') && j === headers.length - 1) continue; headerRow.push(headers[j].innerText.trim()); }
     aoa.push(headerRow);
     let bodyData = [];
     for (let i = 1; i < rows.length; i++) {
-      let cols = rows[i].querySelectorAll("td, th");
-      if (cols.length === 1 && cols[0].colSpan > 1) continue; 
+      let cols = rows[i].querySelectorAll("td, th"); if (cols.length === 1 && cols[0].colSpan > 1) continue; 
       let rowArr = [];
-      for (let j = 0; j < cols.length; j++) {
-        if(cols[j].querySelector('button') && j === cols.length - 1) continue; 
-        rowArr.push(cols[j].innerText.trim());
-      }
+      for (let j = 0; j < cols.length; j++) { if(cols[j].querySelector('button') && j === cols.length - 1) continue; rowArr.push(cols[j].innerText.trim()); }
       bodyData.push(rowArr);
     }
     if (bodyData.length === 0) return Swal.fire('Notice', 'No data available to export.', 'info');
-    if (tableId === 'attendance-table' || tableId === 'masterlist-table') {
-      bodyData.sort((a, b) => {
-         let compA = a[2] ? a[2].toLowerCase() : "";
-         let compB = b[2] ? b[2].toLowerCase() : "";
-         return compA.localeCompare(compB);
-      });
-    }
+    if (tableId === 'attendance-table' || tableId === 'masterlist-table') { bodyData.sort((a, b) => { let compA = a[2] ? a[2].toLowerCase() : ""; let compB = b[2] ? b[2].toLowerCase() : ""; return compA.localeCompare(compB); }); }
     bodyData.forEach(r => aoa.push(r));
-    let ws = XLSX.utils.aoa_to_sheet(aoa);
-    let range = XLSX.utils.decode_range(ws['!ref']);
+    let ws = XLSX.utils.aoa_to_sheet(aoa); let range = XLSX.utils.decode_range(ws['!ref']);
     for (let R = range.s.r; R <= range.e.r; ++R) {
       for (let C = range.s.c; C <= range.e.c; ++C) {
-        let cellAddress = {c:C, r:R};
-        let cellRef = XLSX.utils.encode_cell(cellAddress);
-        if (!ws[cellRef]) continue;
-        if (R === 0) {
-          ws[cellRef].s = { font: { bold: true, color: { rgb: "FFFFFFFF" } }, fill: { fgColor: { rgb: "FF2D3821" } }, alignment: { horizontal: "center" } };
-          continue;
-        }
+        let cellRef = XLSX.utils.encode_cell({c:C, r:R}); if (!ws[cellRef]) continue;
+        if (R === 0) { ws[cellRef].s = { font: { bold: true, color: { rgb: "FFFFFFFF" } }, fill: { fgColor: { rgb: "FF2D3821" } }, alignment: { horizontal: "center" } }; continue; }
         let val = String(ws[cellRef].v).toUpperCase();
-        if (val === "PRESENT" || val === "APPROVED") {
-          ws[cellRef].s = { fill: { fgColor: { rgb: "FF388E3C" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
-        } else if (val === "LATE" || val === "PENDING") {
-          ws[cellRef].s = { fill: { fgColor: { rgb: "FFF57F17" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
-        } else if (val === "VERY LATE" || val === "ABSENT" || val === "REJECTED") {
-          ws[cellRef].s = { fill: { fgColor: { rgb: "FFD32F2F" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
-        }
+        if (val === "PRESENT" || val === "APPROVED") { ws[cellRef].s = { fill: { fgColor: { rgb: "FF388E3C" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } }; } 
+        else if (val === "LATE" || val === "PENDING") { ws[cellRef].s = { fill: { fgColor: { rgb: "FFF57F17" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } }; } 
+        else if (val === "VERY LATE" || val === "ABSENT" || val === "REJECTED") { ws[cellRef].s = { fill: { fgColor: { rgb: "FFD32F2F" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } }; }
       }
     }
     ws['!cols'] = [{wch: 15}, {wch: 30}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}];
-    let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Unit Data");
-    XLSX.writeFile(wb, filename + ".xlsx");
+    let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Unit Data"); XLSX.writeFile(wb, filename + ".xlsx");
   }
 
   function togglePasswordVisibility() {
-    const passInput = document.getElementById('login-pass');
-    const toggleIcon = document.getElementById('toggle-pass-icon');
-    if (passInput.type === 'password') {
-      passInput.type = 'text';
-      toggleIcon.classList.remove('fa-eye');
-      toggleIcon.classList.add('fa-eye-slash');
-    } else {
-      passInput.type = 'password';
-      toggleIcon.classList.remove('fa-eye-slash');
-      toggleIcon.classList.add('fa-eye');
-    }
+    const passInput = document.getElementById('login-pass'), toggleIcon = document.getElementById('toggle-pass-icon');
+    if (passInput.type === 'password') { passInput.type = 'text'; toggleIcon.classList.remove('fa-eye'); toggleIcon.classList.add('fa-eye-slash'); } 
+    else { passInput.type = 'password'; toggleIcon.classList.remove('fa-eye-slash'); toggleIcon.classList.add('fa-eye'); }
   }
 
   window.onload = () => {
@@ -744,42 +642,29 @@
         const parsed = JSON.parse(savedSession);
         if (parsed.expiry > Date.now() && parsed.token) {
           session = { user: parsed.user, token: parsed.token, role: parsed.role };
-          document.getElementById('view-login').style.display = 'none'; 
-          document.getElementById('app-container').style.display = 'flex';
-          loadUserProfile();
-          setupRoleUI(parsed.role);
-          updateOfflineSyncUI();
-        } else {
-          localStorage.removeItem('scck_session');
-        }
+          document.getElementById('view-login').style.display = 'none'; document.getElementById('app-container').style.display = 'flex';
+          loadUserProfile(); setupRoleUI(parsed.role); updateOfflineSyncUI();
+        } else { localStorage.removeItem('scck_session'); }
       } catch(e) {}
     }
   };
 
   function setupRoleUI(role) {
     if (role === 'Super Admin' || role === 'Admin') {
-      document.getElementById('sidebar-menu-admin').style.display = 'block'; 
-      document.getElementById('sidebar-menu-scanner').style.display = 'none';
-      
+      document.getElementById('sidebar-menu-admin').style.display = 'block'; document.getElementById('sidebar-menu-scanner').style.display = 'none';
       let btnClass = document.getElementById('btn-submit-class');
-
       if (role === 'Super Admin') {
         if(btnClass) btnClass.innerHTML = '<i class="fas fa-check-double"></i> INSTANTLY CREATE & APPROVE CLASS';
-        document.getElementById('admin-draft-section').style.display = 'none';
-        document.getElementById('admin-leave-submit-section').style.display = 'none'; 
-        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block');
-        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none'); 
+        document.getElementById('admin-draft-section').style.display = 'none'; document.getElementById('admin-leave-submit-section').style.display = 'none'; 
+        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block'); document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none'); 
       } else {
         if(btnClass) btnClass.innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT REQUEST FOR APPROVAL';
-        document.getElementById('admin-draft-section').style.display = 'block';
-        document.getElementById('admin-leave-submit-section').style.display = 'flex'; 
-        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); 
+        document.getElementById('admin-draft-section').style.display = 'block'; document.getElementById('admin-leave-submit-section').style.display = 'flex'; 
+        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none'); document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); 
       }
       switchTab('panel-dashboard', document.querySelectorAll('#sidebar-menu-admin button')[0]);
     } else {
-      document.getElementById('sidebar-menu-admin').style.display = 'none'; 
-      document.getElementById('sidebar-menu-scanner').style.display = 'block'; 
+      document.getElementById('sidebar-menu-admin').style.display = 'none'; document.getElementById('sidebar-menu-scanner').style.display = 'block'; 
       switchTab('panel-scanner', document.querySelector('#sidebar-menu-scanner button'));
     }
   }
@@ -788,33 +673,20 @@
     const inputs = ['prof-image-file', 'set-logo-file', 'set-nav-logo-file', 'set-bg-file', 'leg-class-logo', 'leg-off-photo'];
     inputs.forEach(id => {
       const el = document.getElementById(id);
-      if(el) {
-        el.addEventListener('change', function(e) {
-          if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(event) { openCropper(event.target.result, id); };
-            reader.readAsDataURL(e.target.files[0]);
-          }
-        });
-      }
+      if(el) { el.addEventListener('change', function(e) { if (e.target.files && e.target.files[0]) { const reader = new FileReader(); reader.onload = function(event) { openCropper(event.target.result, id); }; reader.readAsDataURL(e.target.files[0]); } }); }
     });
   }
 
   function openCropper(imageSrc, targetId) {
-    currentCropTarget = targetId;
-    const modal = document.getElementById('cropper-modal');
-    const img = document.getElementById('cropper-image');
-    img.src = imageSrc;
-    modal.classList.add('show');
-    let aspectRatio = (targetId === 'set-bg-file') ? NaN : 1; 
+    currentCropTarget = targetId; const modal = document.getElementById('cropper-modal'), img = document.getElementById('cropper-image');
+    img.src = imageSrc; modal.classList.add('show');
     if(currentCropper) currentCropper.destroy();
-    currentCropper = new Cropper(img, { aspectRatio: aspectRatio, viewMode: 2, autoCropArea: 1 });
+    currentCropper = new Cropper(img, { aspectRatio: (targetId === 'set-bg-file') ? NaN : 1, viewMode: 2, autoCropArea: 1 });
   }
 
   document.getElementById('btn-crop-apply').addEventListener('click', () => {
     if (!currentCropper) return;
-    const canvas = currentCropper.getCroppedCanvas({ maxWidth: 800, maxHeight: 800 });
-    croppedData[currentCropTarget] = canvas.toDataURL('image/png');
+    croppedData[currentCropTarget] = currentCropper.getCroppedCanvas({ maxWidth: 800, maxHeight: 800 }).toDataURL('image/png');
     let statusTextMap = { 'prof-image-file': 'prof-image-status', 'set-logo-file': 'set-logo-status', 'set-nav-logo-file': 'set-nav-logo-status', 'set-bg-file': 'set-bg-status', 'leg-class-logo': 'leg-class-status', 'leg-off-photo': 'leg-off-status' };
     let statusEl = document.getElementById(statusTextMap[currentCropTarget]);
     if(statusEl) statusEl.innerHTML = '<span style="color:var(--status-green); font-weight:bold;"><i class="fas fa-check"></i> Image Cropped & Ready</span>';
@@ -833,17 +705,9 @@
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_SIZE = 1080; 
-          let width = img.width, height = img.height;
-          if (width > MAX_SIZE || height > MAX_SIZE) {
-            if (width > height) { height = Math.round((height * MAX_SIZE) / width); width = MAX_SIZE; } 
-            else { width = Math.round((width * MAX_SIZE) / height); height = MAX_SIZE; }
-          }
-          canvas.width = width; canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/jpeg', 0.8)); 
+          const canvas = document.createElement('canvas'); const MAX_SIZE = 1080; let width = img.width, height = img.height;
+          if (width > MAX_SIZE || height > MAX_SIZE) { if (width > height) { height = Math.round((height * MAX_SIZE) / width); width = MAX_SIZE; } else { width = Math.round((width * MAX_SIZE) / height); height = MAX_SIZE; } }
+          canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); resolve(canvas.toDataURL('image/jpeg', 0.8)); 
         };
         img.src = e.target.result;
       };
@@ -860,23 +724,16 @@
   }
   function toggleTheme() { applyTheme(!isDarkMode); }
 
-  function toggleSidebar() {
-    document.querySelector('.sidebar').classList.toggle('open');
-    document.getElementById('mobile-overlay').classList.toggle('show');
-  }
+  function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('open'); document.getElementById('mobile-overlay').classList.toggle('show'); }
 
   function switchTab(panelId, btnElement) {
-    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-    document.getElementById(panelId).classList.add('active-panel');
-    document.querySelectorAll('.sidebar-menu button').forEach(b => b.classList.remove('active'));
-    if (btnElement) btnElement.classList.add('active');
-
-    if (window.innerWidth <= 768) toggleSidebar();
-    if (panelId !== 'panel-scanner') stopScanner(false);
+    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel')); document.getElementById(panelId).classList.add('active-panel');
+    document.querySelectorAll('.sidebar-menu button').forEach(b => b.classList.remove('active')); if (btnElement) btnElement.classList.add('active');
+    if (window.innerWidth <= 768) toggleSidebar(); if (panelId !== 'panel-scanner') stopScanner(false);
     
     if (['panel-dashboard','panel-attendance','panel-masterlist','panel-accounts'].includes(panelId)) loadDashboardData();
     if (panelId === 'panel-leaves') { loadLeavesData(); fetchStudentsForDropdown(); }
-    if (panelId === 'panel-idcards') fetchStudentsForDropdown();
+    if (panelId === 'panel-idcards' || panelId === 'panel-forms') fetchStudentsForDropdown();
     if (panelId === 'panel-forms') fetchFormDossierData();
     if (panelId === 'panel-audit') loadAuditLogs();
     if (panelId === 'panel-profile') loadUserProfile();
@@ -887,39 +744,22 @@
   function loadLegacyAdminData() {
     document.getElementById('legacy-classes-tbody').innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
     document.getElementById('legacy-officers-tbody').innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
-    
     apiCall('getAdminLegacyData', { user: session.user, pass: session.pass }, (res) => {
       let cHtml = '';
       res.classes.forEach(c => {
         let actionBtn = '';
         if (session.role === 'Super Admin') {
-          if (c.status === 'Pending') {
-            actionBtn = `
-              <button class="btn-success" style="padding:4px 8px; font-size:11px; margin-right:5px;" onclick="updateLegacyClass('${c.id}','Approved')">APPROVE</button>
-              <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="updateLegacyClass('${c.id}','Rejected')">REJECT</button>`;
-          } else {
-            actionBtn = `<button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteLegacyClass('${c.id}')"><i class="fas fa-trash"></i> DELETE</button>`;
-          }
+          if (c.status === 'Pending') { actionBtn = `<button class="btn-success" style="padding:4px 8px; font-size:11px; margin-right:5px;" onclick="updateLegacyClass('${c.id}','Approved')">APPROVE</button><button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="updateLegacyClass('${c.id}','Rejected')">REJECT</button>`; } 
+          else { actionBtn = `<button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteLegacyClass('${c.id}')"><i class="fas fa-trash"></i> DELETE</button>`; }
         }
         let bClass = c.status === 'Approved' ? 'badge-present' : (c.status === 'Pending' ? 'badge-late' : 'badge-absent');
-        cHtml += `<tr>
-          <td>${c.year}</td>
-          <td><b>${escapeHTML(c.name)}</b></td>
-          <td><span class="badge ${bClass}">${c.status}</span></td>
-          <td>${actionBtn}</td>
-        </tr>`;
+        cHtml += `<tr><td>${c.year}</td><td><b>${escapeHTML(c.name)}</b></td><td><span class="badge ${bClass}">${c.status}</span></td><td>${actionBtn}</td></tr>`;
       });
       document.getElementById('legacy-classes-tbody').innerHTML = cHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
-
       let oHtml = '';
       res.officers.forEach(o => {
         let actionBtn = session.role === 'Super Admin' ? `<button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteLegacyOfficer('${o.id}')"><i class="fas fa-trash"></i></button>` : '';
-        oHtml += `<tr>
-          <td>${o.classId}</td>
-          <td><b>${escapeHTML(o.rank)} ${escapeHTML(o.name)}</b></td>
-          <td>${escapeHTML(o.designation)}</td>
-          <td>${actionBtn}</td>
-        </tr>`;
+        oHtml += `<tr><td>${o.classId}</td><td><b>${escapeHTML(o.rank)} ${escapeHTML(o.name)}</b></td><td>${escapeHTML(o.designation)}</td><td>${actionBtn}</td></tr>`;
       });
       document.getElementById('legacy-officers-tbody').innerHTML = oHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
     });
@@ -928,346 +768,159 @@
   window.updateLegacyClass = function(id, status) {
     Swal.fire({ title: `Set class to ${status}?`, showCancelButton: true }).then(r => {
       if(r.isConfirmed) {
-        if(session.role === 'Super Admin') {
-            let blg = document.getElementById('badge-legacy');
-            let count = parseInt(blg.innerText || 0) - 1;
-            if(count > 0) { blg.innerText = count; } else { blg.style.display = 'none'; }
-        }
+        if(session.role === 'Super Admin') { let blg = document.getElementById('badge-legacy'), count = parseInt(blg.innerText || 0) - 1; if(count > 0) { blg.innerText = count; } else { blg.style.display = 'none'; } }
         Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() });
-        apiCall('updateLegacyClassStatus', { classId: id, status: status, user: session.user, pass: session.pass }, () => {
-          Swal.fire('Success', 'Status updated', 'success');
-          loadLegacyAdminData();
-          loadLegacyClassesForDropdown();
-        });
+        apiCall('updateLegacyClassStatus', { classId: id, status: status, user: session.user, pass: session.pass }, () => { Swal.fire('Success', 'Status updated', 'success'); loadLegacyAdminData(); loadLegacyClassesForDropdown(); });
       }
     });
   }
 
   window.deleteLegacyClass = function(id) {
     Swal.fire({ title: 'PERMANENTLY DELETE CLASS?', text: 'All associated data will be wiped.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => {
-      if(r.isConfirmed) {
-        Swal.fire({ title: 'DELETING...', didOpen: () => Swal.showLoading() });
-        apiCall('deleteLegacyClass', { classId: id, user: session.user, pass: session.pass }, () => {
-          Swal.fire('Deleted!', 'Class removed.', 'success');
-          loadLegacyAdminData();
-          loadLegacyClassesForDropdown();
-        });
-      }
+      if(r.isConfirmed) { Swal.fire({ title: 'DELETING...', didOpen: () => Swal.showLoading() }); apiCall('deleteLegacyClass', { classId: id, user: session.user, pass: session.pass }, () => { Swal.fire('Deleted!', 'Class removed.', 'success'); loadLegacyAdminData(); loadLegacyClassesForDropdown(); }); }
     });
   }
 
   window.deleteLegacyOfficer = function(id) {
     Swal.fire({ title: 'PERMANENTLY DELETE OFFICER?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => {
-      if(r.isConfirmed) {
-        Swal.fire({ title: 'DELETING...', didOpen: () => Swal.showLoading() });
-        apiCall('deleteLegacyOfficer', { offId: id, user: session.user, pass: session.pass }, () => {
-          Swal.fire('Deleted!', 'Officer removed.', 'success');
-          loadLegacyAdminData();
-        });
-      }
+      if(r.isConfirmed) { Swal.fire({ title: 'DELETING...', didOpen: () => Swal.showLoading() }); apiCall('deleteLegacyOfficer', { offId: id, user: session.user, pass: session.pass }, () => { Swal.fire('Deleted!', 'Officer removed.', 'success'); loadLegacyAdminData(); }); }
     });
   }
 
   async function submitPublicPost() {
-    const title = document.getElementById('post-title').value.trim();
-    const desc = document.getElementById('post-desc').value.trim();
-    const vid = document.getElementById('post-video-url').value.trim();
-    
+    const title = document.getElementById('post-title').value.trim(), desc = document.getElementById('post-desc').value.trim(), vid = document.getElementById('post-video-url').value.trim();
     if (!title || !desc) return Swal.fire('Notice', 'Title and description are required.', 'warning');
     if (!editingPostId && stagedImages.length === 0 && !vid) return Swal.fire('Notice', 'At least one image or video URL is required.', 'warning');
-    
     Swal.fire({ title: 'UPLOADING TO COMMAND...', html: 'This may take a moment...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-    
-    let actionName = editingPostId ? 'resubmitPost' : 'submitPost';
-    let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, pass: session.pass };
+    let actionName = editingPostId ? 'resubmitPost' : 'submitPost', payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, pass: session.pass };
     if (editingPostId) payload.postId = editingPostId;
-
-    apiCall(actionName, payload, (res) => {
-      Swal.fire('Success', res.message, 'success');
-      cancelEdit();
-      loadPosts();
-    });
+    apiCall(actionName, payload, (res) => { Swal.fire('Success', res.message, 'success'); cancelEdit(); loadPosts(); });
   }
 
   function editPost(id) {
-    const p = globalAdminPostCache.find(x => x.id === id);
-    if (!p) return;
-    editingPostId = id;
-    document.getElementById('post-title').value = p.title;
-    document.getElementById('post-desc').value = p.description;
-    document.getElementById('post-video-url').value = p.videoUrl || '';
-    document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST';
-    document.getElementById('btn-cancel-edit').style.display = 'inline-block';
-    
-    stagedImages = [];
-    document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;">Images unchanged. Select new ones below to override.</span>';
-    document.getElementById('admin-draft-section').scrollIntoView({behavior: 'smooth'});
+    const p = globalAdminPostCache.find(x => x.id === id); if (!p) return;
+    editingPostId = id; document.getElementById('post-title').value = p.title; document.getElementById('post-desc').value = p.description; document.getElementById('post-video-url').value = p.videoUrl || '';
+    document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST'; document.getElementById('btn-cancel-edit').style.display = 'inline-block';
+    stagedImages = []; document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;">Images unchanged. Select new ones below to override.</span>'; document.getElementById('admin-draft-section').scrollIntoView({behavior: 'smooth'});
   }
 
   function cancelEdit() {
-    editingPostId = null;
-    document.getElementById('post-title').value = '';
-    document.getElementById('post-desc').value = '';
-    document.getElementById('post-video-url').value = '';
-    document.getElementById('post-image-file').value = '';
-    stagedImages = [];
-    document.getElementById('image-staging-grid').innerHTML = '';
-    document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL';
-    document.getElementById('btn-cancel-edit').style.display = 'none';
+    editingPostId = null; document.getElementById('post-title').value = ''; document.getElementById('post-desc').value = ''; document.getElementById('post-video-url').value = ''; document.getElementById('post-image-file').value = '';
+    stagedImages = []; document.getElementById('image-staging-grid').innerHTML = '';
+    document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL'; document.getElementById('btn-cancel-edit').style.display = 'none';
   }
 
   function renderAdminPostsHTML() {
     let html = '';
     globalAdminPostCache.forEach(p => {
-      let actionBtn = '';
-      let feedbackHtml = '';
-      let isPinned = (p.pinned === true || p.pinned === "TRUE");
-      
+      let actionBtn = '', feedbackHtml = '', isPinned = (p.pinned === true || p.pinned === "TRUE");
       let previewBtn = `<button class="btn-info" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="previewPost('${p.id}')"><i class="fas fa-eye"></i> PREVIEW</button>`;
-
       if (session.role === 'Super Admin') {
-        let pinColor = isPinned ? 'var(--army-gold)' : 'var(--text-muted)';
-        let pinIcon = isPinned ? 'fas fa-thumbtack' : 'fas fa-thumbtack';
-        let pinTooltip = isPinned ? 'UNPIN' : 'PIN TO TOP';
+        let pinColor = isPinned ? 'var(--army-gold)' : 'var(--text-muted)', pinIcon = isPinned ? 'fas fa-thumbtack' : 'fas fa-thumbtack', pinTooltip = isPinned ? 'UNPIN' : 'PIN TO TOP';
         let pinBtn = `<button style="background:transparent; color:${pinColor}; border:1px solid ${pinColor}; padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="togglePin('${p.id}')"><i class="${pinIcon}"></i> ${pinTooltip}</button>`;
-        
         let deleteBtn = `<button class="btn-danger" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="deletePost('${p.id}')"><i class="fas fa-trash"></i> DELETE</button>`;
-
         if (p.status === 'Pending' || p.status === 'Revise') {
           feedbackHtml = `<textarea id="feedback-${p.id}" placeholder="Type instructions or corrections here..." style="width:100%; height:60px; margin-top:10px; font-size:12px; padding:8px;">${escapeHTML(p.feedback || '')}</textarea>`;
-          actionBtn = `
-            ${previewBtn}
-            <button class="btn-success" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="updatePost('${p.id}','Approved')">APPROVE</button>
-            <button class="btn-warning" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="updatePost('${p.id}','Revise')">REVISE</button>
-            <button class="btn-danger" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="updatePost('${p.id}','Rejected')">REJECT</button>
-            ${deleteBtn}
-          `;
-        } else {
-          actionBtn = `
-            ${previewBtn}
-            ${pinBtn}
-            ${deleteBtn}
-          `;
-          feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px;"><b>Notes:</b> ${escapeHTML(p.feedback)}</div>` : '';
-        }
+          actionBtn = `${previewBtn}<button class="btn-success" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="updatePost('${p.id}','Approved')">APPROVE</button><button class="btn-warning" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; color:#fff;" onclick="updatePost('${p.id}','Revise')">REVISE</button><button class="btn-danger" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%;" onclick="updatePost('${p.id}','Rejected')">REJECT</button>${deleteBtn}`;
+        } else { actionBtn = `${previewBtn}${pinBtn}${deleteBtn}`; feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px;"><b>Notes:</b> ${escapeHTML(p.feedback)}</div>` : ''; }
       } else if (session.role === 'Admin') {
         actionBtn = previewBtn;
-        if (p.status === 'Revise') {
-          feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${escapeHTML(p.feedback)}</div>`;
-          actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; margin-top:5px;" onclick="editPost('${p.id}')"><i class="fas fa-edit"></i> EDIT POST</button>`;
-        } else if (p.status === 'Rejected') {
-          feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${escapeHTML(p.feedback)}</div>` : '';
-        }
+        if (p.status === 'Revise') { feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${escapeHTML(p.feedback)}</div>`; actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; margin-top:5px;" onclick="editPost('${p.id}')"><i class="fas fa-edit"></i> EDIT POST</button>`; } 
+        else if (p.status === 'Rejected') { feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${escapeHTML(p.feedback)}</div>` : ''; }
       }
-
       let badgeClass = p.status === 'Approved' ? 'badge-present' : (p.status === 'Rejected' ? 'badge-absent' : (p.status === 'Revise' ? 'badge-late' : 'badge-timeout'));
-      
-      let firstImg = p.image ? p.image.split(',')[0] : '';
-      let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : '<div style="width:80px; height:60px; background:#111; border-radius:4px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-video" style="color:#555;"></i></div>';
-      
+      let firstImg = p.image ? p.image.split(',')[0] : ''; let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : '<div style="width:80px; height:60px; background:#111; border-radius:4px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-video" style="color:#555;"></i></div>';
       let pinnedLabel = isPinned ? `<div style="font-size:10px; color:var(--army-gold); font-weight:bold; margin-bottom:3px;"><i class="fas fa-thumbtack"></i> PINNED</div>` : '';
       let vidLabel = p.videoUrl ? `<div style="font-size:10px; color:#0288d1; font-weight:bold; margin-bottom:3px;"><i class="fas fa-video"></i> VIDEO ATTACHED</div>` : '';
-      let styledDesc = formatHashtags(escapeHTML(p.description));
-
-      html += `<tr>
-        <td style="font-size:12px; width:80px;">${p.date}</td>
-        <td style="width:90px;">${imgHtml}</td>
-        <td>${pinnedLabel}${vidLabel}<b>${escapeHTML(p.title)}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${styledDesc}</span>${feedbackHtml}</td>
-        <td style="width:90px;"><span class="badge ${badgeClass}">${p.status}</span></td>
-        <td style="width:100px;">${actionBtn}</td>
-      </tr>`;
+      html += `<tr><td style="font-size:12px; width:80px;">${p.date}</td><td style="width:90px;">${imgHtml}</td><td>${pinnedLabel}${vidLabel}<b>${escapeHTML(p.title)}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${formatHashtags(escapeHTML(p.description))}</span>${feedbackHtml}</td><td style="width:90px;"><span class="badge ${badgeClass}">${p.status}</span></td><td style="width:100px;">${actionBtn}</td></tr>`;
     });
     document.getElementById('posts-table').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No posts found.</td></tr>';
   }
 
-  function loadPosts() {
-    document.getElementById('posts-table').innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
-    apiCall('getPostsAdmin', { user: session.user, pass: session.pass }, (res) => {
-      globalAdminPostCache = res.posts; 
-      renderAdminPostsHTML();
-    });
-  }
+  function loadPosts() { document.getElementById('posts-table').innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>'; apiCall('getPostsAdmin', { user: session.user, pass: session.pass }, (res) => { globalAdminPostCache = res.posts; renderAdminPostsHTML(); }); }
 
   window.togglePin = function(id) {
-    const postIndex = globalAdminPostCache.findIndex(x => x.id === id);
-    if(postIndex === -1) return;
-    
-    let currentPinned = globalAdminPostCache[postIndex].pinned;
-    globalAdminPostCache[postIndex].pinned = (currentPinned === true || currentPinned === "TRUE") ? false : true;
-    renderAdminPostsHTML();
-    
-    Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Syncing...', showConfirmButton: false, timer: 1000 });
+    const postIndex = globalAdminPostCache.findIndex(x => x.id === id); if(postIndex === -1) return;
+    globalAdminPostCache[postIndex].pinned = (globalAdminPostCache[postIndex].pinned === true || globalAdminPostCache[postIndex].pinned === "TRUE") ? false : true;
+    renderAdminPostsHTML(); Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Syncing...', showConfirmButton: false, timer: 1000 });
     apiCall('togglePinPost', { postId: id, user: session.user, pass: session.pass }, () => {}, () => { loadPosts(); });
   }
 
   window.deletePost = function(id) {
-    Swal.fire({
-      title: 'PERMANENTLY DELETE?',
-      text: "This post will be completely erased from the database. This cannot be undone.",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d32f2f',
-      confirmButtonText: 'ANNIHILATE POST'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({ title: 'DELETING...', didOpen: () => Swal.showLoading() });
-        apiCall('deletePost', { postId: id, user: session.user, pass: session.pass }, (res) => {
-          Swal.fire('Deleted!', 'The post has been wiped.', 'success');
-          loadPosts();
-        });
-      }
+    Swal.fire({ title: 'PERMANENTLY DELETE?', text: "This post will be completely erased from the database. This cannot be undone.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f', confirmButtonText: 'ANNIHILATE POST' }).then((result) => {
+      if (result.isConfirmed) { Swal.fire({ title: 'DELETING...', didOpen: () => Swal.showLoading() }); apiCall('deletePost', { postId: id, user: session.user, pass: session.pass }, (res) => { Swal.fire('Deleted!', 'The post has been wiped.', 'success'); loadPosts(); }); }
     });
   }
 
   function updatePost(id, status) {
     let feedback = document.getElementById(`feedback-${id}`) ? document.getElementById(`feedback-${id}`).value.trim() : '';
-    if (status === 'Revise' && !feedback) {
-      return Swal.fire('Notice', 'Please provide correction instructions for the Admin before clicking Revise.', 'warning');
-    }
-
+    if (status === 'Revise' && !feedback) return Swal.fire('Notice', 'Please provide correction instructions for the Admin before clicking Revise.', 'warning');
     Swal.fire({ title: `Set status to ${status}?`, showCancelButton: true, confirmButtonText: 'CONFIRM' }).then(r => {
       if (r.isConfirmed) {
         const postIndex = globalAdminPostCache.findIndex(x => x.id === id);
         if(postIndex !== -1) {
-            globalAdminPostCache[postIndex].status = status;
-            globalAdminPostCache[postIndex].feedback = feedback;
-            
-            if (session.role === 'Super Admin') {
-                let bp = document.getElementById('badge-posts');
-                let currentCount = parseInt(bp.innerText || "0");
-                if(currentCount > 0) {
-                    bp.innerText = currentCount - 1;
-                    if(currentCount - 1 <= 0) bp.style.display = 'none';
-                }
-            }
+            globalAdminPostCache[postIndex].status = status; globalAdminPostCache[postIndex].feedback = feedback;
+            if (session.role === 'Super Admin') { let bp = document.getElementById('badge-posts'), currentCount = parseInt(bp.innerText || "0"); if(currentCount > 0) { bp.innerText = currentCount - 1; if(currentCount - 1 <= 0) bp.style.display = 'none'; } }
         }
-        
-        renderAdminPostsHTML();
-        Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Syncing to database...', showConfirmButton: false, timer: 1500 });
-        apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, pass: session.pass }, 
-        () => {
-          Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000 });
-        }, 
-        () => {
-          loadPosts();
-        });
+        renderAdminPostsHTML(); Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Syncing to database...', showConfirmButton: false, timer: 1500 });
+        apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, pass: session.pass }, () => { Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000 }); }, () => { loadPosts(); });
       }
     });
   }
 
   let previewSlideIdx = 0;
   function previewPost(postId) {
-    const p = globalAdminPostCache.find(x => x.id === postId);
-    if (!p) return;
-    const images = p.image ? p.image.split(',') : [];
-    previewSlideIdx = 0;
-    
-    let carouselHtml = '';
-    let slidesArr = [];
-    
+    const p = globalAdminPostCache.find(x => x.id === postId); if (!p) return;
+    const images = p.image ? p.image.split(',') : []; previewSlideIdx = 0; let carouselHtml = '', slidesArr = [];
     if (p.videoUrl) slidesArr.push(`<div class="preview-carousel-slide" id="prev-slide-${slidesArr.length}">${createEmbed(p.videoUrl)}</div>`);
-    images.forEach(img => {
-        if(img) slidesArr.push(`<div class="preview-carousel-slide" id="prev-slide-${slidesArr.length}"><img src="${img}"></div>`);
-    });
-
+    images.forEach(img => { if(img) slidesArr.push(`<div class="preview-carousel-slide" id="prev-slide-${slidesArr.length}"><img src="${img}"></div>`); });
     if (slidesArr.length > 0) {
         slidesArr[0] = slidesArr[0].replace('preview-carousel-slide"', 'preview-carousel-slide active"');
-        let slides = slidesArr.join('');
-        let btns = slidesArr.length > 1 ? `<button class="preview-carousel-btn preview-carousel-prev" onclick="changePreviewSlide(-1, ${slidesArr.length})"><i class="fas fa-chevron-left"></i></button><button class="preview-carousel-btn preview-carousel-next" onclick="changePreviewSlide(1, ${slidesArr.length})"><i class="fas fa-chevron-right"></i></button>` : '';
+        let slides = slidesArr.join(''), btns = slidesArr.length > 1 ? `<button class="preview-carousel-btn preview-carousel-prev" onclick="changePreviewSlide(-1, ${slidesArr.length})"><i class="fas fa-chevron-left"></i></button><button class="preview-carousel-btn preview-carousel-next" onclick="changePreviewSlide(1, ${slidesArr.length})"><i class="fas fa-chevron-right"></i></button>` : '';
         let dots = slidesArr.length > 1 ? `<div class="preview-carousel-dots">` + slidesArr.map((_, i) => `<span class="preview-dot ${i === 0 ? 'active' : ''}" id="prev-dot-${i}" onclick="setPreviewSlide(${i}, ${slidesArr.length})"></span>`).join('') + `</div>` : '';
         carouselHtml = `<div class="preview-carousel-container">${slides}${btns}${dots}</div>`;
     }
-
-    let styledDesc = formatHashtags(escapeHTML(p.description));
-
-    const html = `
-      ${carouselHtml}
-      <div class="preview-post-date">${p.date}</div>
-      <h2 class="preview-post-title">${escapeHTML(p.title)}</h2>
-      <div class="preview-post-desc">${styledDesc}</div>
-    `;
-    document.getElementById('preview-dynamic-content').innerHTML = html;
-    const modal = document.getElementById('post-preview-modal');
-    modal.style.display = 'flex';
-    setTimeout(() => modal.classList.add('show'), 10);
+    document.getElementById('preview-dynamic-content').innerHTML = `${carouselHtml}<div class="preview-post-date">${p.date}</div><h2 class="preview-post-title">${escapeHTML(p.title)}</h2><div class="preview-post-desc">${formatHashtags(escapeHTML(p.description))}</div>`;
+    const modal = document.getElementById('post-preview-modal'); modal.style.display = 'flex'; setTimeout(() => modal.classList.add('show'), 10);
   }
 
   window.changePreviewSlide = function(step, total) { setPreviewSlide(previewSlideIdx + step, total); }
   window.setPreviewSlide = function(index, total) {
-    if(index >= total) index = 0;
-    if(index < 0) index = total - 1;
-    document.querySelectorAll('.preview-carousel-slide').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.preview-dot').forEach(d => d.classList.remove('active'));
-    document.getElementById(`prev-slide-${index}`).classList.add('active');
-    if (document.getElementById(`prev-dot-${index}`)) document.getElementById(`prev-dot-${index}`).classList.add('active');
+    if(index >= total) index = 0; if(index < 0) index = total - 1;
+    document.querySelectorAll('.preview-carousel-slide').forEach(s => s.classList.remove('active')); document.querySelectorAll('.preview-dot').forEach(d => d.classList.remove('active'));
+    document.getElementById(`prev-slide-${index}`).classList.add('active'); if (document.getElementById(`prev-dot-${index}`)) document.getElementById(`prev-dot-${index}`).classList.add('active');
     previewSlideIdx = index;
   }
 
   function closePostPreview(force) {
     const modal = document.getElementById('post-preview-modal');
-    if (force === true || force.target === modal) {
-      modal.classList.remove('show');
-      setTimeout(() => modal.style.display = 'none', 300);
-      
-      const iframe = modal.querySelector('iframe');
-      if (iframe) {
-        let iframeSrc = iframe.src;
-        iframe.src = iframeSrc; 
-      }
-    }
+    if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); const iframe = modal.querySelector('iframe'); if (iframe) { iframe.src = iframe.src; } }
   }
 
   function performLogin() {
-    const u = document.getElementById('login-user').value.trim(), p = document.getElementById('login-pass').value;
-    const btn = document.getElementById('btn-login'), err = document.getElementById('login-err');
+    const u = document.getElementById('login-user').value.trim(), p = document.getElementById('login-pass').value, btn = document.getElementById('btn-login'), err = document.getElementById('login-err');
     if (!u || !p) { err.innerText = 'Credentials required.'; return; }
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; err.innerText = '';
-
-    apiCall('systemLogin', { user: u, pass: p }, 
-      (res) => {
-        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS';
-        session = { user: u, token: res.token, role: res.role };
-        localStorage.setItem('scck_session', JSON.stringify({ user: u, token: res.token, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
-        
-        document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
-        document.getElementById('view-login').style.display = 'none'; document.getElementById('app-container').style.display = 'flex';
-        loadUserProfile();
-        setupRoleUI(res.role);
-        updateOfflineSyncUI();
-      },
-      (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; err.innerText = "Error: " + e.message; }
+    apiCall('systemLogin', { user: u, pass: p }, (res) => {
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; session = { user: u, token: res.token, role: res.role }; localStorage.setItem('scck_session', JSON.stringify({ user: u, token: res.token, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
+        document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = ''; document.getElementById('view-login').style.display = 'none'; document.getElementById('app-container').style.display = 'flex';
+        loadUserProfile(); setupRoleUI(res.role); updateOfflineSyncUI();
+      }, (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; err.innerText = "Error: " + e.message; }
     );
   }
   
-  function logout() { 
-    session = {}; 
-    localStorage.removeItem('scck_session'); 
-    stopScanner(false); 
-    document.getElementById('app-container').style.display = 'none'; 
-    document.getElementById('view-login').style.display = 'flex'; 
-  }
+  function logout() { session = {}; localStorage.removeItem('scck_session'); stopScanner(false); document.getElementById('app-container').style.display = 'none'; document.getElementById('view-login').style.display = 'flex'; }
 
   function updateOfflineSyncUI() {
-    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
-    const btn = document.getElementById('btn-sync-offline');
-    if (btn) {
-      if (offlineScans.length > 0) {
-        btn.style.display = 'block';
-        btn.innerHTML = `<i class="fas fa-wifi"></i> SYNC OFFLINE SCANS (${offlineScans.length})`;
-      } else {
-        btn.style.display = 'none';
-      }
-    }
+    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]"); const btn = document.getElementById('btn-sync-offline');
+    if (btn) { if (offlineScans.length > 0) { btn.style.display = 'block'; btn.innerHTML = `<i class="fas fa-wifi"></i> SYNC OFFLINE SCANS (${offlineScans.length})`; } else { btn.style.display = 'none'; } }
   }
 
   function syncOfflineScans() {
-    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
-    if (offlineScans.length === 0) return;
+    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]"); if (offlineScans.length === 0) return;
     Swal.fire({ title: 'SYNCING DATA...', html: `Uploading ${offlineScans.length} scans...`, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     apiCall('bulkMarkAttendance', { scans: offlineScans, user: session.user, pass: session.pass }, (res) => {
-       localStorage.removeItem('scck_offline_scans');
-       updateOfflineSyncUI();
-       Swal.fire('Synced!', `Successfully uploaded offline records.`, 'success');
+       localStorage.removeItem('scck_offline_scans'); updateOfflineSyncUI(); Swal.fire('Synced!', `Successfully uploaded offline records.`, 'success');
        if(document.getElementById('panel-dashboard').classList.contains('active-panel')) loadDashboardData();
     });
   }
@@ -1277,140 +930,55 @@
   
   function startScanner() { 
       const v = document.getElementById('qr-video'), m = document.getElementById('msg'); 
-      m.innerText='REQUESTING HIGH-RES OPTICS...'; 
-      m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; 
-      if(!qrScanner) {
-          qrScanner = new QrScanner(v, r => { if(!isScanning) onScanSuccess(r.data); }, { 
-              onDecodeError: e => {}, 
-              highlightScanRegion: true, 
-              preferredCamera: 'environment',
-              maxScansPerSecond: 10 
-          }); 
-      }
-      qrScanner.start().then(() => { 
-          hideCameraError(); 
-          m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; 
-          document.getElementById('btn-start-cam').style.display='none'; 
-          document.getElementById('btn-stop-cam').style.display='block'; 
-          
-          qrScanner.hasFlash().then(hasFlash => {
-              if (hasFlash) document.getElementById('btn-torch').style.display = 'block';
-          });
-      }).catch(err => { showCameraError('ACCESS DENIED', 'Camera access blocked.'); }); 
+      m.innerText='REQUESTING HIGH-RES OPTICS...'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; 
+      if(!qrScanner) { qrScanner = new QrScanner(v, r => { if(!isScanning) onScanSuccess(r.data); }, { onDecodeError: e => {}, highlightScanRegion: true, preferredCamera: 'environment', maxScansPerSecond: 10 }); }
+      qrScanner.start().then(() => { hideCameraError(); m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; document.getElementById('btn-start-cam').style.display='none'; document.getElementById('btn-stop-cam').style.display='block'; qrScanner.hasFlash().then(hasFlash => { if (hasFlash) document.getElementById('btn-torch').style.display = 'block'; }); }).catch(err => { showCameraError('ACCESS DENIED', 'Camera access blocked.'); }); 
   }
   
-  function toggleFlashlight() {
-      if(qrScanner) {
-          qrScanner.isFlashOn().then(isOn => {
-              if(isOn) {
-                  qrScanner.turnFlashOff();
-                  document.getElementById('btn-torch').innerHTML = '<i class="fas fa-bolt"></i> TOGGLE LIGHT';
-              } else {
-                  qrScanner.turnFlashOn();
-                  document.getElementById('btn-torch').innerHTML = '<i class="fas fa-lightbulb"></i> TURN OFF LIGHT';
-              }
-          });
-      }
-  }
-
-  function stopScanner(manual) { 
-      if(qrScanner) {
-          qrScanner.turnFlashOff();
-          qrScanner.stop(); 
-      }
-      isScanning=false; 
-      if(manual){ 
-          document.getElementById('btn-start-cam').style.display='block'; 
-          document.getElementById('btn-stop-cam').style.display='none'; 
-          document.getElementById('btn-torch').style.display='none';
-          document.getElementById('msg').innerText='CAMERA OFFLINE'; 
-          document.getElementById('msg').style.background='rgba(232, 240, 254, 0.9)'; 
-          document.getElementById('msg').style.color='var(--army-primary)'; 
-      } 
-  }
+  function toggleFlashlight() { if(qrScanner) { qrScanner.isFlashOn().then(isOn => { if(isOn) { qrScanner.turnFlashOff(); document.getElementById('btn-torch').innerHTML = '<i class="fas fa-bolt"></i> TOGGLE LIGHT'; } else { qrScanner.turnFlashOn(); document.getElementById('btn-torch').innerHTML = '<i class="fas fa-lightbulb"></i> TURN OFF LIGHT'; } }); } }
+  function stopScanner(manual) { if(qrScanner) { qrScanner.turnFlashOff(); qrScanner.stop(); } isScanning=false; if(manual){ document.getElementById('btn-start-cam').style.display='block'; document.getElementById('btn-stop-cam').style.display='none'; document.getElementById('btn-torch').style.display='none'; document.getElementById('msg').innerText='CAMERA OFFLINE'; document.getElementById('msg').style.background='rgba(232, 240, 254, 0.9)'; document.getElementById('msg').style.color='var(--army-primary)'; } }
 
   function handleQRImageUpload(event) { 
-      const f = event.target.files[0]; if(!f) return; 
-      const m = document.getElementById('msg'); 
-      m.innerHTML='<i class="fas fa-spinner fa-spin"></i> ISOLATING MATRIX...'; 
-      m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; 
-      
-      QrScanner.scanImage(f, { returnDetailedScanResult: true, alsoTryWithoutScanRegion: true })
-      .then(r => onScanSuccess(r.data))
-      .catch(e => { 
-          Swal.fire('Scan Failed', 'No valid QR code found. Ensure the image is clear.', 'error'); 
-          m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; 
-          m.style.background='rgba(232, 240, 254, 0.9)'; 
-          m.style.color='var(--army-primary)'; 
-      }); 
-      event.target.value=''; 
+      const f = event.target.files[0]; if(!f) return; const m = document.getElementById('msg'); 
+      m.innerHTML='<i class="fas fa-spinner fa-spin"></i> ISOLATING MATRIX...'; m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; 
+      QrScanner.scanImage(f, { returnDetailedScanResult: true, alsoTryWithoutScanRegion: true }).then(r => onScanSuccess(r.data)).catch(e => { Swal.fire('Scan Failed', 'No valid QR code found. Ensure the image is clear.', 'error'); m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }); event.target.value=''; 
   }
 
   function clearRecentScans() { document.getElementById('recent-scans').innerHTML=''; recentScanCount=0; document.getElementById('scan-count').innerText='0'; }
   
   function onScanSuccess(text) { 
-    if(isScanning) return; isScanning=true; 
-    const m=document.getElementById('msg'); 
-    
+    if(isScanning) return; isScanning=true; const m=document.getElementById('msg'); 
     if (!navigator.onLine) {
-      let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
-      const now = new Date();
-      const offDate = ('0' + (now.getMonth() + 1)).slice(-2) + '/' + ('0' + now.getDate()).slice(-2) + '/' + now.getFullYear();
-      let hours = now.getHours();
-      let ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12;
-      hours = hours ? hours : 12; 
-      let mins = ('0' + now.getMinutes()).slice(-2);
-      let secs = ('0' + now.getSeconds()).slice(-2);
-      let offTime = ('0' + hours).slice(-2) + ':' + mins + ':' + secs + ' ' + ampm;
-      
-      offlineScans.push({ scannedData: text, offlineDate: offDate, offlineTime: offTime });
-      localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
-      
-      m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff';
-      m.innerHTML='<i class="fas fa-save"></i> SAVED OFFLINE';
-      document.getElementById('scan-name').innerText='OFFLINE SCAN CACHED';
-      document.getElementById('scan-id').innerText=escapeHTML(text);
-      
-      updateOfflineSyncUI();
-      setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 2000);
-      return;
+      let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]"), now = new Date();
+      let offDate = ('0' + (now.getMonth() + 1)).slice(-2) + '/' + ('0' + now.getDate()).slice(-2) + '/' + now.getFullYear();
+      let hours = now.getHours(), ampm = hours >= 12 ? 'PM' : 'AM'; hours = hours % 12; hours = hours ? hours : 12; 
+      let offTime = ('0' + hours).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2) + ':' + ('0' + now.getSeconds()).slice(-2) + ' ' + ampm;
+      offlineScans.push({ scannedData: text, offlineDate: offDate, offlineTime: offTime }); localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
+      m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-save"></i> SAVED OFFLINE';
+      document.getElementById('scan-name').innerText='OFFLINE SCAN CACHED'; document.getElementById('scan-id').innerText=escapeHTML(text);
+      updateOfflineSyncUI(); setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 2000); return;
     }
-
-    m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${escapeHTML(res.id)}</strong><br><span style="font-size:12px; color:var(--text-muted);">${escapeHTML(res.name)}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); }
+    m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${escapeHTML(res.id)}</strong><br><span style="font-size:12px; color:var(--text-muted);">${escapeHTML(res.name)}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); 
+  }
 
   function loadDashboardData() { 
     if(session.role!=='Admin'&&session.role!=='Super Admin') return; 
     apiCall('getAdminDashboardData', { user: session.user, pass: session.pass }, (res) => { 
-      
       if (res.alerts) {
-         let bl = document.getElementById('badge-leaves');
-         let bp = document.getElementById('badge-posts');
-         let blg = document.getElementById('badge-legacy');
+         let bl = document.getElementById('badge-leaves'), bp = document.getElementById('badge-posts'), blg = document.getElementById('badge-legacy');
          if (session.role === 'Super Admin') {
              if(bl) { bl.innerText = res.alerts.leaves; bl.style.display = res.alerts.leaves > 0 ? 'inline-block' : 'none'; }
              if(bp) { bp.innerText = res.alerts.posts; bp.style.display = res.alerts.posts > 0 ? 'inline-block' : 'none'; }
              if(blg) { blg.innerText = res.alerts.legacy; blg.style.display = res.alerts.legacy > 0 ? 'inline-block' : 'none'; }
-         } else {
-             if(bl) bl.style.display = 'none';
-             if(bp) bp.style.display = 'none';
-             if(blg) blg.style.display = 'none';
-         }
+         } else { if(bl) bl.style.display = 'none'; if(bp) bp.style.display = 'none'; if(blg) blg.style.display = 'none'; }
       }
-
-      document.getElementById('admin-active-day').innerText=res.activeDay; const t=res.stats.total||1, p=res.stats.present, l=res.stats.late, a=res.stats.absent; document.getElementById('stat-total').innerText=res.stats.total; document.getElementById('stat-present').innerText=p; document.getElementById('stat-present-pct').innerText=Math.round((p/t)*100)+'%'; document.getElementById('stat-late').innerText=l; document.getElementById('stat-late-pct').innerText=Math.round((l/t)*100)+'%'; document.getElementById('stat-absent').innerText=a; document.getElementById('stat-absent-pct').innerText=Math.round((a/t)*100)+'%'; renderDonut(p,l,a); if(res.weeklyData) renderWeekly(res.weeklyData); let ah=''; res.attendance.forEach(r => { let bc=r.status==='Present'?'badge-present':(r.status==='Late'?'badge-late':(r.status==='Very Late'?'badge-verylate':'badge-absent')); let tc=(r.status==='Late'||r.status==='Very Late')?'var(--status-red)':'var(--status-green)'; ah+=`<tr><td><b>${escapeHTML(r.id)}</b></td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.course)}</td><td style="color:${tc}; font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; }); document.getElementById('attendance-table').innerHTML=ah||'<tr><td colspan="6" style="text-align:center;">No records.</td></tr>'; let mh=''; res.masterlist.forEach(r => { let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); mh+=`<tr><td><b>${escapeHTML(r.id)}</b></td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.company)}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${escapeHTML(r.contact)}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${escapeHTML(r.id)}','${escapeHTML(r.name)}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-info" onclick="showQR('${escapeHTML(r.id)}','${escapeHTML(r.name)}')" title="Show QR"><i class="fas fa-qrcode"></i></button> <button class="btn-icon btn-warning" onclick="editStudent('${escapeHTML(r.id)}','${escapeHTML(r.company)}','${escapeHTML(r.contact)}')"><i class="fas fa-edit"></i></button> <button class="btn-icon btn-danger" onclick="deleteStudentPrompt('${escapeHTML(r.id)}')"><i class="fas fa-trash"></i></button></td></tr>`; }); document.getElementById('masterlist-table').innerHTML=mh||'<tr><td colspan="6" style="text-align:center;">No cadets found.</td></tr>'; 
-      
+      document.getElementById('admin-active-day').innerText=res.activeDay; const t=res.stats.total||1, p=res.stats.present, l=res.stats.late, a=res.stats.absent; document.getElementById('stat-total').innerText=res.stats.total; document.getElementById('stat-present').innerText=p; document.getElementById('stat-present-pct').innerText=Math.round((p/t)*100)+'%'; document.getElementById('stat-late').innerText=l; document.getElementById('stat-late-pct').innerText=Math.round((l/t)*100)+'%'; document.getElementById('stat-absent').innerText=a; document.getElementById('stat-absent-pct').innerText=Math.round((a/t)*100)+'%'; renderDonut(p,l,a); if(res.weeklyData) renderWeekly(res.weeklyData); 
+      let ah=''; res.attendance.forEach(r => { let bc=r.status==='Present'?'badge-present':(r.status==='Late'?'badge-late':(r.status==='Very Late'?'badge-verylate':'badge-absent')); let tc=(r.status==='Late'||r.status==='Very Late')?'var(--status-red)':'var(--status-green)'; ah+=`<tr><td><b>${escapeHTML(r.id)}</b></td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.course)}</td><td style="color:${tc}; font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; }); document.getElementById('attendance-table').innerHTML=ah||'<tr><td colspan="6" style="text-align:center;">No records.</td></tr>'; 
+      let mh=''; res.masterlist.forEach(r => { let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); mh+=`<tr><td><b>${escapeHTML(r.id)}</b></td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.company)}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${escapeHTML(r.contact)}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${escapeHTML(r.id)}','${escapeHTML(r.name)}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-info" onclick="showQR('${escapeHTML(r.id)}','${escapeHTML(r.name)}')" title="Show QR"><i class="fas fa-qrcode"></i></button> <button class="btn-icon btn-warning" onclick="editStudent('${escapeHTML(r.id)}','${escapeHTML(r.company)}','${escapeHTML(r.contact)}')"><i class="fas fa-edit"></i></button> <button class="btn-icon btn-danger" onclick="deleteStudentPrompt('${escapeHTML(r.id)}')"><i class="fas fa-trash"></i></button></td></tr>`; }); document.getElementById('masterlist-table').innerHTML=mh||'<tr><td colspan="6" style="text-align:center;">No cadets found.</td></tr>'; 
       let ach=''; for(let i=1; i<res.accounts.length; i++) { 
-        let r=res.accounts[i]; 
-        let btn=r[3]==='Active'?`<button class="btn-danger" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${escapeHTML(r[0])}','Disabled')">REVOKE</button>`:`<button class="btn-success" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${escapeHTML(r[0])}','Active')">GRANT</button>`; 
-        let sb=r[3]==='Active'?'<span class="badge badge-present">ACTIVE</span>':'<span class="badge badge-absent">REVOKED</span>'; 
-        
-        let legAccess = r[4] || "Denied";
-        let legBtn = legAccess === "Granted" ? 
-            `<button id="toggle-btn-${escapeHTML(r[0])}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${escapeHTML(r[0])}', 'Granted')">ACCESS: ON</button>` : 
-            `<button id="toggle-btn-${escapeHTML(r[0])}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${escapeHTML(r[0])}', 'Denied')">ACCESS: OFF</button>`;
+        let r=res.accounts[i]; let btn=r[3]==='Active'?`<button class="btn-danger" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${escapeHTML(r[0])}','Disabled')">REVOKE</button>`:`<button class="btn-success" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${escapeHTML(r[0])}','Active')">GRANT</button>`; let sb=r[3]==='Active'?'<span class="badge badge-present">ACTIVE</span>':'<span class="badge badge-absent">REVOKED</span>'; 
+        let legAccess = r[4] || "Denied"; let legBtn = legAccess === "Granted" ? `<button id="toggle-btn-${escapeHTML(r[0])}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${escapeHTML(r[0])}', 'Granted')">ACCESS: ON</button>` : `<button id="toggle-btn-${escapeHTML(r[0])}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${escapeHTML(r[0])}', 'Denied')">ACCESS: OFF</button>`;
         if(r[2] === "Super Admin") legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">BYPASS GRANTED</span>`;
-
         ach+=`<tr><td>${escapeHTML(r[0])}</td><td><b>${escapeHTML(r[2])}</b></td><td>${legBtn}</td><td>${sb}</td><td>${btn}</td></tr>`; 
       } 
       document.getElementById('accounts-table').innerHTML=ach||'<tr><td colspan="5" style="text-align:center;">No accounts.</td></tr>'; 
@@ -1425,8 +993,7 @@
     apiCall('getDiscipline', { studentId: id, user: session.user, pass: session.pass }, (res) => { 
         let h = ''; 
         res.records.forEach(r => { 
-            let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)'; 
-            let typeBadge = r.type === 'Merit' ? '<span class="badge badge-present">MERIT</span>' : '<span class="badge badge-absent">DEMERIT</span>'; 
+            let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)'; let typeBadge = r.type === 'Merit' ? '<span class="badge badge-present">MERIT</span>' : '<span class="badge badge-absent">DEMERIT</span>'; 
             h += `<tr style="border-bottom: 1px solid var(--border);"> <td style="padding:8px 0;">${r.date}</td> <td style="padding:8px 0;">${typeBadge}</td> <td style="padding:8px 0; color:var(--text-muted);">${escapeHTML(r.reason)} <br><small>by ${escapeHTML(r.admin)}</small></td> <td style="padding:8px 0; font-weight:bold; color:${ptsColor};">${r.points > 0 ? '+'+r.points : r.points}</td> </tr>`; 
         }); 
         document.getElementById('disc-history-table').innerHTML = h || '<tr><td colspan="4" style="text-align:center; padding:10px 0;">No records found.</td></tr>'; 
@@ -1434,31 +1001,14 @@
   }
   
   function submitDiscipline() { 
-    const val = document.getElementById('disc-action-select').value; 
-    if (!val) return Swal.fire('Notice', 'Please select an action from the dropdown.', 'warning'); 
-    
-    const btn = document.getElementById('btn-submit-discipline');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECORDING...';
-    btn.style.opacity = '0.7';
-    btn.style.cursor = 'not-allowed';
-
+    const val = document.getElementById('disc-action-select').value; if (!val) return Swal.fire('Notice', 'Please select an action from the dropdown.', 'warning'); 
+    const btn = document.getElementById('btn-submit-discipline'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECORDING...'; btn.style.opacity = '0.7'; btn.style.cursor = 'not-allowed';
     const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
     Swal.fire({ title: 'RECORDING...', didOpen: () => Swal.showLoading() }); 
-    
     apiCall('addDiscipline', { studentId: currentDiscStudentId, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => { 
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-gavel"></i> RECORD ACTION';
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
-
-        Swal.fire('Success', 'Discipline action recorded.', 'success'); 
-        document.getElementById('disc-action-select').value = ""; 
-        
-        loadDashboardData(); 
-        loadDisciplineHistory(currentDiscStudentId); 
-        let currScore = parseInt(document.getElementById('disc-cadet-score').innerText); 
-        document.getElementById('disc-cadet-score').innerText = currScore + points; 
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-gavel"></i> RECORD ACTION'; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+        Swal.fire('Success', 'Discipline action recorded.', 'success'); document.getElementById('disc-action-select').value = ""; 
+        loadDashboardData(); loadDisciplineHistory(currentDiscStudentId); document.getElementById('disc-cadet-score').innerText = parseInt(document.getElementById('disc-cadet-score').innerText) + points; 
     }); 
   }
 
@@ -1470,41 +1020,21 @@
   function changeAccStatus(u, s) { Swal.fire({ title: `Change ${escapeHTML(u)} to ${escapeHTML(s)}?`, showCancelButton: true }).then(r => { if(r.isConfirmed) apiCall('updateAccountStatus', { targetUser: u, newStatus: s, user: session.user, pass: session.pass }, () => loadDashboardData()); }); }
   
   window.toggleLegacyAccess = function(userTarget, currentStatus) {
-      const btnId = 'toggle-btn-' + userTarget;
-      const btn = document.getElementById(btnId);
-      
-      let newStatus = currentStatus === 'Granted' ? 'Denied' : 'Granted';
-      
+      const btnId = 'toggle-btn-' + userTarget, btn = document.getElementById(btnId); let newStatus = currentStatus === 'Granted' ? 'Denied' : 'Granted';
       if (btn) {
-          if(newStatus === 'Granted') {
-              btn.outerHTML = `<button id="${btnId}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${escapeHTML(userTarget)}', 'Granted')">ACCESS: ON</button>`;
-          } else {
-              btn.outerHTML = `<button id="${btnId}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${escapeHTML(userTarget)}', 'Denied')">ACCESS: OFF</button>`;
-          }
+          if(newStatus === 'Granted') { btn.outerHTML = `<button id="${btnId}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${escapeHTML(userTarget)}', 'Granted')">ACCESS: ON</button>`; } 
+          else { btn.outerHTML = `<button id="${btnId}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${escapeHTML(userTarget)}', 'Denied')">ACCESS: OFF</button>`; }
       }
-
       Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Updating clearance...', showConfirmButton: false, timer: 1500 });
-
-      apiCall('toggleLegacyAccess', { targetUser: userTarget, user: session.user, pass: session.pass }, (res) => {
-          Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Clearance Updated!', showConfirmButton: false, timer: 2000 });
-      }, (err) => {
-          loadDashboardData(); 
-      });
+      apiCall('toggleLegacyAccess', { targetUser: userTarget, user: session.user, pass: session.pass }, (res) => { Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Clearance Updated!', showConfirmButton: false, timer: 2000 }); }, (err) => { loadDashboardData(); });
   }
 
   function showQR(id, name) { 
-      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}');
-      let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
-      
+      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'), sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
       Swal.fire({ 
           title: escapeHTML(name), 
-          html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${escapeHTML(id)}</p>
-                 <div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;">
-                    <div id="swal-qr"></div>
-                    <img src="${sysLogo}" style="position:absolute; width:45px; height:45px; background:white; padding:4px; border-radius:8px; z-index:10;">
-                 </div>`, 
-          confirmButtonColor: 'var(--army-primary)', 
-          confirmButtonText: 'CLOSE', 
+          html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${escapeHTML(id)}</p><div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;"><div id="swal-qr"></div><img src="${sysLogo}" style="position:absolute; width:45px; height:45px; background:white; padding:4px; border-radius:8px; z-index:10;"></div>`, 
+          confirmButtonColor: 'var(--army-primary)', confirmButtonText: 'CLOSE', 
           didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821', correctLevel: QRCode.CorrectLevel.H }) 
       }); 
   }
@@ -1517,60 +1047,46 @@
   function updateLeave(id, s) { 
       Swal.fire({ title: `Set status to ${escapeHTML(s)}?`, showCancelButton: true }).then(r => { 
           if(r.isConfirmed) { 
-              if(session.role === 'Super Admin') {
-                  let bl = document.getElementById('badge-leaves');
-                  if(bl && bl.style.display !== 'none') {
-                      let count = parseInt(bl.innerText || 0) - 1;
-                      bl.innerText = count;
-                      if(count <= 0) bl.style.display = 'none';
-                  }
-              }
-              Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Processing...', showConfirmButton: false, timer: 1500 });
-              apiCall('updateLeaveStatus', { leaveId: id, status: s, user: session.user, pass: session.pass }, () => loadLeavesData()); 
+              if(session.role === 'Super Admin') { let bl = document.getElementById('badge-leaves'); if(bl && bl.style.display !== 'none') { let count = parseInt(bl.innerText || 0) - 1; bl.innerText = count; if(count <= 0) bl.style.display = 'none'; } }
+              Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Processing...', showConfirmButton: false, timer: 1500 }); apiCall('updateLeaveStatus', { leaveId: id, status: s, user: session.user, pass: session.pass }, () => loadLeavesData()); 
           } 
       }); 
   }
 
   function fetchStudentsForDropdown() { 
       document.getElementById('id-target-select').innerHTML='<option value="ALL">Fetching data...</option>'; 
-      document.getElementById('lv-id').innerHTML='<option value="">Fetching data...</option>'; 
+      if(document.getElementById('lv-id')) document.getElementById('lv-id').innerHTML='<option value="">Fetching data...</option>'; 
       apiCall('getStudentsForIDCards', { user: session.user, pass: session.pass }, (res) => { 
           globalStudentCache = res.students; 
           let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; 
-          res.students.forEach(s => { 
-              o+=`<option value="${s.id}">${escapeHTML(s.id)} – ${escapeHTML(s.name)}</option>`; 
-              lo+=`<option value="${s.id}">${escapeHTML(s.id)} – ${escapeHTML(s.name)}</option>`; 
-          }); 
+          res.students.forEach(s => { o+=`<option value="${s.id}">${escapeHTML(s.id)} – ${escapeHTML(s.name)}</option>`; lo+=`<option value="${s.id}">${escapeHTML(s.id)} – ${escapeHTML(s.name)}</option>`; }); 
           document.getElementById('id-target-select').innerHTML=o; 
-          document.getElementById('lv-id').innerHTML=lo; 
+          if(document.getElementById('lv-id')) document.getElementById('lv-id').innerHTML=lo; 
       }); 
   }
 
-  function fetchFormDossierData() {
-      document.getElementById('form-target-select').innerHTML='<option value="ALL">Fetching data...</option>';
-      apiCall('getFormDossierData', { user: session.user, pass: session.pass }, (res) => {
-          globalFormCache = res.students;
-          let o = '<option value="ALL">Entire Roster (Bulk)</option>';
-          res.students.forEach(s => { o += `<option value="${s.studentNo}">${escapeHTML(s.studentNo)} – ${escapeHTML(s.lName)}, ${escapeHTML(s.fName)}</option>`; });
-          document.getElementById('form-target-select').innerHTML = o;
-      });
-  }
-  
   function generateIDPreview() { 
       const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); 
       c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; 
       const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); 
       if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; 
-      
-      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}');
-      let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
-
+      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'), sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
       c.innerHTML=f.map(s => { 
           let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; 
           return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${escapeHTML(s.name)}</div><div class="id-course-modern">COURSE: ${escapeHTML(s.course || 'N/A')}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${escapeHTML(s.company || 'N/A')}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${escapeHTML(s.id)}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; 
       }).join(''); 
-      
       setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H })), 300); 
+  }
+  function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
+
+  // ─── NEW DOSSIER FORM GENERATOR ENGINE ───
+  function fetchFormDossierData() {
+      document.getElementById('form-target-select').innerHTML='<option value="ALL">Fetching data...</option>';
+      apiCall('getFormDossierData', { user: session.user, pass: session.pass }, (res) => {
+          globalFormCache = res.students; let o = '<option value="ALL">Entire Roster (Bulk)</option>';
+          res.students.forEach(s => { o += `<option value="${s.studentNo}">${escapeHTML(s.studentNo)} – ${escapeHTML(s.lName)}, ${escapeHTML(s.fName)}</option>`; });
+          document.getElementById('form-target-select').innerHTML = o;
+      });
   }
 
   function generateFormPreview() {
@@ -1578,141 +1094,158 @@
       const c = document.getElementById('form-grid-container');
       c.innerHTML = '<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING EDITABLE PREVIEW...</p>';
       
-      const f = t === 'ALL' ? globalFormCache : globalFormCache.filter(s => s.studentNo === t);
+      const f = t === 'ALL' ? globalFormCache : globalFormCache.filter(s => s.studentNo.toString() === t.toString());
       if (!f.length) return c.innerHTML = '<p style="text-align:center; width:100%;">No cadets found.</p>';
       
       const tz = new Date().toLocaleDateString();
       
       c.innerHTML = f.map(s => {
-          let imgBox = s.image ? `<img src="${s.image}" style="width:120px; height:120px; object-fit:cover; border:2px solid #000;">` : `<div style="width:120px; height:120px; border:2px solid #000; display:flex; align-items:center; justify-content:center; font-size:12px; font-family:'Times New Roman', serif;">2x2 PHOTO</div>`;
+          let imgBox = s.image ? `<img src="${s.image}" style="width:120px; height:120px; object-fit:cover; border:2px solid #000;">` : `<div style="width:120px; height:120px; border:2px solid #000; display:flex; align-items:center; justify-content:center; font-size:12px; font-family:'Arial', sans-serif;">2x2 PHOTO</div>`;
+          const field = (key, val, fw='normal') => `<div class="editable-field" contenteditable="true" data-field="${key}" style="font-weight:${fw};">${escapeHTML(val)}</div>`;
           
-          const field = (key, val, flex=1) => `<span class="editable-field" contenteditable="true" data-field="${key}" style="flex:${flex};">${escapeHTML(val)}</span>`;
-
           return `
           <div class="print-form-page" id="form-doc-${s.studentNo}">
               <div class="print-form-header">ROTC REGISTRATION FORM</div>
               
-              <div class="print-form-row">
-                  <div class="print-form-group"><span class="print-form-label">Student No:</span>${field('studentNo', s.studentNo)}</div>
-                  <div class="print-form-group"><span class="print-form-label">MS:</span>${field('msLevel', s.msLevel)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Date:</span>${field('date', tz)}</div>
-              </div>
+              <table style="margin-bottom:10px;">
+                  <tr>
+                      <td style="width:75px; font-weight:bold;">Student No:</td><td style="width:30%;">${field('studentNo', s.studentNo)}</td>
+                      <td style="width:30px; font-weight:bold;">MS:</td><td style="width:20%;">${field('msLevel', s.msLevel)}</td>
+                      <td style="width:40px; font-weight:bold;">Date:</td><td style="width:25%;">${field('date', tz)}</td>
+                  </tr>
+              </table>
               
-              <div class="print-form-row" style="margin-top:10px;">
-                  <div class="print-form-group" style="flex:0.1;"><span class="print-form-label">Name:</span></div>
-                  ${field('lName', s.lName)} ${field('fName', s.fName)} ${field('mName', s.mName)}
-              </div>
-              <div class="print-form-row" style="font-size:11px; color:#555; margin-top:-8px; margin-bottom:15px; border:none;">
-                  <div class="print-form-group" style="flex:0.1; border:none;"></div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Last Name)</div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(First Name)</div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Middle Name)</div>
-              </div>
+              <table style="margin-bottom:15px;">
+                  <tr>
+                      <td style="width:50px; font-weight:bold;">Name:</td>
+                      <td style="text-align:center;">${field('lName', s.lName, 'bold')}</td>
+                      <td style="text-align:center;">${field('fName', s.fName, 'bold')}</td>
+                      <td style="text-align:center;">${field('mName', s.mName, 'bold')}</td>
+                  </tr>
+                  <tr style="font-size:11px; color:#555;">
+                      <td></td><td style="text-align:center;">(Last Name)</td><td style="text-align:center;">(First Name)</td><td style="text-align:center;">(Middle Name)</td>
+                  </tr>
+              </table>
 
-              <div class="print-form-section" style="margin-top:0;">Temporary Address:</div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">No/St/Vill/Brgy.:</span>${field('tempBrgy', s.tempBrgy)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Municipality:</span>${field('tempCity', s.tempCity)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Province:</span>${field('tempProv', s.tempProv)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Telephone/Cellphone Number:</span>${field('telNo', s.telNo)}</div></div>
+              <div style="font-weight:bold; margin-bottom:5px;">Temporary Address:</div>
+              <table style="margin-bottom:10px;">
+                  <tr><td style="width:120px;">No/St/Vill/Brgy.:</td><td>${field('tempBrgy', s.tempBrgy)}</td></tr>
+                  <tr><td>Municipality:</td><td>${field('tempCity', s.tempCity)}</td></tr>
+                  <tr><td>Province:</td><td>${field('tempProv', s.tempProv)}</td></tr>
+                  <tr><td>Telephone/Cellphone Number:</td><td>${field('telNo', s.telNo)}</td></tr>
+              </table>
               
-              <div class="print-form-row" style="margin-top:10px;">
-                  <div class="print-form-group"><span class="print-form-label">Course:</span>${field('course', s.course)}</div>
-                  <div class="print-form-group"><span class="print-form-label">School:</span><span class="print-form-value" style="border-bottom:1px solid #000; flex:1; padding-left:5px;">St. Clare College of Kalookan</span></div>
-                  <div class="print-form-group"><span class="print-form-label">Religion:</span>${field('religion', s.religion)}</div>
-              </div>
-              <div class="print-form-row">
-                  <div class="print-form-group"><span class="print-form-label">Date of Birth:</span>${field('dob', s.dob)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Place of Birth:</span>${field('pob', s.pob)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Sex:</span>${field('sex', s.sex)}</div>
-              </div>
-              <div class="print-form-row">
-                  <div class="print-form-group"><span class="print-form-label">Height:</span>${field('height', s.height)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Weight:</span>${field('weight', s.weight)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Complexion:</span>${field('complexion', s.complexion)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Blood Type:</span>${field('bloodType', s.bloodType)}</div>
-              </div>
+              <table style="margin-bottom:10px;">
+                  <tr>
+                      <td style="width:50px;">Course:</td><td style="width:35%;">${field('course', s.course)}</td>
+                      <td style="width:50px;">School:</td><td style="width:30%; border-bottom:1px solid #000; padding-left:5px;">St. Clare College</td>
+                      <td style="width:55px;">Religion:</td><td>${field('religion', s.religion)}</td>
+                  </tr>
+              </table>
+              <table style="margin-bottom:10px;">
+                  <tr>
+                      <td style="width:80px;">Date of Birth:</td><td style="width:25%;">${field('dob', s.dob)}</td>
+                      <td style="width:90px;">Place of Birth:</td><td style="width:35%;">${field('pob', s.pob)}</td>
+                      <td style="width:30px;">Sex:</td><td>${field('sex', s.sex)}</td>
+                  </tr>
+              </table>
+              <table style="margin-bottom:15px;">
+                  <tr>
+                      <td style="width:50px;">Height:</td><td style="width:20%;">${field('height', s.height)}</td>
+                      <td style="width:50px;">Weight:</td><td style="width:20%;">${field('weight', s.weight)}</td>
+                      <td style="width:80px;">Complexion:</td><td style="width:20%;">${field('complexion', s.complexion)}</td>
+                      <td style="width:80px;">Blood Type:</td><td>${field('bloodType', s.bloodType)}</td>
+                  </tr>
+              </table>
 
-              <div class="print-form-section">Permanent Address:</div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">No/St/Vill/Brgy.:</span>${field('permBrgy', s.permBrgy)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Municipality:</span>${field('permCity', s.permCity)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Province:</span>${field('permProv', s.permProv)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Telephone/Cellphone Number:</span>${field('telNo', s.telNo)}</div></div>
+              <div style="font-weight:bold; margin-bottom:5px;">Permanent Address:</div>
+              <table style="margin-bottom:15px;">
+                  <tr><td style="width:120px;">No/St/Vill/Brgy.:</td><td>${field('permBrgy', s.permBrgy)}</td></tr>
+                  <tr><td>Municipality:</td><td>${field('permCity', s.permCity)}</td></tr>
+                  <tr><td>Province:</td><td>${field('permProv', s.permProv)}</td></tr>
+                  <tr><td>Telephone/Cellphone Number:</td><td>${field('telNo', s.telNo)}</td></tr>
+              </table>
 
-              <div class="print-form-row" style="margin-top:10px;">
-                  <div class="print-form-group"><span class="print-form-label">Father:</span>${field('fatherName', s.fatherName)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Occupation:</span>${field('fatherOcc', s.fatherOcc)}</div>
-              </div>
-              <div class="print-form-row">
-                  <div class="print-form-group"><span class="print-form-label">Mother:</span>${field('motherName', s.motherName)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Occupation:</span>${field('motherOcc', s.motherOcc)}</div>
-              </div>
+              <table style="margin-bottom:15px;">
+                  <tr><td style="width:50px;">Father:</td><td style="width:50%;">${field('fatherName', s.fatherName)}</td><td style="width:75px;">Occupation:</td><td>${field('fatherOcc', s.fatherOcc)}</td></tr>
+                  <tr><td>Mother:</td><td>${field('motherName', s.motherName)}</td><td>Occupation:</td><td>${field('motherOcc', s.motherOcc)}</td></tr>
+              </table>
 
-              <div class="print-form-section">Person to be notify in case of emergency:</div>
-              <div class="print-form-row">
-                  <div class="print-form-group"><span class="print-form-label">Name:</span>${field('emergName', s.emergName)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Relationship:</span>${field('emergRel', s.emergRel)}</div>
-              </div>
-              <div class="print-form-row">
-                  <div class="print-form-group"><span class="print-form-label">Address:</span>${field('emergAddr', s.emergAddr)}</div>
-                  <div class="print-form-group"><span class="print-form-label">Tel/Cp No:</span>${field('emergContact', s.emergContact)}</div>
-              </div>
+              <div style="font-weight:bold; margin-bottom:5px;">Person to be notify in case of emergency:</div>
+              <table style="margin-bottom:10px;">
+                  <tr><td style="width:45px;">Name:</td><td style="width:50%;">${field('emergName', s.emergName)}</td><td style="width:85px;">Relationship:</td><td>${field('emergRel', s.emergRel)}</td></tr>
+                  <tr><td>Address:</td><td>${field('emergAddr', s.emergAddr)}</td><td>Tel/Cp No:</td><td>${field('emergContact', s.emergContact)}</td></tr>
+              </table>
               
               <div style="page-break-before: always;"></div>
-              <div class="print-form-header" style="margin-top:40px;">CADET INFORMATION SHEET</div>
-              <div class="print-form-section" style="text-decoration:none;">Educational Background:</div>
               
-              <div class="print-form-section" style="margin-top:5px; text-decoration:none;">a. Elementary:</div>
-              <div class="print-form-row">
-                  ${field('elemSchool', s.elemSchool)} ${field('elemLoc', s.elemLoc)} ${field('elemDate', s.elemDate)}
-              </div>
-              <div class="print-form-row" style="font-size:11px; color:#555; margin-top:-8px; margin-bottom:10px; border:none;">
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Name of School)</div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Location)</div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Date of Attendance)</div>
-              </div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">General Average:</span>${field('elemGenAve', s.elemGenAve)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Honors Received:</span>${field('elemHonors', s.elemHonors)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Clubs, Organization and other Affiliations (Indicate Position):</span>${field('elemClubs', s.elemClubs)}</div></div>
-
-              <div class="print-form-section" style="text-decoration:none;">b. High School:</div>
-              <div class="print-form-row">
-                  ${field('hsSchool', s.hsSchool)} ${field('hsLoc', s.hsLoc)} ${field('hsDate', s.hsDate)}
-              </div>
-              <div class="print-form-row" style="font-size:11px; color:#555; margin-top:-8px; margin-bottom:10px; border:none;">
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Name of School)</div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Location)</div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Date of Attendance)</div>
-              </div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">General Average:</span>${field('hsGenAve', s.hsGenAve)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Honors Received:</span>${field('hsHonors', s.hsHonors)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Clubs, Organization and other Affiliations (Indicate Position):</span>${field('hsClubs', s.hsClubs)}</div></div>
-
-              <div class="print-form-section" style="text-decoration:none;">c. College:</div>
-              <div class="print-form-row">
-                  ${field('collSchool', s.collSchool)} ${field('collLoc', s.collLoc)} ${field('collDate', s.collDate)}
-              </div>
-              <div class="print-form-row" style="font-size:11px; color:#555; margin-top:-8px; margin-bottom:10px; border:none;">
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Name of School)</div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Location)</div>
-                  <div class="print-form-group" style="justify-content:center; border:none;">(Date of Attendance)</div>
-              </div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">General Average:</span>${field('collGenAve', s.collGenAve)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Honors Received:</span>${field('collHonors', s.collHonors)}</div></div>
-              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Clubs, Organization and other Affiliations (Indicate Position):</span>${field('collClubs', s.collClubs)}</div></div>
-
-              <div class="print-form-row" style="margin-top:15px;"><div class="print-form-group"><span class="print-form-label">Hobbies: (Writing, Essay, Poetry, etc.)</span></div></div>
-              <div class="print-form-row"><div class="print-form-group">${field('hobbies', s.hobbies)}</div></div>
-
-              <div class="print-form-row" style="margin-top:15px;"><div class="print-form-group"><span class="print-form-label">Do you intend to take the Advance ROTC/Probationary Training Course (POTC) and pursue a military career? (___) Yes (___) No. Why?</span></div></div>
-              <div class="print-form-row"><div class="print-form-group">${field('militaryIntent', s.militaryIntent)}</div></div>
+              <div class="print-form-header" style="margin-top:20px;">CADET INFORMATION SHEET</div>
+              <div style="margin-bottom:10px;">Educational Background:</div>
               
-              <div style="margin-top: 30px; font-size:13px; font-family:'Times New Roman', serif;">This is to certify that the above data is true and correct:</div>
+              <div style="margin-bottom:5px;">a. Elementary:</div>
+              <table style="margin-bottom:5px; text-align:center;">
+                  <tr>
+                      <td style="width:45%;">${field('elemSchool', s.elemSchool)}</td>
+                      <td style="width:35%;">${field('elemLoc', s.elemLoc)}</td>
+                      <td style="width:20%;">${field('elemDate', s.elemDate)}</td>
+                  </tr>
+                  <tr style="font-size:11px; color:#555; border-top:none;">
+                      <td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td>
+                  </tr>
+              </table>
+              <table style="margin-bottom:10px;">
+                  <tr><td style="width:110px;">General Average:</td><td>${field('elemGenAve', s.elemGenAve)}</td></tr>
+                  <tr><td>Honors Received:</td><td>${field('elemHonors', s.elemHonors)}</td></tr>
+                  <tr><td style="width:350px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td>${field('elemClubs', s.elemClubs)}</td></tr>
+              </table>
 
-              <div style="margin-top: 30px; display:flex; justify-content:space-between; align-items:flex-end;">
+              <div style="margin-bottom:5px; margin-top:15px;">b. High School:</div>
+              <table style="margin-bottom:5px; text-align:center;">
+                  <tr>
+                      <td style="width:45%;">${field('hsSchool', s.hsSchool)}</td>
+                      <td style="width:35%;">${field('hsLoc', s.hsLoc)}</td>
+                      <td style="width:20%;">${field('hsDate', s.hsDate)}</td>
+                  </tr>
+                  <tr style="font-size:11px; color:#555; border-top:none;">
+                      <td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td>
+                  </tr>
+              </table>
+              <table style="margin-bottom:10px;">
+                  <tr><td style="width:110px;">General Average:</td><td>${field('hsGenAve', s.hsGenAve)}</td></tr>
+                  <tr><td>Honors Received:</td><td>${field('hsHonors', s.hsHonors)}</td></tr>
+                  <tr><td style="width:350px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td>${field('hsClubs', s.hsClubs)}</td></tr>
+              </table>
+
+              <div style="margin-bottom:5px; margin-top:15px;">c. College:</div>
+              <table style="margin-bottom:5px; text-align:center;">
+                  <tr>
+                      <td style="width:45%;">${field('collSchool', s.collSchool)}</td>
+                      <td style="width:35%;">${field('collLoc', s.collLoc)}</td>
+                      <td style="width:20%;">${field('collDate', s.collDate)}</td>
+                  </tr>
+                  <tr style="font-size:11px; color:#555; border-top:none;">
+                      <td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td>
+                  </tr>
+              </table>
+              <table style="margin-bottom:10px;">
+                  <tr><td style="width:110px;">General Average:</td><td>${field('collGenAve', s.collGenAve)}</td></tr>
+                  <tr><td>Honors Received:</td><td>${field('collHonors', s.collHonors)}</td></tr>
+                  <tr><td style="width:350px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td>${field('collClubs', s.collClubs)}</td></tr>
+              </table>
+
+              <table style="margin-top:15px; margin-bottom:5px;"><tr><td>Hobbies: (Writing, Essay, Poetry, etc.)</td></tr></table>
+              <table style="margin-bottom:15px;"><tr><td>${field('hobbies', s.hobbies)}</td></tr></table>
+
+              <table style="margin-bottom:5px;"><tr><td>Do you intend to take the Advance ROTC/Probationary Training Course (POTC) and pursue a military career? (___) Yes (___) No. Why?</td></tr></table>
+              <table style="margin-bottom:15px;"><tr><td>${field('militaryIntent', s.militaryIntent)}</td></tr></table>
+              
+              <div style="margin-top: 30px; font-size:14px; text-align:center;">This is to certify that the above data is true and correct:</div>
+
+              <div style="margin-top: 40px; display:flex; justify-content:space-between; align-items:flex-end;">
                   ${imgBox}
                   <div style="text-align:center; width:300px;">
                       <div style="border-bottom:1px solid #000; min-height:30px;"></div>
-                      <div style="font-size:12px; margin-top:5px; font-family:'Times New Roman', serif;">(Student Name & Signature)</div>
+                      <div style="font-size:12px; margin-top:5px;">(Student Name & Signature)</div>
                   </div>
               </div>
           </div>
@@ -1741,32 +1274,16 @@
       });
   }
   
-  function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
-  function printForms() { if(document.getElementById('form-grid-container').innerHTML.includes('No cadets')||document.getElementById('form-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
-  function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${escapeHTML(l.user)}</b></td><td><span class="badge badge-action">${escapeHTML(l.action)}</span></td><td style="color:var(--text-muted); font-size:13px;">${escapeHTML(l.details)}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }); }
-  
-  function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${escapeHTML(c.name)} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
-  
-  function submitLegacyClass() { 
-      const n=document.getElementById('leg-class-name').value.trim(), y=document.getElementById('leg-class-year').value.trim(), l=croppedData['leg-class-logo']; 
-      if(!n||!y||!l) return Swal.fire('Notice', 'Fields required.', 'warning'); 
-      Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() }); 
-      apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire('Success', res.message, 'success'); 
-          document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; loadLegacyAdminData(); 
-      }); 
-  }
-  
-  function submitLegacyOfficer() { 
-      const c=document.getElementById('leg-off-class').value, r=document.getElementById('leg-off-rank').value.trim(), n=document.getElementById('leg-off-name').value.trim(), d=document.getElementById('leg-off-desig').value.trim(), course=document.getElementById('leg-off-course').value.trim(), bio=document.getElementById('leg-off-bio').value.trim(), i=croppedData['leg-off-photo']; 
-      if(!c||!r||!n||!d||!i) return Swal.fire('Notice', 'Please fill all required fields and upload an image.', 'warning'); 
-      Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); 
-      apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire('Success', res.message, 'success'); 
-          document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; loadLegacyAdminData(); 
-      }); 
+  function printForms() {
+      if (document.getElementById('form-grid-container').innerHTML.includes('No cadets') || document.getElementById('form-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning');
+      window.print();
   }
 
+  function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${escapeHTML(l.user)}</b></td><td><span class="badge badge-action">${escapeHTML(l.action)}</span></td><td style="color:var(--text-muted); font-size:13px;">${escapeHTML(l.details)}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }); }
+  function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${escapeHTML(c.name)} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
+  
+  function submitLegacyClass() { const n=document.getElementById('leg-class-name').value.trim(), y=document.getElementById('leg-class-year').value.trim(), l=croppedData['leg-class-logo']; if(!n||!y||!l) return Swal.fire('Notice', 'Fields required.', 'warning'); Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() }); apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; loadLegacyAdminData(); }); }
+  function submitLegacyOfficer() { const c=document.getElementById('leg-off-class').value, r=document.getElementById('leg-off-rank').value.trim(), n=document.getElementById('leg-off-name').value.trim(), d=document.getElementById('leg-off-desig').value.trim(), course=document.getElementById('leg-off-course').value.trim(), bio=document.getElementById('leg-off-bio').value.trim(), i=croppedData['leg-off-photo']; if(!c||!r||!n||!d||!i) return Swal.fire('Notice', 'Please fill all required fields and upload an image.', 'warning'); Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; loadLegacyAdminData(); }); }
   function loadUserProfile() { apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { document.getElementById('prof-name').value=res.name||""; document.getElementById('prof-rank').value=res.rank||""; document.getElementById('prof-age').value=res.age||""; document.getElementById('prof-course').value=res.course||""; document.getElementById('prof-position').value=res.position||""; document.getElementById('prof-contact').value=res.contact||""; updateSidebarProfile(res); }); }
   function saveUserProfile() { const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; if(croppedData['prof-image-file']) d.imageData=croppedData['prof-image-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('prof-image-file').value=""; delete croppedData['prof-image-file']; document.getElementById('prof-image-status').innerHTML='Select an image...'; loadUserProfile(); }); }
   function updateSidebarProfile(d) { document.getElementById('sidebar-profile-name').innerText=(d.name||session.user||"PERSONNEL").toUpperCase(); document.getElementById('sidebar-profile-role').innerText=(d.rank?d.rank+" - ":"")+(d.position||session.role||"SYSTEM ACTIVE"); if(d.image) { document.getElementById('sidebar-profile-img').src=d.image; document.getElementById('sidebar-profile-img').style.display='block'; document.getElementById('sidebar-icon').style.display='none'; } else { document.getElementById('sidebar-profile-img').style.display='none'; document.getElementById('sidebar-icon').style.display='block'; } }
