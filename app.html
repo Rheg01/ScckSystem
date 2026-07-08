@@ -65,9 +65,7 @@
     .id-photo-placeholder { font-size: 40px; color: var(--text-muted); }
     .id-name-modern { text-align: center; font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: bold; color: var(--text); line-height: 1.1; padding: 0 10px; text-transform: uppercase; }
     .id-course-modern { text-align: center; font-size: 11px; color: var(--army-primary); font-weight: 700; text-transform: uppercase; margin-top: 5px; letter-spacing: 0.5px;}
-    
     .qr-container-modern { margin: auto auto 15px auto; width: 85px; height: 85px; background: white; padding: 4px; border-radius: 6px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; }
-    
     .id-footer-modern { background: var(--army-dark); color: #fff; text-align: center; font-size: 9px; padding: 8px; font-weight: bold; letter-spacing: 1px; }
 
     .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; } .mobile-overlay.show { display: block; }
@@ -120,14 +118,13 @@
     
     @media print { 
         body * { visibility: hidden; } 
-        /* ID Card Print */
+        
         .active-panel#panel-idcards #id-grid-container, .active-panel#panel-idcards #id-grid-container * { visibility: visible; } 
         .active-panel#panel-idcards #id-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: grid; grid-template-columns: repeat(3, 240px); gap: 20px; justify-content: center; margin: 0; padding: 0; } 
         .id-card-modern { page-break-inside: avoid; border: 1px solid #000; box-shadow: none; } 
         .id-card-top { background: #1b2015 !important; border-bottom: 4px solid #d4af37 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} 
         .id-footer-modern { background: #1b2015 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} 
         
-        /* Form Print */
         .active-panel#panel-forms #form-grid-container, .active-panel#panel-forms #form-grid-container * { visibility: visible; color: #000 !important; }
         .active-panel#panel-forms #form-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: block; margin: 0; padding: 0; }
         .print-form-page { page-break-after: always; box-shadow: none; border: none; padding: 0; max-width: 100%; width: 100%; margin-bottom: 0; }
@@ -1202,7 +1199,7 @@
     document.querySelectorAll('.preview-carousel-slide').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.preview-dot').forEach(d => d.classList.remove('active'));
     document.getElementById(`prev-slide-${index}`).classList.add('active');
-    if (document.getElementById(`prev-dot-${index}`)) document.getElementById(`prev-dot-${indexclassList.add('active')}`);
+    if (document.getElementById(`prev-dot-${index}`)) document.getElementById(`prev-dot-${index}`).classList.add('active');
     previewSlideIdx = index;
   }
 
@@ -1579,4 +1576,204 @@
   function generateFormPreview() {
       const t = document.getElementById('form-target-select').value;
       const c = document.getElementById('form-grid-container');
-      c.innerHTML = '<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING EDITABLE PREVIEW...</
+      c.innerHTML = '<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING EDITABLE PREVIEW...</p>';
+      
+      const f = t === 'ALL' ? globalFormCache : globalFormCache.filter(s => s.studentNo === t);
+      if (!f.length) return c.innerHTML = '<p style="text-align:center; width:100%;">No cadets found.</p>';
+      
+      const tz = new Date().toLocaleDateString();
+      
+      c.innerHTML = f.map(s => {
+          let imgBox = s.image ? `<img src="${s.image}" style="width:120px; height:120px; object-fit:cover; border:2px solid #000;">` : `<div style="width:120px; height:120px; border:2px solid #000; display:flex; align-items:center; justify-content:center; font-size:12px; font-family:'Times New Roman', serif;">2x2 PHOTO</div>`;
+          
+          const field = (key, val, flex=1) => `<span class="editable-field" contenteditable="true" data-field="${key}" style="flex:${flex};">${escapeHTML(val)}</span>`;
+
+          return `
+          <div class="print-form-page" id="form-doc-${s.studentNo}">
+              <div class="print-form-header">ROTC REGISTRATION FORM</div>
+              
+              <div class="print-form-row">
+                  <div class="print-form-group"><span class="print-form-label">Student No:</span>${field('studentNo', s.studentNo)}</div>
+                  <div class="print-form-group"><span class="print-form-label">MS:</span>${field('msLevel', s.msLevel)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Date:</span>${field('date', tz)}</div>
+              </div>
+              
+              <div class="print-form-row" style="margin-top:10px;">
+                  <div class="print-form-group" style="flex:0.1;"><span class="print-form-label">Name:</span></div>
+                  ${field('lName', s.lName)} ${field('fName', s.fName)} ${field('mName', s.mName)}
+              </div>
+              <div class="print-form-row" style="font-size:11px; color:#555; margin-top:-8px; margin-bottom:15px; border:none;">
+                  <div class="print-form-group" style="flex:0.1; border:none;"></div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Last Name)</div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(First Name)</div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Middle Name)</div>
+              </div>
+
+              <div class="print-form-section" style="margin-top:0;">Temporary Address:</div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">No/St/Vill/Brgy.:</span>${field('tempBrgy', s.tempBrgy)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Municipality:</span>${field('tempCity', s.tempCity)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Province:</span>${field('tempProv', s.tempProv)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Telephone/Cellphone Number:</span>${field('telNo', s.telNo)}</div></div>
+              
+              <div class="print-form-row" style="margin-top:10px;">
+                  <div class="print-form-group"><span class="print-form-label">Course:</span>${field('course', s.course)}</div>
+                  <div class="print-form-group"><span class="print-form-label">School:</span><span class="print-form-value" style="border-bottom:1px solid #000; flex:1; padding-left:5px;">St. Clare College of Kalookan</span></div>
+                  <div class="print-form-group"><span class="print-form-label">Religion:</span>${field('religion', s.religion)}</div>
+              </div>
+              <div class="print-form-row">
+                  <div class="print-form-group"><span class="print-form-label">Date of Birth:</span>${field('dob', s.dob)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Place of Birth:</span>${field('pob', s.pob)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Sex:</span>${field('sex', s.sex)}</div>
+              </div>
+              <div class="print-form-row">
+                  <div class="print-form-group"><span class="print-form-label">Height:</span>${field('height', s.height)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Weight:</span>${field('weight', s.weight)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Complexion:</span>${field('complexion', s.complexion)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Blood Type:</span>${field('bloodType', s.bloodType)}</div>
+              </div>
+
+              <div class="print-form-section">Permanent Address:</div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">No/St/Vill/Brgy.:</span>${field('permBrgy', s.permBrgy)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Municipality:</span>${field('permCity', s.permCity)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Province:</span>${field('permProv', s.permProv)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Telephone/Cellphone Number:</span>${field('telNo', s.telNo)}</div></div>
+
+              <div class="print-form-row" style="margin-top:10px;">
+                  <div class="print-form-group"><span class="print-form-label">Father:</span>${field('fatherName', s.fatherName)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Occupation:</span>${field('fatherOcc', s.fatherOcc)}</div>
+              </div>
+              <div class="print-form-row">
+                  <div class="print-form-group"><span class="print-form-label">Mother:</span>${field('motherName', s.motherName)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Occupation:</span>${field('motherOcc', s.motherOcc)}</div>
+              </div>
+
+              <div class="print-form-section">Person to be notify in case of emergency:</div>
+              <div class="print-form-row">
+                  <div class="print-form-group"><span class="print-form-label">Name:</span>${field('emergName', s.emergName)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Relationship:</span>${field('emergRel', s.emergRel)}</div>
+              </div>
+              <div class="print-form-row">
+                  <div class="print-form-group"><span class="print-form-label">Address:</span>${field('emergAddr', s.emergAddr)}</div>
+                  <div class="print-form-group"><span class="print-form-label">Tel/Cp No:</span>${field('emergContact', s.emergContact)}</div>
+              </div>
+              
+              <div style="page-break-before: always;"></div>
+              <div class="print-form-header" style="margin-top:40px;">CADET INFORMATION SHEET</div>
+              <div class="print-form-section" style="text-decoration:none;">Educational Background:</div>
+              
+              <div class="print-form-section" style="margin-top:5px; text-decoration:none;">a. Elementary:</div>
+              <div class="print-form-row">
+                  ${field('elemSchool', s.elemSchool)} ${field('elemLoc', s.elemLoc)} ${field('elemDate', s.elemDate)}
+              </div>
+              <div class="print-form-row" style="font-size:11px; color:#555; margin-top:-8px; margin-bottom:10px; border:none;">
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Name of School)</div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Location)</div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Date of Attendance)</div>
+              </div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">General Average:</span>${field('elemGenAve', s.elemGenAve)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Honors Received:</span>${field('elemHonors', s.elemHonors)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Clubs, Organization and other Affiliations (Indicate Position):</span>${field('elemClubs', s.elemClubs)}</div></div>
+
+              <div class="print-form-section" style="text-decoration:none;">b. High School:</div>
+              <div class="print-form-row">
+                  ${field('hsSchool', s.hsSchool)} ${field('hsLoc', s.hsLoc)} ${field('hsDate', s.hsDate)}
+              </div>
+              <div class="print-form-row" style="font-size:11px; color:#555; margin-top:-8px; margin-bottom:10px; border:none;">
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Name of School)</div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Location)</div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Date of Attendance)</div>
+              </div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">General Average:</span>${field('hsGenAve', s.hsGenAve)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Honors Received:</span>${field('hsHonors', s.hsHonors)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Clubs, Organization and other Affiliations (Indicate Position):</span>${field('hsClubs', s.hsClubs)}</div></div>
+
+              <div class="print-form-section" style="text-decoration:none;">c. College:</div>
+              <div class="print-form-row">
+                  ${field('collSchool', s.collSchool)} ${field('collLoc', s.collLoc)} ${field('collDate', s.collDate)}
+              </div>
+              <div class="print-form-row" style="font-size:11px; color:#555; margin-top:-8px; margin-bottom:10px; border:none;">
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Name of School)</div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Location)</div>
+                  <div class="print-form-group" style="justify-content:center; border:none;">(Date of Attendance)</div>
+              </div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">General Average:</span>${field('collGenAve', s.collGenAve)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Honors Received:</span>${field('collHonors', s.collHonors)}</div></div>
+              <div class="print-form-row"><div class="print-form-group"><span class="print-form-label">Clubs, Organization and other Affiliations (Indicate Position):</span>${field('collClubs', s.collClubs)}</div></div>
+
+              <div class="print-form-row" style="margin-top:15px;"><div class="print-form-group"><span class="print-form-label">Hobbies: (Writing, Essay, Poetry, etc.)</span></div></div>
+              <div class="print-form-row"><div class="print-form-group">${field('hobbies', s.hobbies)}</div></div>
+
+              <div class="print-form-row" style="margin-top:15px;"><div class="print-form-group"><span class="print-form-label">Do you intend to take the Advance ROTC/Probationary Training Course (POTC) and pursue a military career? (___) Yes (___) No. Why?</span></div></div>
+              <div class="print-form-row"><div class="print-form-group">${field('militaryIntent', s.militaryIntent)}</div></div>
+              
+              <div style="margin-top: 30px; font-size:13px; font-family:'Times New Roman', serif;">This is to certify that the above data is true and correct:</div>
+
+              <div style="margin-top: 30px; display:flex; justify-content:space-between; align-items:flex-end;">
+                  ${imgBox}
+                  <div style="text-align:center; width:300px;">
+                      <div style="border-bottom:1px solid #000; min-height:30px;"></div>
+                      <div style="font-size:12px; margin-top:5px; font-family:'Times New Roman', serif;">(Student Name & Signature)</div>
+                  </div>
+              </div>
+          </div>
+          `;
+      }).join('');
+  }
+
+  function exportToDrive() {
+      const t = document.getElementById('form-target-select').value;
+      if (t === 'ALL') return Swal.fire('Notice', 'Bulk export is disabled to prevent Google Drive rate limits. Please export one cadet at a time.', 'warning');
+      if (document.getElementById('form-grid-container').innerHTML.includes('No cadets') || document.getElementById('form-grid-container').innerHTML.includes('RENDERING')) {
+          return Swal.fire('Notice', 'Generate preview before exporting.', 'warning');
+      }
+      
+      const container = document.getElementById(`form-doc-${t}`);
+      if(!container) return Swal.fire('Error', 'Document not found.', 'error');
+      
+      const fields = container.querySelectorAll('.editable-field');
+      let formData = {};
+      fields.forEach(f => { formData[f.getAttribute('data-field')] = f.innerText.trim(); });
+      
+      Swal.fire({ title: 'EXPORTING TO DRIVE...', html: 'Generating Google Doc...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      
+      apiCall('exportRegistrationForm', { formData: formData, user: session.user, pass: session.pass }, (res) => {
+          Swal.fire('Success!', res.message, 'success');
+      });
+  }
+  
+  function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
+  function printForms() { if(document.getElementById('form-grid-container').innerHTML.includes('No cadets')||document.getElementById('form-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
+  function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${escapeHTML(l.user)}</b></td><td><span class="badge badge-action">${escapeHTML(l.action)}</span></td><td style="color:var(--text-muted); font-size:13px;">${escapeHTML(l.details)}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }); }
+  
+  function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${escapeHTML(c.name)} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
+  
+  function submitLegacyClass() { 
+      const n=document.getElementById('leg-class-name').value.trim(), y=document.getElementById('leg-class-year').value.trim(), l=croppedData['leg-class-logo']; 
+      if(!n||!y||!l) return Swal.fire('Notice', 'Fields required.', 'warning'); 
+      Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() }); 
+      apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { 
+          Swal.fire('Success', res.message, 'success'); 
+          document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; loadLegacyAdminData(); 
+      }); 
+  }
+  
+  function submitLegacyOfficer() { 
+      const c=document.getElementById('leg-off-class').value, r=document.getElementById('leg-off-rank').value.trim(), n=document.getElementById('leg-off-name').value.trim(), d=document.getElementById('leg-off-desig').value.trim(), course=document.getElementById('leg-off-course').value.trim(), bio=document.getElementById('leg-off-bio').value.trim(), i=croppedData['leg-off-photo']; 
+      if(!c||!r||!n||!d||!i) return Swal.fire('Notice', 'Please fill all required fields and upload an image.', 'warning'); 
+      Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); 
+      apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { 
+          Swal.fire('Success', res.message, 'success'); 
+          document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; loadLegacyAdminData(); 
+      }); 
+  }
+
+  function loadUserProfile() { apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { document.getElementById('prof-name').value=res.name||""; document.getElementById('prof-rank').value=res.rank||""; document.getElementById('prof-age').value=res.age||""; document.getElementById('prof-course').value=res.course||""; document.getElementById('prof-position').value=res.position||""; document.getElementById('prof-contact').value=res.contact||""; updateSidebarProfile(res); }); }
+  function saveUserProfile() { const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; if(croppedData['prof-image-file']) d.imageData=croppedData['prof-image-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('prof-image-file').value=""; delete croppedData['prof-image-file']; document.getElementById('prof-image-status').innerHTML='Select an image...'; loadUserProfile(); }); }
+  function updateSidebarProfile(d) { document.getElementById('sidebar-profile-name').innerText=(d.name||session.user||"PERSONNEL").toUpperCase(); document.getElementById('sidebar-profile-role').innerText=(d.rank?d.rank+" - ":"")+(d.position||session.role||"SYSTEM ACTIVE"); if(d.image) { document.getElementById('sidebar-profile-img').src=d.image; document.getElementById('sidebar-profile-img').style.display='block'; document.getElementById('sidebar-icon').style.display='none'; } else { document.getElementById('sidebar-profile-img').style.display='none'; document.getElementById('sidebar-icon').style.display='block'; } }
+  function saveSystemSettings() { let p={ user: session.user, pass: session.pass, clearBg: false }; if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', p, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('set-logo-file').value=""; delete croppedData['set-logo-file']; document.getElementById('set-logo-status').innerHTML='Select an image...'; document.getElementById('set-bg-file').value=""; delete croppedData['set-bg-file']; document.getElementById('set-bg-status').innerHTML='Select an image...'; document.getElementById('set-nav-logo-file').value=""; delete croppedData['set-nav-logo-file']; document.getElementById('set-nav-logo-status').innerHTML='Select an image...'; apiCall('getSettings', {}, (n) => { if(n.logoUrl) { document.getElementById('system-logo-login').src=n.logoUrl; document.getElementById('system-logo-login').style.display='block'; } if(n.bgUrl) document.getElementById('view-login').style.backgroundImage=`url('${n.bgUrl}')`; }); }); }
+  function resetBackground() { Swal.fire({ title: 'RESETTING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', { clearBg: true, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', 'Background removed.', 'success'); document.getElementById('view-login').style.backgroundImage=`radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%)`; }); }
+
+  try { if (localStorage.getItem('sccks_dark') === '1') applyTheme(true); } catch(e) {}
+</script>
+</body>
+</html>
