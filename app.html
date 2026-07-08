@@ -193,9 +193,11 @@
     .id-course-modern { text-align: center; font-size: 11px; color: var(--army-primary); font-weight: 700; text-transform: uppercase; margin-top: 5px; letter-spacing: 0.5px;}
     
     .qr-container-modern { margin: auto auto 15px auto; width: 85px; height: 85px; background: white; padding: 4px; border-radius: 6px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    
     /* QR Exploding Fix */
     .qr-container-modern canvas, .qr-container-modern img:not(.center-logo) { width: 100% !important; height: auto !important; object-fit: contain; }
     .center-logo { width: 22px !important; height: 22px !important; object-fit: contain; position: absolute; z-index: 10; background: white; padding: 2px; border-radius: 4px; }
+    
     .id-footer-modern { background: var(--army-dark); color: #fff; text-align: center; font-size: 9px; padding: 8px; font-weight: bold; letter-spacing: 1px; }
 
     /* ─── MODALS & OVERLAYS ─── */
@@ -234,15 +236,6 @@
     .preview-post-title { font-size: 32px; margin-bottom: 20px; line-height: 1.2; border-bottom: 1px solid var(--border); padding-bottom: 15px;}
     .preview-post-desc { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.8; white-space: pre-wrap; }
 
-    /* ─── DATA INTERCEPTION MODAL CSS ─── */
-    .intercept-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 90000; align-items: center; justify-content: center; padding: 20px; }
-    .intercept-modal.show { display: flex; animation: fadeUp 0.3s ease; }
-    .intercept-box { background: var(--card-bg); width: 100%; max-width: 900px; max-height: 90vh; overflow-y: auto; border-radius: 8px; border-top: 5px solid var(--army-gold); padding: 30px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-    .intercept-box h3 { color: var(--army-primary); margin-bottom: 5px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    .intercept-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px; margin-bottom: 20px;}
-    .intercept-grid div label { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; display: block; }
-    .intercept-grid div input { width: 100%; padding: 10px; margin: 0; font-size: 13px; }
-    
     @media print { 
         body * { visibility: hidden; } 
         .active-panel#panel-idcards #id-grid-container, .active-panel#panel-idcards #id-grid-container * { visibility: visible; } 
@@ -256,7 +249,6 @@
         .sidebar.open { left: 0; } 
         .mobile-menu-btn { display: block; } 
         .main-content { padding: 15px; width: 100%; } 
-        .intercept-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -332,21 +324,6 @@
   </div>
 </div>
 
-<div class="intercept-modal" id="intercept-modal">
-  <div class="intercept-box">
-    <i class="fas fa-times" style="position:absolute; top:20px; right:20px; font-size:24px; color:var(--text-muted); cursor:pointer;" onclick="closeInterceptModal()"></i>
-    <h3><i class="fas fa-user-edit"></i> REVIEW DOSSIER DATA</h3>
-    <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Correct any typos before generating the final document. <b>Note: Changes here only affect the printed document, they do not overwrite the raw database.</b></p>
-    
-    <div id="intercept-dynamic-fields" class="intercept-grid"></div>
-
-    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:30px; border-top:1px solid var(--border); padding-top:20px;">
-        <button class="btn-danger" style="width:auto; padding:12px 25px;" onclick="closeInterceptModal()"><i class="fas fa-times"></i> CANCEL</button>
-        <button class="btn-success" style="width:auto; padding:12px 25px;" onclick="executeFormGeneration()"><i class="fas fa-file-pdf"></i> GENERATE OFFICIAL FORM</button>
-    </div>
-  </div>
-</div>
-
 <div id="view-login">
   <div class="login-box">
     <div class="login-logo-container"><img src="" class="app-logo" id="system-logo-login" alt="Logo"></div>
@@ -362,8 +339,10 @@
       <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;" onmouseover="this.style.color='var(--army-gold)'" onmouseout="this.style.color='var(--text-muted)'"></i>
     </div>
     
-    <button onclick="performLogin()" id="btn-login" style="margin-top: 10px;"><i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS</button>
-    <div id="login-err" style="color: var(--status-red); margin-top: 15px; font-size: 14px; font-weight: bold; font-family: 'Inter', sans-serif;"></div>
+    <button onclick="performLogin()" id="btn-login" style="margin-top: 10px; margin-bottom: 25px;"><i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS</button>
+    <div id="login-err" style="color: var(--status-red); margin-top: 10px; font-size: 14px; font-weight: bold; font-family: 'Inter', sans-serif;"></div>
+    
+    <a href="index.html" style="font-size: 13px; color: var(--army-light); text-decoration: none; font-weight: bold; border-bottom: 1px solid var(--army-light); padding-bottom: 2px;">RETURN TO PUBLIC LANDING PAGE</a>
   </div>
 </div>
 
@@ -385,14 +364,8 @@
       <li><button onclick="switchTab('panel-masterlist',this)"><i class="fas fa-users"></i> <span>UNIT ROSTER</span></button></li>
       <li><button onclick="switchTab('panel-leaves',this)"><i class="fas fa-calendar-alt"></i> <span>LEAVE REQUESTS</span> <span id="badge-leaves" class="nav-badge" style="display:none;">0</span></button></li>
       <li class="admin-only"><button onclick="switchTab('panel-idcards',this)"><i class="fas fa-id-card"></i> <span>ID GENERATOR</span></button></li>
-      
-      <li class="admin-only"><button onclick="switchTab('panel-forms',this)"><i class="fas fa-file-alt"></i> <span>FORM GENERATOR</span></button></li>
-      
-      <li class="super-admin-only"><button onclick="switchTab('panel-templates',this)"><i class="fas fa-file-word"></i> <span>TEMPLATE MANAGER</span></button></li>
-
       <li><button onclick="switchTab('panel-legacy',this)"><i class="fas fa-landmark"></i> <span>LEGACY MANAGEMENT</span> <span id="badge-legacy" class="nav-badge" style="display:none;">0</span></button></li>
       <li><button onclick="switchTab('panel-posts',this)"><i class="fas fa-images"></i> <span>PUBLIC POSTS</span> <span id="badge-posts" class="nav-badge" style="display:none;">0</span></button></li>
-      
       <li class="super-admin-only"><button onclick="switchTab('panel-accounts',this)"><i class="fas fa-user-shield"></i> <span>PERSONNEL ACCESS</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-audit',this)"><i class="fas fa-history"></i> <span>SYSTEM AUDIT LOG</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-settings',this)"><i class="fas fa-cog"></i> <span>SYSTEM BRANDING</span></button></li>
@@ -499,9 +472,8 @@
       <div class="header-bar anim-1">
         <div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-users"></i> UNIT ROSTER & DISCIPLINE</h2></div>
         <div style="display:flex; gap:10px; align-items:center;">
-          <input type="text" id="search-masterlist" placeholder="Search cadet name or ID..." style="width:250px; margin:0; padding:10px;" oninput="filterMasterlist()">
+          <input type="text" id="search-masterlist" placeholder="Search cadet..." style="width:200px; margin:0; padding:10px;" oninput="filterMasterlist()">
           <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToExcel('masterlist-table', 'Unit_Roster')"><i class="fas fa-file-excel"></i> EXPORT EXCEL</button>
-          <button style="width:auto; padding: 10px 15px;" onclick="forceRefresh(loadDashboardData)"><i class="fas fa-sync"></i> REFRESH</button>
         </div>
       </div>
       <div class="table-card anim-2">
@@ -550,67 +522,6 @@
       </div>
       <div class="id-grid anim-3" id="id-grid-container">
           <p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0; font-family:'Inter',sans-serif;">Select a target and generate preview to render Identification Cards.</p>
-      </div>
-    </div>
-
-    <div id="panel-forms" class="view-panel">
-      <div class="header-bar anim-1">
-          <div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-file-alt"></i> REGISTRATION DOSSIER GENERATOR</h2></div>
-          <button style="width:auto; padding: 10px 15px;" onclick="forceRefresh(fetchFormDossierData)"><i class="fas fa-sync"></i> REFRESH DATA</button>
-      </div>
-      <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02);">
-        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Select a cadet below to open the Data Interception window. You can correct typos before the system renders the final document using the Super Admin's Master Template.</p>
-        <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">SELECT CADET:</label>
-        <select id="form-target-select" style="margin-bottom:15px;"><option value="">Loading roster...</option></select>
-        <button class="btn-success" style="width:auto; padding:14px 30px;" onclick="openDataInterceptModal()"><i class="fas fa-user-edit"></i> REVIEW & GENERATE FORM</button>
-      </div>
-    </div>
-
-    <div id="panel-templates" class="view-panel">
-      <div class="header-bar anim-1">
-          <div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-file-word"></i> MASTER TEMPLATE MANAGER</h2></div>
-      </div>
-      
-      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
-          <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02);">
-            <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-file-upload"></i> 1. UPLOAD WORD TEMPLATE</h3>
-            <p style="color:var(--text-muted); font-size:13px; margin-bottom:15px; line-height:1.6;">
-               Upload your <b>.docx</b> file containing your exact layout and `{{tags}}`. The system will automatically convert it into the Master Google Doc Template.
-            </p>
-            <input type="file" id="word-template-file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-            <button class="btn-warning" onclick="uploadWordTemplate()" style="margin-top:10px;"><i class="fas fa-upload"></i> UPLOAD & CONVERT</button>
-            
-            <hr style="margin:20px 0; border:none; border-top:1px dashed var(--border);">
-            
-            <p style="color:var(--text-muted); font-size:13px; margin-bottom:10px;"><b>OR</b> If you already built it in Google Docs, paste the URL below:</p>
-            <input type="text" id="template-url-input" placeholder="https://docs.google.com/document/d/.../edit">
-            <button class="btn-secondary" onclick="saveTemplateLink()"><i class="fas fa-link"></i> SAVE GOOGLE DOC URL</button>
-          </div>
-
-          <div class="anim-3" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02);">
-            <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-images"></i> 2. TEMPLATE LOGOS</h3>
-            <p style="color:var(--text-muted); font-size:13px; margin-bottom:15px; line-height:1.6;">
-               Upload the official logos and define their pixel size (e.g., 80). Place `{{logoHeaderLeft}}`, `{{logoHeaderRight}}`, `{{logoFooterLeft}}`, and `{{logoFooterRight}}` inside your template to inject them.
-            </p>
-            
-            <div style="display:grid; grid-template-columns: 1fr 80px; gap:10px; margin-bottom:10px; align-items:end;">
-               <div><label style="font-size:11px; font-weight:bold; color:var(--text-muted);">HEADER LEFT LOGO</label><input type="file" id="logo-hl" accept="image/*" style="margin:0; padding:8px;"></div>
-               <div><label style="font-size:11px; font-weight:bold; color:var(--text-muted);">SIZE (PX)</label><input type="number" id="size-hl" value="80" style="margin:0; padding:8px;"></div>
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 80px; gap:10px; margin-bottom:10px; align-items:end;">
-               <div><label style="font-size:11px; font-weight:bold; color:var(--text-muted);">HEADER RIGHT LOGO</label><input type="file" id="logo-hr" accept="image/*" style="margin:0; padding:8px;"></div>
-               <div><label style="font-size:11px; font-weight:bold; color:var(--text-muted);">SIZE (PX)</label><input type="number" id="size-hr" value="80" style="margin:0; padding:8px;"></div>
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 80px; gap:10px; margin-bottom:10px; align-items:end;">
-               <div><label style="font-size:11px; font-weight:bold; color:var(--text-muted);">FOOTER LEFT LOGO</label><input type="file" id="logo-fl" accept="image/*" style="margin:0; padding:8px;"></div>
-               <div><label style="font-size:11px; font-weight:bold; color:var(--text-muted);">SIZE (PX)</label><input type="number" id="size-fl" value="60" style="margin:0; padding:8px;"></div>
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 80px; gap:10px; margin-bottom:20px; align-items:end;">
-               <div><label style="font-size:11px; font-weight:bold; color:var(--text-muted);">FOOTER RIGHT LOGO</label><input type="file" id="logo-fr" accept="image/*" style="margin:0; padding:8px;"></div>
-               <div><label style="font-size:11px; font-weight:bold; color:var(--text-muted);">SIZE (PX)</label><input type="number" id="size-fr" value="60" style="margin:0; padding:8px;"></div>
-            </div>
-            <button class="btn-success" onclick="saveTemplateLogosBtn()"><i class="fas fa-save"></i> SAVE TEMPLATE LOGOS</button>
-          </div>
       </div>
     </div>
 
@@ -743,7 +654,6 @@
   let session = {}; 
   let isDarkMode = false; 
   let globalStudentCache = []; 
-  let globalFormCache = []; 
   let globalAdminPostCache = []; 
   let isScanning = false; 
   let recentScanCount = 0; 
@@ -757,7 +667,6 @@
   let editingPostId = null; 
   let currentDiscStudentId = null; 
   let stagedImages = [];
-  let currentInterceptCadet = null;
 
   function escapeHTML(str) {
       if (!str) return '';
@@ -843,8 +752,7 @@
     
     if (['panel-dashboard','panel-attendance','panel-masterlist','panel-accounts'].includes(panelId)) loadDashboardData();
     if (panelId === 'panel-leaves') { loadLeavesData(); fetchStudentsForDropdown(); }
-    if (panelId === 'panel-idcards' || panelId === 'panel-forms') fetchStudentsForDropdown();
-    if (panelId === 'panel-forms') fetchFormDossierData();
+    if (panelId === 'panel-idcards') fetchStudentsForDropdown();
     if (panelId === 'panel-audit') loadAuditLogs();
     if (panelId === 'panel-profile') loadUserProfile();
     if (panelId === 'panel-legacy') { loadLegacyClassesForDropdown(); loadLegacyAdminData(); }
@@ -1013,151 +921,6 @@
     });
   }
 
-  // ─── DOSSIER DATA INTERCEPTION ENGINE (ADMIN) ───────────────────────
-
-  function fetchFormDossierData() {
-      document.getElementById('form-target-select').innerHTML='<option value="">Fetching data...</option>';
-      apiCall('getFormDossierData', { user: session.user, pass: session.pass }, (res) => {
-          globalFormCache = res.students; 
-          let o = '<option value="">Select Cadet...</option>';
-          res.students.forEach(s => { o += `<option value="${s.studentNo}">${escapeHTML(s.studentNo)} – ${escapeHTML(s.lName)}, ${escapeHTML(s.fName)}</option>`; });
-          document.getElementById('form-target-select').innerHTML = o;
-      });
-  }
-
-  function openDataInterceptModal() {
-      const targetId = document.getElementById('form-target-select').value;
-      if (!targetId) return Swal.fire('Notice', 'Please select a cadet first.', 'warning');
-      
-      const cadet = globalFormCache.find(s => s.studentNo.toString() === targetId.toString());
-      if (!cadet) return Swal.fire('Error', 'Cadet data not found in cache.', 'error');
-      
-      currentInterceptCadet = JSON.parse(JSON.stringify(cadet)); // Deep copy for editing
-      
-      const fields = [
-          { key: 'studentNo', label: 'Cadet ID', type: 'text' }, { key: 'msLevel', label: 'MS Level', type: 'text' },
-          { key: 'fName', label: 'First Name', type: 'text' }, { key: 'mName', label: 'Middle Name', type: 'text' }, { key: 'lName', label: 'Last Name', type: 'text' },
-          { key: 'course', label: 'Course', type: 'text' }, { key: 'religion', label: 'Religion', type: 'text' },
-          { key: 'dob', label: 'Date of Birth', type: 'text' }, { key: 'pob', label: 'Place of Birth', type: 'text' },
-          { key: 'sex', label: 'Sex', type: 'text' }, { key: 'height', label: 'Height', type: 'text' }, { key: 'weight', label: 'Weight', type: 'text' },
-          { key: 'bloodType', label: 'Blood Type', type: 'text' }, { key: 'complexion', label: 'Complexion', type: 'text' },
-          { key: 'telNo', label: 'Active Contact No.', type: 'text' },
-          { key: 'tempBrgy', label: 'Temp Address (Brgy)', type: 'text' }, { key: 'tempCity', label: 'Temp Address (City)', type: 'text' }, { key: 'tempProv', label: 'Temp Address (Prov)', type: 'text' },
-          { key: 'permBrgy', label: 'Perm Address (Brgy)', type: 'text' }, { key: 'permCity', label: 'Perm Address (City)', type: 'text' }, { key: 'permProv', label: 'Perm Address (Prov)', type: 'text' },
-          { key: 'fatherName', label: 'Father Name', type: 'text' }, { key: 'fatherOcc', label: 'Father Occupation', type: 'text' },
-          { key: 'motherName', label: 'Mother Name', type: 'text' }, { key: 'motherOcc', label: 'Mother Occupation', type: 'text' },
-          { key: 'emergName', label: 'Emergency Contact Name', type: 'text' }, { key: 'emergRel', label: 'Emergency Relationship', type: 'text' },
-          { key: 'emergAddr', label: 'Emergency Address', type: 'text' }, { key: 'emergContact', label: 'Emergency Contact No.', type: 'text' },
-          { key: 'elemSchool', label: 'Elem School', type: 'text' }, { key: 'elemLoc', label: 'Elem Location', type: 'text' }, { key: 'elemDate', label: 'Elem Date', type: 'text' },
-          { key: 'elemGenAve', label: 'Elem Gen Ave', type: 'text' }, { key: 'elemHonors', label: 'Elem Honors', type: 'text' }, { key: 'elemClubs', label: 'Elem Clubs', type: 'text' },
-          { key: 'hsSchool', label: 'HS School', type: 'text' }, { key: 'hsLoc', label: 'HS Location', type: 'text' }, { key: 'hsDate', label: 'HS Date', type: 'text' },
-          { key: 'hsGenAve', label: 'HS Gen Ave', type: 'text' }, { key: 'hsHonors', label: 'HS Honors', type: 'text' }, { key: 'hsClubs', label: 'HS Clubs', type: 'text' },
-          { key: 'collSchool', label: 'College', type: 'text' }, { key: 'collLoc', label: 'College Location', type: 'text' }, { key: 'collDate', label: 'College Date', type: 'text' },
-          { key: 'collGenAve', label: 'College Gen Ave', type: 'text' }, { key: 'collHonors', label: 'College Honors', type: 'text' }, { key: 'collClubs', label: 'College Clubs', type: 'text' },
-          { key: 'hobbies', label: 'Hobbies/Skills', type: 'text' }, { key: 'militaryIntent', label: 'Military Intent', type: 'text' }
-      ];
-
-      let html = '';
-      fields.forEach(f => {
-          html += `<div><label>${f.label}</label><input type="${f.type}" id="int-${f.key}" value="${escapeHTML(currentInterceptCadet[f.key] || '')}"></div>`;
-      });
-
-      document.getElementById('intercept-dynamic-fields').innerHTML = html;
-      document.getElementById('intercept-modal').style.display = 'flex';
-      setTimeout(() => document.getElementById('intercept-modal').classList.add('show'), 10);
-  }
-
-  function closeInterceptModal() {
-      const modal = document.getElementById('intercept-modal');
-      modal.classList.remove('show');
-      setTimeout(() => modal.style.display = 'none', 300);
-  }
-
-  function executeFormGeneration() {
-      // Gather all edited data from the modal
-      const inputs = document.getElementById('intercept-dynamic-fields').querySelectorAll('input');
-      inputs.forEach(input => {
-          let key = input.id.replace('int-', '');
-          currentInterceptCadet[key] = input.value.trim();
-      });
-
-      currentInterceptCadet.date = new Date().toLocaleDateString();
-
-      closeInterceptModal();
-      Swal.fire({ title: 'GENERATING OFFICIAL DOSSIER...', html: 'Injecting data into Master Template...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-      
-      apiCall('exportRegistrationForm', { formData: currentInterceptCadet, user: session.user, pass: session.pass }, (res) => {
-          Swal.fire({
-            title: 'Success!',
-            text: 'The official dossier has been generated.',
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonText: '<i class="fas fa-external-link-alt"></i> OPEN DOCUMENT',
-            cancelButtonText: 'CLOSE'
-          }).then((result) => {
-            if (result.isConfirmed) { window.open(res.url, '_blank'); }
-          });
-      });
-  }
-
-  // ─── TEMPLATE MANAGER ENGINE (SUPER ADMIN) ──────────────────────────
-
-  function saveTemplateLink() {
-      const url = document.getElementById('template-url-input').value.trim();
-      if (!url) return Swal.fire('Notice', 'Please paste a valid Google Doc URL.', 'warning');
-      
-      Swal.fire({ title: 'LOCKING TEMPLATE...', didOpen: () => Swal.showLoading() });
-      apiCall('saveTemplateUrl', { templateUrl: url, user: session.user, pass: session.pass }, (res) => {
-          Swal.fire('Success', res.message, 'success');
-          document.getElementById('template-url-input').value = '';
-      });
-  }
-
-  function uploadWordTemplate() {
-    const fileInput = document.getElementById('word-template-file');
-    if (!fileInput.files || fileInput.files.length === 0) return Swal.fire('Notice', 'Please select a .docx file first.', 'warning');
-    
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    
-    Swal.fire({ title: 'UPLOADING & CONVERTING...', html: 'Processing Word Document...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-    
-    reader.onload = function(e) {
-      const base64Data = e.target.result;
-      apiCall('saveWordTemplate', { base64Data: base64Data, mimeType: file.type, user: session.user, pass: session.pass }, (res) => {
-        Swal.fire('Success', res.message, 'success');
-        fileInput.value = '';
-      });
-    };
-    reader.readAsDataURL(file);
-  }
-
-  async function saveTemplateLogosBtn() {
-    let logos = {};
-    const processLogo = async (fileId, sizeId, key) => {
-      const fileInput = document.getElementById(fileId);
-      const sizeVal = document.getElementById(sizeId).value;
-      if (fileInput.files && fileInput.files.length > 0) {
-        let b64 = await compressAutoImage(fileInput.files[0]);
-        logos[key] = { data: b64, size: sizeVal };
-      } else {
-        // If no new file is uploaded, we still send the size in case they updated it
-        logos[key] = { size: sizeVal };
-      }
-    };
-    
-    Swal.fire({ title: 'SAVING CONFIGURATION...', didOpen: () => Swal.showLoading() });
-    await processLogo('logo-hl', 'size-hl', 'hl');
-    await processLogo('logo-hr', 'size-hr', 'hr');
-    await processLogo('logo-fl', 'size-fl', 'fl');
-    await processLogo('logo-fr', 'size-fr', 'fr');
-    
-    apiCall('saveTemplateLogos', { logos: logos, user: session.user, pass: session.pass }, (res) => {
-       Swal.fire('Success', res.message, 'success');
-       ['logo-hl', 'logo-hr', 'logo-fl', 'logo-fr'].forEach(id => document.getElementById(id).value = '');
-    });
-  }
-
   // ─── DASHBOARD METRICS & CHARTS ────────────────────────────────────
 
   function loadDashboardData() { 
@@ -1208,7 +971,6 @@
         let legAccess = r[4] || "Denied"; 
         let legBtn = "";
         
-        // FIX: Remove Legacy toggle for Scanners
         if (r[2] === "Scanner") {
            legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">N/A (Scanner)</span>`;
         } else if (r[2] === "Super Admin") {
@@ -1300,7 +1062,6 @@
   function handleQRImageUpload(event) { const f = event.target.files[0]; if(!f) return; const m = document.getElementById('msg'); m.innerHTML='<i class="fas fa-spinner fa-spin"></i> ISOLATING MATRIX...'; m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; QrScanner.scanImage(f, { returnDetailedScanResult: true, alsoTryWithoutScanRegion: true }).then(r => onScanSuccess(r.data)).catch(e => { Swal.fire('Scan Failed', 'No valid QR code found. Ensure the image is clear.', 'error'); m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }); event.target.value=''; }
   function clearRecentScans() { document.getElementById('recent-scans').innerHTML=''; recentScanCount=0; document.getElementById('scan-count').innerText='0'; }
   function onScanSuccess(text) { if(isScanning) return; isScanning=true; const m=document.getElementById('msg'); if (!navigator.onLine) { let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]"), now = new Date(); let offDate = ('0' + (now.getMonth() + 1)).slice(-2) + '/' + ('0' + now.getDate()).slice(-2) + '/' + now.getFullYear(); let hours = now.getHours(), ampm = hours >= 12 ? 'PM' : 'AM'; hours = hours % 12; hours = hours ? hours : 12; let offTime = ('0' + hours).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2) + ':' + ('0' + now.getSeconds()).slice(-2) + ' ' + ampm; offlineScans.push({ scannedData: text, offlineDate: offDate, offlineTime: offTime }); localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans)); m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-save"></i> SAVED OFFLINE'; document.getElementById('scan-name').innerText='OFFLINE SCAN CACHED'; document.getElementById('scan-id').innerText=escapeHTML(text); updateOfflineSyncUI(); setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 2000); return; } m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${escapeHTML(res.id)}</strong><br><span style="font-size:12px; color:var(--text-muted);">${escapeHTML(res.name)}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); }
-  function showQR(id, name) { let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'), sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png'; Swal.fire({ title: escapeHTML(name), html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${escapeHTML(id)}</p><div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;"><div id="swal-qr"></div><img src="${sysLogo}" class="center-logo" style="position:absolute; width:45px !important; height:45px !important; background:white; padding:4px; border-radius:8px; z-index:10;"></div>`, confirmButtonColor: 'var(--army-primary)', confirmButtonText: 'CLOSE', didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821', correctLevel: QRCode.CorrectLevel.H }) }); }
 
   // ─── LEGACY & AUDIT ───────────────────────────────────────────────────
   function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${escapeHTML(l.user)}</b></td><td><span class="badge badge-action">${escapeHTML(l.action)}</span></td><td style="color:var(--text-muted); font-size:13px;">${escapeHTML(l.details)}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }); }
