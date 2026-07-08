@@ -238,15 +238,11 @@
       <li><button onclick="switchTab('panel-dashboard',this)"><i class="fas fa-chart-pie"></i> <span>DASHBOARD</span></button></li>
       <li><button onclick="switchTab('panel-attendance',this)"><i class="fas fa-clipboard-list"></i> <span>ATTENDANCE LOG</span></button></li>
       <li><button onclick="switchTab('panel-masterlist',this)"><i class="fas fa-users"></i> <span>UNIT ROSTER</span></button></li>
-      
       <li><button onclick="switchTab('panel-leaves',this)"><i class="fas fa-calendar-alt"></i> <span>LEAVE REQUESTS</span> <span id="badge-leaves" class="nav-badge" style="display:none;">0</span></button></li>
       <li class="admin-only"><button onclick="switchTab('panel-idcards',this)"><i class="fas fa-id-card"></i> <span>ID GENERATOR</span></button></li>
       <li class="admin-only"><button onclick="switchTab('panel-forms',this)"><i class="fas fa-file-alt"></i> <span>FORM GENERATOR</span></button></li>
-      
       <li><button onclick="switchTab('panel-legacy',this)"><i class="fas fa-landmark"></i> <span>LEGACY MANAGEMENT</span> <span id="badge-legacy" class="nav-badge" style="display:none;">0</span></button></li>
-      
       <li><button onclick="switchTab('panel-posts',this)"><i class="fas fa-images"></i> <span>PUBLIC POSTS</span> <span id="badge-posts" class="nav-badge" style="display:none;">0</span></button></li>
-      
       <li class="super-admin-only"><button onclick="switchTab('panel-accounts',this)"><i class="fas fa-user-shield"></i> <span>PERSONNEL ACCESS</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-audit',this)"><i class="fas fa-history"></i> <span>SYSTEM AUDIT LOG</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-settings',this)"><i class="fas fa-cog"></i> <span>SYSTEM BRANDING</span></button></li>
@@ -1185,49 +1181,94 @@
               
               <div style="margin-bottom:5px;">a. Elementary:</div>
               <table style="margin-bottom:5px; text-align:center;">
-                  <tr>
-                      <td style="width:45%;">${field('elemSchool', s.elemSchool)}</td>
-                      <td style="width:35%;">${field('elemLoc', s.elemLoc)}</td>
-                      <td style="width:20%;">${field('elemDate', s.elemDate)}</td>
-                  </tr>
-                  <tr style="font-size:11px; color:#555; border-top:none;">
-                      <td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td>
-                  </tr>
+                  <tr><td style="width:45%;">${field('elemSchool', s.elemSchool)}</td><td style="width:35%;">${field('elemLoc', s.elemLoc)}</td><td style="width:20%;">${field('elemDate', s.elemDate)}</td></tr>
+                  <tr style="font-size:11px; color:#555; border-top:none;"><td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td></tr>
               </table>
               <table style="margin-bottom:10px;">
                   <tr><td style="width:110px;">General Average:</td><td>${field('elemGenAve', s.elemGenAve)}</td></tr>
                   <tr><td>Honors Received:</td><td>${field('elemHonors', s.elemHonors)}</td></tr>
-                  <tr><td style="width:350px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td>${field('elemClubs', s.elemClubs)}</td></tr>
+                  <tr><td style="width:350px;">Clubs, Organization and Affiliations (Position):</td><td>${field('elemClubs', s.elemClubs)}</td></tr>
               </table>
 
               <div style="margin-bottom:5px; margin-top:15px;">b. High School:</div>
               <table style="margin-bottom:5px; text-align:center;">
-                  <tr>
-                      <td style="width:45%;">${field('hsSchool', s.hsSchool)}</td>
-                      <td style="width:35%;">${field('hsLoc', s.hsLoc)}</td>
-                      <td style="width:20%;">${field('hsDate', s.hsDate)}</td>
-                  </tr>
-                  <tr style="font-size:11px; color:#555; border-top:none;">
-                      <td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td>
-                  </tr>
+                  <tr><td style="width:45%;">${field('hsSchool', s.hsSchool)}</td><td style="width:35%;">${field('hsLoc', s.hsLoc)}</td><td style="width:20%;">${field('hsDate', s.hsDate)}</td></tr>
+                  <tr style="font-size:11px; color:#555; border-top:none;"><td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td></tr>
               </table>
               <table style="margin-bottom:10px;">
                   <tr><td style="width:110px;">General Average:</td><td>${field('hsGenAve', s.hsGenAve)}</td></tr>
                   <tr><td>Honors Received:</td><td>${field('hsHonors', s.hsHonors)}</td></tr>
-                  <tr><td style="width:350px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td>${field('hsClubs', s.hsClubs)}</td></tr>
+                  <tr><td style="width:350px;">Clubs, Organization and Affiliations (Position):</td><td>${field('hsClubs', s.hsClubs)}</td></tr>
               </table>
 
               <div style="margin-bottom:5px; margin-top:15px;">c. College:</div>
               <table style="margin-bottom:5px; text-align:center;">
-                  <tr>
-                      <td style="width:45%;">${field('collSchool', s.collSchool)}</td>
-                      <td style="width:35%;">${field('collLoc', s.collLoc)}</td>
-                      <td style="width:20%;">${field('collDate', s.collDate)}</td>
-                  </tr>
-                  <tr style="font-size:11px; color:#555; border-top:none;">
-                      <td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td>
-                  </tr>
+                  <tr><td style="width:45%;">${field('collSchool', s.collSchool)}</td><td style="width:35%;">${field('collLoc', s.collLoc)}</td><td style="width:20%;">${field('collDate', s.collDate)}</td></tr>
+                  <tr style="font-size:11px; color:#555; border-top:none;"><td>(Name of School)</td><td>(Location)</td><td>(Date of Attendance)</td></tr>
               </table>
               <table style="margin-bottom:10px;">
                   <tr><td style="width:110px;">General Average:</td><td>${field('collGenAve', s.collGenAve)}</td></tr>
-                  <tr><td>Honors
+                  <tr><td>Honors Received:</td><td>${field('collHonors', s.collHonors)}</td></tr>
+                  <tr><td style="width:350px;">Clubs, Organization and Affiliations (Position):</td><td>${field('collClubs', s.collClubs)}</td></tr>
+              </table>
+
+              <table style="margin-top:15px; margin-bottom:5px;"><tr><td>Hobbies: (Writing, Essay, Poetry, etc.)</td></tr></table>
+              <table style="margin-bottom:15px;"><tr><td>${field('hobbies', s.hobbies)}</td></tr></table>
+
+              <table style="margin-bottom:5px;"><tr><td>Intend to take Advance ROTC & pursue a military career? (___) Yes (___) No. Why?</td></tr></table>
+              <table style="margin-bottom:15px;"><tr><td>${field('militaryIntent', s.militaryIntent)}</td></tr></table>
+              
+              <div style="margin-top: 30px; font-size:14px; text-align:center;">This is to certify that the above data is true and correct:</div>
+
+              <div style="margin-top: 40px; display:flex; justify-content:space-between; align-items:flex-end;">
+                  ${imgBox}
+                  <div style="text-align:center; width:300px;">
+                      <div style="border-bottom:1px solid #000; min-height:30px;"></div>
+                      <div style="font-size:12px; margin-top:5px;">(Student Name & Signature)</div>
+                  </div>
+              </div>
+          </div>
+          `;
+      }).join('');
+  }
+
+  function exportToDrive() {
+      const t = document.getElementById('form-target-select').value;
+      if (t === 'ALL') return Swal.fire('Notice', 'Bulk export is disabled to prevent Google Drive rate limits. Please export one cadet at a time.', 'warning');
+      if (document.getElementById('form-grid-container').innerHTML.includes('No cadets') || document.getElementById('form-grid-container').innerHTML.includes('RENDERING')) {
+          return Swal.fire('Notice', 'Generate preview before exporting.', 'warning');
+      }
+      
+      const container = document.getElementById(`form-doc-${t}`);
+      if(!container) return Swal.fire('Error', 'Document not found.', 'error');
+      
+      const fields = container.querySelectorAll('.editable-field');
+      let formData = {};
+      fields.forEach(f => { formData[f.getAttribute('data-field')] = f.innerText.trim(); });
+      
+      Swal.fire({ title: 'EXPORTING TO DRIVE...', html: 'Generating Google Doc...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      
+      apiCall('exportRegistrationForm', { formData: formData, user: session.user, pass: session.pass }, (res) => {
+          Swal.fire('Success!', res.message, 'success');
+      });
+  }
+  
+  function printForms() {
+      if (document.getElementById('form-grid-container').innerHTML.includes('No cadets') || document.getElementById('form-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning');
+      window.print();
+  }
+
+  function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${escapeHTML(l.user)}</b></td><td><span class="badge badge-action">${escapeHTML(l.action)}</span></td><td style="color:var(--text-muted); font-size:13px;">${escapeHTML(l.details)}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }); }
+  function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${escapeHTML(c.name)} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
+  function submitLegacyClass() { const n=document.getElementById('leg-class-name').value.trim(), y=document.getElementById('leg-class-year').value.trim(), l=croppedData['leg-class-logo']; if(!n||!y||!l) return Swal.fire('Notice', 'Fields required.', 'warning'); Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() }); apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; loadLegacyAdminData(); }); }
+  function submitLegacyOfficer() { const c=document.getElementById('leg-off-class').value, r=document.getElementById('leg-off-rank').value.trim(), n=document.getElementById('leg-off-name').value.trim(), d=document.getElementById('leg-off-desig').value.trim(), course=document.getElementById('leg-off-course').value.trim(), bio=document.getElementById('leg-off-bio').value.trim(), i=croppedData['leg-off-photo']; if(!c||!r||!n||!d||!i) return Swal.fire('Notice', 'Please fill all required fields and upload an image.', 'warning'); Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; loadLegacyAdminData(); }); }
+  function loadUserProfile() { apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { document.getElementById('prof-name').value=res.name||""; document.getElementById('prof-rank').value=res.rank||""; document.getElementById('prof-age').value=res.age||""; document.getElementById('prof-course').value=res.course||""; document.getElementById('prof-position').value=res.position||""; document.getElementById('prof-contact').value=res.contact||""; updateSidebarProfile(res); }); }
+  function saveUserProfile() { const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; if(croppedData['prof-image-file']) d.imageData=croppedData['prof-image-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('prof-image-file').value=""; delete croppedData['prof-image-file']; document.getElementById('prof-image-status').innerHTML='Select an image...'; loadUserProfile(); }); }
+  function updateSidebarProfile(d) { document.getElementById('sidebar-profile-name').innerText=(d.name||session.user||"PERSONNEL").toUpperCase(); document.getElementById('sidebar-profile-role').innerText=(d.rank?d.rank+" - ":"")+(d.position||session.role||"SYSTEM ACTIVE"); if(d.image) { document.getElementById('sidebar-profile-img').src=d.image; document.getElementById('sidebar-profile-img').style.display='block'; document.getElementById('sidebar-icon').style.display='none'; } else { document.getElementById('sidebar-profile-img').style.display='none'; document.getElementById('sidebar-icon').style.display='block'; } }
+  function saveSystemSettings() { let p={ user: session.user, pass: session.pass, clearBg: false }; if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', p, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('set-logo-file').value=""; delete croppedData['set-logo-file']; document.getElementById('set-logo-status').innerHTML='Select an image...'; document.getElementById('set-bg-file').value=""; delete croppedData['set-bg-file']; document.getElementById('set-bg-status').innerHTML='Select an image...'; document.getElementById('set-nav-logo-file').value=""; delete croppedData['set-nav-logo-file']; document.getElementById('set-nav-logo-status').innerHTML='Select an image...'; apiCall('getSettings', {}, (n) => { if(n.logoUrl) { document.getElementById('system-logo-login').src=n.logoUrl; document.getElementById('system-logo-login').style.display='block'; } if(n.bgUrl) document.getElementById('view-login').style.backgroundImage=`url('${n.bgUrl}')`; }); }); }
+  function resetBackground() { Swal.fire({ title: 'RESETTING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', { clearBg: true, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', 'Background removed.', 'success'); document.getElementById('view-login').style.backgroundImage=`radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%)`; }); }
+
+  try { if (localStorage.getItem('sccks_dark') === '1') applyTheme(true); } catch(e) {}
+</script>
+</body>
+</html>
