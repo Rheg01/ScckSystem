@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,8 +67,9 @@
     .id-course-modern { text-align: center; font-size: 11px; color: var(--army-primary); font-weight: 700; text-transform: uppercase; margin-top: 5px; letter-spacing: 0.5px;}
     
     .qr-container-modern { margin: auto auto 15px auto; width: 85px; height: 85px; background: white; padding: 4px; border-radius: 6px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    /* QR Exploding Fix */
-    .qr-container-modern canvas, .qr-container-modern img:not([src*="flaticon"]) { width: 100% !important; height: auto !important; object-fit: contain; }
+    /* FIXED CSS: QR stretch fixed without touching center logo */
+    .qr-container-modern canvas, .qr-container-modern img:not(.center-logo) { width: 100% !important; height: auto !important; object-fit: contain; }
+    .center-logo { width: 22px !important; height: 22px !important; object-fit: contain; position: absolute; z-index: 10; background: white; padding: 2px; border-radius: 4px; }
 
     .id-footer-modern { background: var(--army-dark); color: #fff; text-align: center; font-size: 9px; padding: 8px; font-weight: bold; letter-spacing: 1px; }
 
@@ -111,11 +111,11 @@
 
     /* FORM GENERATOR CSS - STRICT PERCENTAGE LAYOUT FOR A4/FOLIO */
     .form-grid { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-top: 30px; }
-    .print-form-page { width: 8.5in; min-height: 11in; background: #fff; color: #000; padding: 0.5in; border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-family: 'Arial', sans-serif; position: relative; text-shadow: none; line-height: 1.2; margin: 0 auto; box-sizing: border-box; overflow: hidden;}
+    .print-form-page { width: 8.5in; min-height: 11in; background: #fff; color: #000; padding: 0.5in; border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-family: 'Arial', sans-serif; position: relative; text-shadow: none; line-height: 1.2; margin: 0 auto; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;}
     .print-form-page table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 12px; font-family: 'Arial', sans-serif; color: #000; table-layout: fixed; }
     .print-form-page td { padding: 2px; vertical-align: bottom; }
     .print-form-header { text-align: center; font-weight: bold; text-decoration: underline; margin-bottom: 15px; font-size: 14px;}
-    .editable-field { border-bottom: 1px solid #000; min-height: 18px; display: inline-block; outline: none; transition: background 0.2s; white-space: pre-wrap; word-break: break-word; text-align:center;}
+    .editable-field { border-bottom: 1px solid #000; min-height: 18px; display: inline-block; outline: none; transition: background 0.2s; white-space: pre-wrap; word-break: break-word; text-align:center; width: 100%;}
     .editable-field:focus { background: #fffde7; border-bottom: 2px solid #fbc02d; }
     
     @media print { 
@@ -353,7 +353,6 @@
       <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0; font-family:'Inter',sans-serif;">Select a target and generate preview to render Identification Cards.</p></div>
     </div>
 
-    <!-- REGISTRATION FORM GENERATOR PANEL -->
     <div id="panel-forms" class="view-panel">
       <div class="header-bar anim-1">
           <div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-file-alt"></i> REGISTRATION DOSSIER GENERATOR</h2></div>
@@ -524,7 +523,6 @@
 
   </div>
 </div>
-
 <script>
   const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw63y63Mk-wyqa1a846oBhnDTHj29dUEJznvrG52sjEtwONa6kOEzDVCy_GlnAMqPXPAg/exec";
 
@@ -1034,7 +1032,7 @@
       let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'), sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
       Swal.fire({ 
           title: escapeHTML(name), 
-          html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${escapeHTML(id)}</p><div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;"><div id="swal-qr"></div><img src="${sysLogo}" style="position:absolute; width:45px; height:45px; background:white; padding:4px; border-radius:8px; z-index:10;"></div>`, 
+          html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${escapeHTML(id)}</p><div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;"><div id="swal-qr"></div><img src="${sysLogo}" class="center-logo" style="position:absolute; width:45px !important; height:45px !important; background:white; padding:4px; border-radius:8px; z-index:10;"></div>`, 
           confirmButtonColor: 'var(--army-primary)', confirmButtonText: 'CLOSE', 
           didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821', correctLevel: QRCode.CorrectLevel.H }) 
       }); 
@@ -1074,7 +1072,7 @@
       let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'), sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
       c.innerHTML=f.map(s => { 
           let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; 
-          return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${escapeHTML(s.name)}</div><div class="id-course-modern">COURSE: ${escapeHTML(s.course || 'N/A')}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${escapeHTML(s.company || 'N/A')}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${escapeHTML(s.id)}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; 
+          return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${escapeHTML(s.name)}</div><div class="id-course-modern">COURSE: ${escapeHTML(s.course || 'N/A')}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${escapeHTML(s.company || 'N/A')}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${escapeHTML(s.id)}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" class="center-logo" alt="Logo"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; 
       }).join(''); 
       setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H })), 300); 
   }
@@ -1099,7 +1097,15 @@
       if (!f.length) return c.innerHTML = '<p style="text-align:center; width:100%;">No cadets found.</p>';
       
       const tz = new Date().toLocaleDateString();
-      const headHtml = `<div style="text-align:center; font-size:10px; font-weight:bold; margin-bottom:15px; font-family:'Arial',sans-serif;">ARMY 2040: WORLD-CLASS. MULTI-MISSION READY. CROSS-DOMAIN CAPABLE</div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding: 0 10px;"><div style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; font-size:9px; display:flex; align-items:center; justify-content:center;">UNIT<br>LOGO</div><div style="text-align:center; flex:1; font-size:11px; font-weight:bold; line-height:1.2;">H E A D Q U A R T E R S<br>DEPARTMENT OF MILITARY SCIENCE AND TACTICS<br>ST CLARE COLLEGE OF KALOOCAN ROTC UNIT<br>1301st (CAMANAVA) CDC, NCRRCG, RESCOM, PA<br><span style="font-weight:normal;">Zabarte Road, Camarin, Caloocan City</span></div><div style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; font-size:9px; display:flex; align-items:center; justify-content:center;">ARMY<br>LOGO</div></div>`;
+      const headHtml = `<div style="text-align:center; font-size:10px; font-weight:bold; margin-bottom:15px; font-family:'Arial',sans-serif;">ARMY 2040: WORLD-CLASS. MULTI-MISSION READY. CROSS-DOMAIN CAPABLE</div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding: 0 10px;"><div style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; font-size:9px; display:flex; align-items:center; justify-content:center; text-align:center; color:#888;">UNIT<br>LOGO</div><div style="text-align:center; flex:1; font-size:11px; font-weight:bold; line-height:1.2;">H E A D Q U A R T E R S<br>DEPARTMENT OF MILITARY SCIENCE AND TACTICS<br>ST CLARE COLLEGE OF KALOOCAN ROTC UNIT<br>1301st (CAMANAVA) CDC, NCRRCG, RESCOM, PA<br><span style="font-weight:normal;">Zabarte Road, Camarin, Caloocan City</span></div><div style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; font-size:9px; display:flex; align-items:center; justify-content:center; text-align:center; color:#888;">ARMY<br>LOGO</div></div>`;
+      
+      const formFooterHtml = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:20px; width:100%;">
+            <div style="width:120px; text-align:center;"><div style="border:1px dashed #ccc; font-size:9px; padding:10px; color:#888;">PGS LOGO</div></div>
+            <div style="font-weight:bold; font-size:14px; font-family:'Arial',sans-serif;">HONOR. PATRIOTISM. DUTY</div>
+            <div style="width:120px; text-align:center;"><div style="border:1px dashed #ccc; font-size:9px; padding:10px; color:#888;">ATR LOGO</div></div>
+          </div>
+      `;
       
       c.innerHTML = f.map(s => {
           let imgBox = s.image ? `<img src="${s.image}" style="width:144px; height:144px; object-fit:cover; border:2px solid #000;">` : `<div style="width:144px; height:144px; border:2px solid #000; display:flex; align-items:center; justify-content:center; font-size:12px;">&lt;&lt;2x2_PHOTO&gt;&gt;</div>`;
@@ -1107,109 +1113,115 @@
           
           return `
           <div class="print-form-page" id="form-doc-${s.studentNo}">
-              ${headHtml}
-              <div class="print-form-header">ROTC REGISTRATION FORM</div>
-              <table><tr><td style="width:70px;">Student No:</td><td style="width:30%;">${fd('studentNo', s.studentNo)}</td><td style="width:30px;">MS:</td><td style="width:20%;">${fd('msLevel', s.msLevel)}</td><td style="width:40px;">Date:</td><td style="width:20%;">${fd('date', tz)}</td></tr></table>
-              <table style="margin-bottom:10px;">
-                  <tr><td style="width:40px;">Name:</td><td style="text-align:center; color:#2e7d32; font-weight:bold;">${fd('lName', s.lName, 'bold')}</td><td style="text-align:center; color:#2e7d32; font-weight:bold;">${fd('fName', s.fName, 'bold')}</td><td style="text-align:center; color:#2e7d32; font-weight:bold;">${fd('mName', s.mName, 'bold')}</td></tr>
-                  <tr style="font-size:10px;"><td></td><td style="text-align:center;">(Last Name)</td><td style="text-align:center;">(First Name)</td><td style="text-align:center;">(Middle Name)</td></tr>
-              </table>
-              <div style="margin-bottom:2px;">Temporary Address:</div>
-              <table style="margin-left:15px; width:calc(100% - 15px);">
-                  <tr><td style="width:120px;">No/St/Vill/Brgy.:</td><td>${fd('tempBrgy', s.tempBrgy)}</td></tr>
-                  <tr><td>Municipality:</td><td>${fd('tempCity', s.tempCity)}</td></tr>
-                  <tr><td>Province:</td><td>${fd('tempProv', s.tempProv)}</td></tr>
-                  <tr><td>Tel/Cell Number:</td><td>${fd('telNo', s.telNo)}</td></tr>
-              </table>
-              <table><tr><td style="width:50px;">Course:</td><td style="width:35%;">${fd('course', s.course)}</td><td style="width:50px;">School:</td><td style="width:30%; border-bottom:1px solid #000;">St. Clare College</td><td style="width:55px;">Religion:</td><td>${fd('religion', s.religion)}</td></tr></table>
-              <table><tr><td style="width:80px;">Date of Birth:</td><td style="width:25%;">${fd('dob', s.dob)}</td><td style="width:90px;">Place of Birth:</td><td style="width:35%;">${fd('pob', s.pob)}</td><td style="width:30px;">Sex:</td><td>${fd('sex', s.sex)}</td></tr></table>
-              <table style="margin-bottom:10px;"><tr><td style="width:50px;">Height:</td><td style="width:20%;">${fd('height', s.height)}</td><td style="width:50px;">Weight:</td><td style="width:20%;">${fd('weight', s.weight)}</td><td style="width:80px;">Complexion:</td><td style="width:20%;">${fd('complexion', s.complexion)}</td><td style="width:80px;">Blood Type:</td><td>${fd('bloodType', s.bloodType)}</td></tr></table>
-              <div style="margin-bottom:2px;">Permanent Address:</div>
-              <table style="margin-left:15px; width:calc(100% - 15px); margin-bottom:10px;">
-                  <tr><td style="width:120px;">No/St/Vill/Brgy.:</td><td>${fd('permBrgy', s.permBrgy)}</td></tr>
-                  <tr><td>Municipality:</td><td>${fd('permCity', s.permCity)}</td></tr>
-                  <tr><td>Province:</td><td>${fd('permProv', s.permProv)}</td></tr>
-                  <tr><td>Tel/Cell Number:</td><td>${fd('telNo', s.telNo)}</td></tr>
-              </table>
-              <table style="margin-bottom:10px;">
-                  <tr><td style="width:50px;">Father:</td><td style="width:50%;">${fd('fatherName', s.fatherName)}</td><td style="width:75px;">Occupation:</td><td>${fd('fatherOcc', s.fatherOcc)}</td></tr>
-                  <tr><td>Mother:</td><td>${fd('motherName', s.motherName)}</td><td>Occupation:</td><td>${fd('motherOcc', s.motherOcc)}</td></tr>
-              </table>
-              <div style="margin-bottom:2px;">Person to be notified in case of emergency:</div>
-              <table style="margin-left:15px; width:calc(100% - 15px); margin-bottom:15px;">
-                  <tr><td style="width:45px;">Name:</td><td style="width:50%;">${fd('emergName', s.emergName)}</td><td style="width:85px;">Relationship:</td><td>${fd('emergRel', s.emergRel)}</td></tr>
-                  <tr><td>Address:</td><td>${fd('emergAddr', s.emergAddr)}</td><td>Tel/Cp No:</td><td>${fd('emergContact', s.emergContact)}</td></tr>
-              </table>
-              
-              <div style="margin-bottom:5px;">Military Science Completed:</div>
-              <table style="text-align:center; margin-bottom:15px;">
-                  <tr style="font-weight:bold; text-decoration:underline;"><td>MS</td><td>SEMESTER</td><td>SCHOOL YEAR</td><td>GRADE</td><td>REMARKS</td></tr>
-                  <tr><td style="border-bottom:1px solid #000; height:18px;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td></tr>
-                  <tr><td style="border-bottom:1px solid #000; height:18px;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td></tr>
-                  <tr><td style="border-bottom:1px solid #000; height:18px;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td></tr>
-              </table>
-              <div style="margin-bottom:30px;">Are you willing to take the advanced course? (____) Yes (____) No</div>
-              
-              <div style="display:flex; justify-content:space-between; margin-top:40px; text-align:center;">
-                  <div style="width:200px;"><div style="border-bottom:1px solid #000; height:20px;"></div><div style="font-size:11px; margin-top:2px;">Admin NCO</div></div>
-                  <div style="width:250px;"><div style="border-bottom:1px solid #000; height:20px;"></div><div style="font-size:11px; margin-top:2px;">(Name of Student & Signature)</div></div>
+              <div>
+                  ${headHtml}
+                  <div class="print-form-header">ROTC REGISTRATION FORM</div>
+                  <table><tr><td style="width:70px;">Student No:</td><td style="width:30%;">${fd('studentNo', s.studentNo)}</td><td style="width:30px;">MS:</td><td style="width:20%;">${fd('msLevel', s.msLevel)}</td><td style="width:40px;">Date:</td><td style="width:20%;">${fd('date', tz)}</td></tr></table>
+                  <table style="margin-bottom:10px;">
+                      <tr><td style="width:40px;">Name:</td><td style="text-align:center; color:#2e7d32; font-weight:bold;">${fd('lName', s.lName, 'bold')}</td><td style="text-align:center; color:#2e7d32; font-weight:bold;">${fd('fName', s.fName, 'bold')}</td><td style="text-align:center; color:#2e7d32; font-weight:bold;">${fd('mName', s.mName, 'bold')}</td></tr>
+                      <tr style="font-size:10px;"><td></td><td style="text-align:center;">(Last Name)</td><td style="text-align:center;">(First Name)</td><td style="text-align:center;">(Middle Name)</td></tr>
+                  </table>
+                  <div style="margin-bottom:2px;">Temporary Address:</div>
+                  <table style="margin-left:15px; width:calc(100% - 15px);">
+                      <tr><td style="width:120px;">No/St/Vill/Brgy.:</td><td>${fd('tempBrgy', s.tempBrgy)}</td></tr>
+                      <tr><td>Municipality:</td><td>${fd('tempCity', s.tempCity)}</td></tr>
+                      <tr><td>Province:</td><td>${fd('tempProv', s.tempProv)}</td></tr>
+                      <tr><td>Tel/Cell Number:</td><td>${fd('telNo', s.telNo)}</td></tr>
+                  </table>
+                  <table><tr><td style="width:50px;">Course:</td><td style="width:35%;">${fd('course', s.course)}</td><td style="width:50px;">School:</td><td style="width:30%; border-bottom:1px solid #000;">St. Clare College</td><td style="width:55px;">Religion:</td><td>${fd('religion', s.religion)}</td></tr></table>
+                  <table><tr><td style="width:80px;">Date of Birth:</td><td style="width:25%;">${fd('dob', s.dob)}</td><td style="width:90px;">Place of Birth:</td><td style="width:35%;">${fd('pob', s.pob)}</td><td style="width:30px;">Sex:</td><td>${fd('sex', s.sex)}</td></tr></table>
+                  <table style="margin-bottom:10px;"><tr><td style="width:50px;">Height:</td><td style="width:20%;">${fd('height', s.height)}</td><td style="width:50px;">Weight:</td><td style="width:20%;">${fd('weight', s.weight)}</td><td style="width:80px;">Complexion:</td><td style="width:20%;">${fd('complexion', s.complexion)}</td><td style="width:80px;">Blood Type:</td><td>${fd('bloodType', s.bloodType)}</td></tr></table>
+                  <div style="margin-bottom:2px;">Permanent Address:</div>
+                  <table style="margin-left:15px; width:calc(100% - 15px); margin-bottom:10px;">
+                      <tr><td style="width:120px;">No/St/Vill/Brgy.:</td><td>${fd('permBrgy', s.permBrgy)}</td></tr>
+                      <tr><td>Municipality:</td><td>${fd('permCity', s.permCity)}</td></tr>
+                      <tr><td>Province:</td><td>${fd('permProv', s.permProv)}</td></tr>
+                      <tr><td>Tel/Cell Number:</td><td>${fd('telNo', s.telNo)}</td></tr>
+                  </table>
+                  <table style="margin-bottom:10px;">
+                      <tr><td style="width:50px;">Father:</td><td style="width:50%;">${fd('fatherName', s.fatherName)}</td><td style="width:75px;">Occupation:</td><td>${fd('fatherOcc', s.fatherOcc)}</td></tr>
+                      <tr><td>Mother:</td><td>${fd('motherName', s.motherName)}</td><td>Occupation:</td><td>${fd('motherOcc', s.motherOcc)}</td></tr>
+                  </table>
+                  <div style="margin-bottom:2px;">Person to be notified in case of emergency:</div>
+                  <table style="margin-left:15px; width:calc(100% - 15px); margin-bottom:15px;">
+                      <tr><td style="width:45px;">Name:</td><td style="width:50%;">${fd('emergName', s.emergName)}</td><td style="width:85px;">Relationship:</td><td>${fd('emergRel', s.emergRel)}</td></tr>
+                      <tr><td>Address:</td><td>${fd('emergAddr', s.emergAddr)}</td><td>Tel/Cp No:</td><td>${fd('emergContact', s.emergContact)}</td></tr>
+                  </table>
+                  
+                  <div style="margin-bottom:5px;">Military Science Completed:</div>
+                  <table style="text-align:center; margin-bottom:15px;">
+                      <tr style="font-weight:bold; text-decoration:underline;"><td>MS</td><td>SEMESTER</td><td>SCHOOL YEAR</td><td>GRADE</td><td>REMARKS</td></tr>
+                      <tr><td style="border-bottom:1px solid #000; height:18px;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td></tr>
+                      <tr><td style="border-bottom:1px solid #000; height:18px;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td></tr>
+                      <tr><td style="border-bottom:1px solid #000; height:18px;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td><td style="border-bottom:1px solid #000;"></td></tr>
+                  </table>
+                  <div style="margin-bottom:20px;">Are you willing to take the advanced course? (____) Yes (____) No</div>
+                  
+                  <div style="display:flex; justify-content:space-between; margin-top:20px; text-align:center;">
+                      <div style="width:200px;"><div style="border-bottom:1px solid #000; height:20px;"></div><div style="font-size:11px; margin-top:2px;">Admin NCO</div></div>
+                      <div style="width:250px;"><div style="border-bottom:1px solid #000; height:20px;"></div><div style="font-size:11px; margin-top:2px;">(Name of Student & Signature)</div></div>
+                  </div>
               </div>
+              ${formFooterHtml}
           </div>
           
           <div class="print-form-page">
-              ${headHtml}
-              <div class="print-form-header">CADET INFORMATION SHEET</div>
-              <div style="margin-bottom:10px;">Educational Background:</div>
-              
-              <div style="margin-bottom:2px;">a. Elementary:</div>
-              <table style="text-align:center; margin-left:10px; width:calc(100% - 10px);">
-                  <tr style="font-weight:bold; text-decoration:underline;"><td>Name of School</td><td>Location</td><td>Date of Attendance</td></tr>
-                  <tr><td style="color:#2e7d32;">${fd('elemSchool', s.elemSchool)}</td><td style="color:#2e7d32;">${fd('elemLoc', s.elemLoc)}</td><td style="color:#2e7d32;">${fd('elemDate', s.elemDate)}</td></tr>
-              </table>
-              <table style="margin-bottom:10px; margin-left:10px; width:calc(100% - 10px);">
-                  <tr><td style="width:110px;">General Average:</td><td style="color:#2e7d32;">${fd('elemGenAve', s.elemGenAve)}</td></tr>
-                  <tr><td>Honors Received:</td><td style="color:#2e7d32;">${fd('elemHonors', s.elemHonors)}</td></tr>
-                  <tr><td style="width:360px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td style="color:#2e7d32;">${fd('elemClubs', s.elemClubs)}</td></tr>
-              </table>
+              <div>
+                  ${headHtml}
+                  <div class="print-form-header">CADET INFORMATION SHEET</div>
+                  <div style="margin-bottom:10px;">Educational Background:</div>
+                  
+                  <div style="margin-bottom:2px;">a. Elementary:</div>
+                  <table style="text-align:center; margin-left:10px; width:calc(100% - 10px);">
+                      <tr style="font-weight:bold; text-decoration:underline;"><td>Name of School</td><td>Location</td><td>Date of Attendance</td></tr>
+                      <tr><td style="color:#2e7d32;">${fd('elemSchool', s.elemSchool)}</td><td style="color:#2e7d32;">${fd('elemLoc', s.elemLoc)}</td><td style="color:#2e7d32;">${fd('elemDate', s.elemDate)}</td></tr>
+                  </table>
+                  <table style="margin-bottom:10px; margin-left:10px; width:calc(100% - 10px);">
+                      <tr><td style="width:110px;">General Average:</td><td style="color:#2e7d32;">${fd('elemGenAve', s.elemGenAve)}</td></tr>
+                      <tr><td>Honors Received:</td><td style="color:#2e7d32;">${fd('elemHonors', s.elemHonors)}</td></tr>
+                      <tr><td style="width:360px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td style="color:#2e7d32;">${fd('elemClubs', s.elemClubs)}</td></tr>
+                  </table>
 
-              <div style="margin-bottom:2px;">b. High School:</div>
-              <table style="text-align:center; margin-left:10px; width:calc(100% - 10px);">
-                  <tr style="font-weight:bold; text-decoration:underline;"><td>Name of School</td><td>Location</td><td>Date of Attendance</td></tr>
-                  <tr><td style="color:#2e7d32;">${fd('hsSchool', s.hsSchool)}</td><td style="color:#2e7d32;">${fd('hsLoc', s.hsLoc)}</td><td style="color:#2e7d32;">${fd('hsDate', s.hsDate)}</td></tr>
-              </table>
-              <table style="margin-bottom:10px; margin-left:10px; width:calc(100% - 10px);">
-                  <tr><td style="width:110px;">General Average:</td><td style="color:#2e7d32;">${fd('hsGenAve', s.hsGenAve)}</td></tr>
-                  <tr><td>Honors Received:</td><td style="color:#2e7d32;">${fd('hsHonors', s.hsHonors)}</td></tr>
-                  <tr><td style="width:360px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td style="color:#2e7d32;">${fd('hsClubs', s.hsClubs)}</td></tr>
-              </table>
+                  <div style="margin-bottom:2px;">b. High School:</div>
+                  <table style="text-align:center; margin-left:10px; width:calc(100% - 10px);">
+                      <tr style="font-weight:bold; text-decoration:underline;"><td>Name of School</td><td>Location</td><td>Date of Attendance</td></tr>
+                      <tr><td style="color:#2e7d32;">${fd('hsSchool', s.hsSchool)}</td><td style="color:#2e7d32;">${fd('hsLoc', s.hsLoc)}</td><td style="color:#2e7d32;">${fd('hsDate', s.hsDate)}</td></tr>
+                  </table>
+                  <table style="margin-bottom:10px; margin-left:10px; width:calc(100% - 10px);">
+                      <tr><td style="width:110px;">General Average:</td><td style="color:#2e7d32;">${fd('hsGenAve', s.hsGenAve)}</td></tr>
+                      <tr><td>Honors Received:</td><td style="color:#2e7d32;">${fd('hsHonors', s.hsHonors)}</td></tr>
+                      <tr><td style="width:360px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td style="color:#2e7d32;">${fd('hsClubs', s.hsClubs)}</td></tr>
+                  </table>
 
-              <div style="margin-bottom:2px;">c. College:</div>
-              <table style="text-align:center; margin-left:10px; width:calc(100% - 10px);">
-                  <tr style="font-weight:bold; text-decoration:underline;"><td>Name of School</td><td>Location</td><td>Date of Attendance</td></tr>
-                  <tr><td style="color:#2e7d32;">${fd('collSchool', s.collSchool)}</td><td style="color:#2e7d32;">${fd('collLoc', s.collLoc)}</td><td style="color:#2e7d32;">${fd('collDate', s.collDate)}</td></tr>
-              </table>
-              <table style="margin-bottom:15px; margin-left:10px; width:calc(100% - 10px);">
-                  <tr><td style="width:110px;">General Average:</td><td style="color:#2e7d32;">${fd('collGenAve', s.collGenAve)}</td></tr>
-                  <tr><td>Honors Received:</td><td style="color:#2e7d32;">${fd('collHonors', s.collHonors)}</td></tr>
-                  <tr><td style="width:360px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td style="color:#2e7d32;">${fd('collClubs', s.collClubs)}</td></tr>
-              </table>
+                  <div style="margin-bottom:2px;">c. College:</div>
+                  <table style="text-align:center; margin-left:10px; width:calc(100% - 10px);">
+                      <tr style="font-weight:bold; text-decoration:underline;"><td>Name of School</td><td>Location</td><td>Date of Attendance</td></tr>
+                      <tr><td style="color:#2e7d32;">${fd('collSchool', s.collSchool)}</td><td style="color:#2e7d32;">${fd('collLoc', s.collLoc)}</td><td style="color:#2e7d32;">${fd('collDate', s.collDate)}</td></tr>
+                  </table>
+                  <table style="margin-bottom:15px; margin-left:10px; width:calc(100% - 10px);">
+                      <tr><td style="width:110px;">General Average:</td><td style="color:#2e7d32;">${fd('collGenAve', s.collGenAve)}</td></tr>
+                      <tr><td>Honors Received:</td><td style="color:#2e7d32;">${fd('collHonors', s.collHonors)}</td></tr>
+                      <tr><td style="width:360px;">Clubs, Organization and other Affiliations (Indicate Position):</td><td style="color:#2e7d32;">${fd('collClubs', s.collClubs)}</td></tr>
+                  </table>
 
-              <table style="margin-bottom:10px;"><tr><td style="width:230px;">Hobbies: (Writing, Essay, Poetry, etc.)</td><td>${fd('hobbies', s.hobbies)}</td></tr></table>
-              
-              <table style="margin-bottom:15px;">
-                <tr><td>Do you intend to take the Advance ROTC/Probationary Training Course (POTC) and pursue a military career? (___) Yes (___) No. Why?</td></tr>
-                <tr><td>${fd('militaryIntent', s.militaryIntent)}</td></tr>
-              </table>
-              
-              <div style="text-align:center; margin-top:20px; margin-bottom:30px;">This is to certify that the above data is true and correct:</div>
+                  <table style="margin-bottom:10px;"><tr><td style="width:230px;">Hobbies: (Writing, Essay, Poetry, etc.)</td><td>${fd('hobbies', s.hobbies)}</td></tr></table>
+                  
+                  <table style="margin-bottom:15px;">
+                    <tr><td>Do you intend to take the Advance ROTC/Probationary Training Course (POTC) and pursue a military career? (___) Yes (___) No. Why?</td></tr>
+                    <tr><td>${fd('militaryIntent', s.militaryIntent)}</td></tr>
+                  </table>
+                  
+                  <div style="text-align:center; margin-top:20px; margin-bottom:30px;">This is to certify that the above data is true and correct:</div>
 
-              <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                  ${imgBox}
-                  <div style="text-align:center; width:250px;">
-                      <div style="border-bottom:1px solid #000; height:20px;"></div>
-                      <div style="font-size:11px; margin-top:5px;">(Student Name & Signature)</div>
+                  <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                      ${imgBox}
+                      <div style="text-align:center; width:250px;">
+                          <div style="border-bottom:1px solid #000; height:20px;"></div>
+                          <div style="font-size:11px; margin-top:5px;">(Student Name & Signature)</div>
+                      </div>
                   </div>
               </div>
+              ${formFooterHtml}
           </div>
           `;
       }).join('');
@@ -1255,4 +1267,3 @@
 </script>
 </body>
 </html>
-
