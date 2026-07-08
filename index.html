@@ -196,6 +196,7 @@
 
     let legacyCache = [];
     let postCache = [];
+    
     let currentPostPage = 1;
     const POSTS_PER_PAGE = 6;
 
@@ -210,6 +211,7 @@
         } else if (url.includes('drive.google.com/file/d/')) {
             finalUrl = url.replace('/view', '/preview');
         } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
+            // Facebook specific iframe plugin formatting
             finalUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
         }
         return `<iframe src="${finalUrl}" style="width:100%; height:450px; border:none; border-radius:8px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
@@ -224,7 +226,7 @@
       const gateLogo = document.getElementById('gate-logo');
       if(gateLogo && branding.logoUrl) gateLogo.src = branding.logoUrl;
       const navLogo = document.getElementById('nav-logo');
-      if(navLogo && branding.logoUrl) navLogo.src = branding.logoUrl;
+      if(navLogo && branding.navLogoUrl) navLogo.src = branding.navLogoUrl;
       const gateScreen = document.getElementById('gate-screen');
       if(gateScreen && branding.bgUrl) {
         if (!document.body.classList.contains('light-mode')) {
@@ -235,12 +237,21 @@
       }
     }
 
+    const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
+    if (cachedBranding) applyBranding(cachedBranding);
+
+    const cachedPosts = JSON.parse(localStorage.getItem('scck_posts') || 'null');
+    if (cachedPosts) { postCache = cachedPosts; renderPostGrid(); }
+
+    const cachedLegacy = JSON.parse(localStorage.getItem('scck_legacy') || 'null');
+    if (cachedLegacy) { legacyCache = cachedLegacy; renderLegacyGrid(cachedLegacy); }
+
+
     function toggleTheme() {
       const isLight = document.body.classList.toggle('light-mode');
       const icon = document.getElementById('theme-icon');
       icon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
       localStorage.setItem('scck_theme', isLight ? 'light' : 'dark');
-      const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
       if (cachedBranding) applyBranding(cachedBranding);
     }
 
@@ -261,101 +272,35 @@
       payload.action = action;
       fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
       .then(response => response.json())
-      .then(data => { if (data.error) throw new Error(data.message); onSuccess(data); })
+      .then(data => { if (data.error && !data.success && data.message) throw new Error(data.message); onSuccess(data); })
       .catch(error => { console.error("API Error:", error); if (onFailure) onFailure(error); });
     }
 
     window.onload = () => {
-      // 1. Fetch Branding
-      apiCall('getSettings', {}, (res) => {
-          localStorage.setItem('scck_branding', JSON.stringify(res));
-          applyBranding(res);
-      });
-
-      // 2. Fetch and Re-assemble Legacy Data from new backend
       apiCall('getLegacyData', {}, (data) => {
-          let formattedClasses = [];
-          if (data.classes && data.classes.length > 0) {
-              data.classes.forEach(row => {
-                  if (row[4] === 'Approved') {
-                      formattedClasses.push({
-                          id: row[0],
-                          year: row[1],
-                          name: row[2],
-                          logo: row[3],
-                          officers: []
-                      });
-                  }
-              });
-          }
-          if (data.officers && data.officers.length > 0) {
-              data.officers.forEach(row => {
-                  let targetClass = formattedClasses.find(c => c.id === row[1]);
-                  if (targetClass) {
-                      targetClass.officers.push({
-                          id: row[0],
-                          classId: row[1],
-                          rank: row[2],
-                          name: row[3],
-                          designation: row[4],
-                          course: row[5] || '',
-                          bio: row[6] || '',
-                          image: row[7] || ''
-                      });
-                  }
-              });
-          }
-          localStorage.setItem('scck_legacy', JSON.stringify(formattedClasses)); 
-          legacyCache = formattedClasses; 
-          renderLegacyGrid(formattedClasses); 
+        if (data.branding) {
+          localStorage.setItem('scck_branding', JSON.stringify(data.branding));
+          applyBranding(data.branding);
+        }
+        if (data.classes && data.classes.length > 0) { 
+          localStorage.setItem('scck_legacy', JSON.stringify(data.classes)); 
+          legacyCache = data.classes; 
+          renderLegacyGrid(data.classes); 
+        }
       });
 
-      // 3. Fetch and map Posts Data from new backend
       apiCall('getApprovedPosts', {}, (data) => {
-          if (data.posts && data.posts.length > 0) {
-              let formattedPosts = [];
-              data.posts.forEach(row => {
-                  if (row[4] === 'Approved') {
-                      let p = {};
-                      if (Array.isArray(row)) {
-                          p.id = row[0];
-                          p.title = row[1];
-                          p.description = row[2];
-                          
-                          let imgData = row[3];
-                          try { 
-                             let parsed = JSON.parse(imgData); 
-                             p.image = Array.isArray(parsed) ? parsed.join(',') : parsed;
-                          } catch(e) { p.image = imgData; }
-
-                          p.status = row[4];
-                          if (row[5] && row[5].toString().includes('/')) p.date = row[5];
-                          else p.date = new Date().toLocaleDateString();
-
-                          p.videoUrl = row[6] && row[6].toString().startsWith('http') ? row[6] : (row[8] && row[8].toString().startsWith('http') ? row[8] : '');
-                          p.pinned = row[7] === true || row[7] === "TRUE" || row[7] === 1 || row[8] === 1;
-                      } else {
-                          p = row; 
-                      }
-                      formattedPosts.push(p);
-                  }
-              });
-              localStorage.setItem('scck_posts', JSON.stringify(formattedPosts)); 
-              postCache = formattedPosts; 
-              renderPostGrid(); 
-          } else {
-              document.getElementById('post-grid-container').innerHTML = '<p style="text-align:center; width:100%; color:var(--text-muted);">No public activities posted yet.</p>';
-          }
+        if (data.success && data.posts && data.posts.length > 0) { 
+          localStorage.setItem('scck_posts', JSON.stringify(data.posts)); 
+          postCache = data.posts; 
+          renderPostGrid(); 
+        }
       });
     };
 
     function renderLegacyGrid(classes) {
       const container = document.getElementById('legacy-grid-container');
       let html = '';
-      if(!classes || classes.length === 0) {
-          container.innerHTML = '<p style="text-align:center; width:100%; color:var(--text-muted);">No legacy archives found.</p>';
-          return;
-      }
       classes.forEach(c => {
         const logo = c.logo ? `<img src="${c.logo}" class="class-logo">` : `<div class="class-logo" style="display:flex; align-items:center; justify-content:center; color:#555; font-size:40px;"><i class="fas fa-shield-alt"></i></div>`;
         html += `<div class="class-card" onclick="openClassModal('${c.id}')">${logo}<div class="class-year">CLASS OF ${c.year}</div><h3 class="class-name">${c.name}</h3></div>`;
@@ -456,6 +401,7 @@
       let carouselHtml = '';
       let slidesArr = [];
       
+      // Add the Facebook/Video embed as the first slide if it exists
       if (p.videoUrl) slidesArr.push(`<div class="carousel-slide" id="slide-${slidesArr.length}">${createEmbed(p.videoUrl)}</div>`);
       images.forEach(img => {
           if(img) slidesArr.push(`<div class="carousel-slide" id="slide-${slidesArr.length}"><img src="${img}"></div>`);
@@ -489,7 +435,7 @@
       const cls = legacyCache.find(c => c.id === classId);
       if (!cls) return;
       let oHtml = '';
-      if (!cls.officers || cls.officers.length === 0) {
+      if (cls.officers.length === 0) {
         oHtml = '<p style="text-align:center; width:100%; color:var(--text-muted); margin-top:30px;">Officer records pending.</p>';
       } else {
         cls.officers.forEach(o => {
@@ -540,6 +486,7 @@
         modal.classList.remove('show');
         setTimeout(() => modal.style.display = 'none', 300);
         
+        // Stop iframe video playback when closing modal
         const iframe = modal.querySelector('iframe');
         if (iframe) {
             let iframeSrc = iframe.src;
