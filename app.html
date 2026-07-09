@@ -1657,27 +1657,39 @@
   function submitBulkDiscipline() {
     let target = document.getElementById('bulk-target-group').value;
     let customTarget = document.getElementById('bulk-custom-company').value.trim();
-    if(customTarget) target = customTarget; // Custom overrides dropdown
+    if(customTarget) target = customTarget;
     
     const val = document.getElementById('bulk-action-select').value;
-    if (!val) return Swal.fire('Notice', 'Please select a batch action from the dropdown.', 'warning'); 
+    if (!val) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Select a batch action.', showConfirmButton:false, timer:2000}); 
     
-    const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
+    const parts = val.split('|'); 
+    const type = parts[0]; 
+    const points = parseInt(parts[1]); 
+    const reason = parts[2]; 
 
+    // 🔥 HCI FIX 1: Immediately close and hide the custom modal to prevent double-clicking
+    closeBulkDisciplineModal(true);
+
+    // 🔥 HCI FIX 2: Trigger the clean confirmation popup only AFTER the background is clear
     Swal.fire({
       title: 'CONFIRM BATCH ACTION?',
       html: `You are about to issue a <b>${type} (${points > 0 ? '+'+points : points} pts)</b> to:<br><br><strong style="color:var(--army-primary); font-size:20px;">${target === 'ALL' ? 'THE ENTIRE UNIT' : target.toUpperCase() + ' COMPANY'}</strong><br><br>Reason: ${reason}`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d32f2f',
-      confirmButtonText: 'CONFIRM BATCH ISSUE'
+      cancelButtonColor: '#607d8b',
+      confirmButtonText: 'CONFIRM BATCH ISSUE',
+      allowOutsideClick: false // Forces the user to explicitly confirm or cancel
     }).then((result) => {
       if (result.isConfirmed) {
+        // 🔥 HCI FIX 3: Lock the screen with a loading state while processing
         Swal.fire({ title: 'PROCESSING BATCH...', html: 'Updating unit rosters...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        
+        // Execute the backend push
         apiCall('bulkAddDiscipline', { targetCompany: target, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => {
-            Swal.fire('Success', res.message, 'success');
-            closeBulkDisciplineModal(true);
-            loadDashboardData();
+            // Success: Show toast and silently sync the dashboard tables
+            Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:3000});
+            silentRefresh('getAdminDashboardData');
         });
       }
     });
