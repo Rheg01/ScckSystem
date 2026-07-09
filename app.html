@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  
   <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
-
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -134,6 +133,40 @@
   </div>
 </div>
 
+<div class="post-preview-overlay" id="bulk-discipline-modal" onclick="closeBulkDisciplineModal(event)">
+  <div class="post-preview-content" onclick="event.stopPropagation()" style="max-width: 500px; padding: 30px;">
+    <h3 style="color:var(--army-primary); margin-bottom:15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;"><i class="fas fa-layer-group"></i> BATCH ACTION / COMPANY UPDATE</h3>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Issue a merit or demerit to an entire company or the whole unit at once.</p>
+    
+    <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">SELECT TARGET GROUP</label>
+    <select id="bulk-target-group" style="margin-bottom:15px;">
+      <option value="ALL">Entire Unit (All Cadets)</option>
+      </select>
+    <input type="text" id="bulk-custom-company" placeholder="Or type exact Company Name (e.g. Alpha, Bravo)..." style="margin-bottom:15px;">
+    
+    <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">ISSUE BATCH MERIT / DEMERIT</label>
+    <select id="bulk-action-select" style="margin-bottom:15px;">
+        <option value="">-- Select Infraction or Achievement --</option>
+        <optgroup label="🔴 DEMERITS (Deductions)">
+           <option value="Demerit|-10|Batch: Unexcused Absence">Unexcused Absence (-10 pts)</option>
+           <option value="Demerit|-5|Batch: Improper Uniform">Improper Uniform (-5 pts)</option>
+           <option value="Demerit|-5|Batch: Moving/Talking in ranks">Moving/Talking in ranks (-5 pts)</option>
+        </optgroup>
+        <optgroup label="🟢 MERITS (Additions)">
+           <option value="Merit|10|Batch: Outstanding Unit Performance">Outstanding Unit Performance (+10 pts)</option>
+           <option value="Merit|5|Batch: Volunteering for Special Duty">Volunteering for Special Duty (+5 pts)</option>
+           <option value="Merit|5|Batch: Excellence in Drills">Excellence in Drills (+5 pts)</option>
+           <option value="Merit|5|Batch: Perfect Attendance">Perfect Attendance (+5 pts)</option>
+        </optgroup>
+    </select>
+
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+      <button class="btn-success" onclick="submitBulkDiscipline()" style="flex:2;"><i class="fas fa-gavel"></i> ISSUE TO ALL</button>
+      <button class="btn-danger" onclick="closeBulkDisciplineModal(true)" style="flex:1;">CANCEL</button>
+    </div>
+  </div>
+</div>
+
 <div class="post-preview-overlay" id="edit-officer-modal" onclick="closeEditOfficerModal(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()" style="max-width: 500px; padding: 30px;">
     <h3 style="color:var(--army-primary); margin-bottom:15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;"><i class="fas fa-user-edit"></i> EDIT LEGACY OFFICER</h3>
@@ -218,7 +251,7 @@
     <p>Command Center & Attendance</p>
     
     <div style="text-align: left; margin-bottom: 8px;"><label style="font-size: 12px; font-weight: 700; color: var(--text-muted); font-family: 'Inter', sans-serif;">IDENTIFICATION</label></div>
-    <input type="text" id="login-user" placeholder="Enter Username" onkeydown="if(event.key==='Enter')performLogin()">
+    <input type="text" id="login-user" placeholder="Enter Username (Cadets: Use Student ID)" onkeydown="if(event.key==='Enter')performLogin()">
     
     <div style="text-align: left; margin-bottom: 8px;"><label style="font-size: 12px; font-weight: 700; color: var(--text-muted); font-family: 'Inter', sans-serif;">PASSPHRASE</label></div>
     <div style="position: relative; margin: 8px 0 16px 0;">
@@ -263,6 +296,12 @@
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
     </ul>
 
+    <ul class="sidebar-menu" id="sidebar-menu-cadet" style="display:none;">
+      <li><button onclick="switchTab('panel-cadet-dashboard',this)" class="active"><i class="fas fa-id-badge"></i> <span>MY DOSSIER & LOGS</span></button></li>
+      <li><button onclick="switchTab('panel-cadet-leaves',this)"><i class="fas fa-envelope"></i> <span>MY LEAVE REQUESTS</span></button></li>
+      <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
+    </ul>
+
     <ul class="sidebar-menu" style="flex:none; padding-top:0; border-top: 1px solid rgba(255,255,255,0.05);">
       <li><button onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon"></i> <span id="theme-text">DARK MODE</span></button></li>
       <li><button onclick="logout()" style="color:#ef5350;"><i class="fas fa-sign-out-alt"></i> <span>LOGOUT</span></button></li>
@@ -270,6 +309,91 @@
   </div>
 
   <div class="main-content">
+
+    <div id="panel-cadet-dashboard" class="view-panel">
+      <div class="header-bar anim-1">
+        <div style="display:flex; align-items:center;">
+          <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+          <h2><i class="fas fa-id-badge"></i> CADET DOSSIER & LOGS</h2>
+        </div>
+        <button style="width:auto; padding:10px 15px;" onclick="forceRefresh(loadCadetData)"><i class="fas fa-sync"></i> REFRESH DATA</button>
+      </div>
+
+      <div class="dashboard-grid anim-2">
+        <div class="stat-card" style="border-bottom-color:var(--army-gold);">
+          <div class="stat-icon" style="color:var(--army-gold);"><i class="fas fa-balance-scale"></i></div>
+          <div><div class="stat-label">Military Bearing Score</div><div class="stat-val" id="cadet-stat-score">100</div></div>
+        </div>
+        <div class="stat-card" style="border-bottom-color:var(--status-green);">
+          <div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-check-circle"></i></div>
+          <div><div class="stat-label">Days Present</div><div class="stat-val" id="cadet-stat-present">0</div></div>
+        </div>
+        <div class="stat-card" style="border-bottom-color:var(--status-red);">
+          <div class="stat-icon" style="color:var(--status-red);"><i class="fas fa-times-circle"></i></div>
+          <div><div class="stat-label">Days Absent</div><div class="stat-val" id="cadet-stat-absent">0</div></div>
+        </div>
+      </div>
+
+      <div class="charts-row anim-3">
+        <div class="table-card">
+          <div style="padding: 15px; border-bottom: 1px solid var(--border);">
+            <h4 style="margin:0; font-size:14px; color:var(--text-muted);"><i class="fas fa-gavel"></i> RECENT DISCIPLINE RECORDS</h4>
+          </div>
+          <div class="table-wrapper" style="max-height: 250px;">
+            <table>
+              <thead><tr><th>Date</th><th>Type</th><th>Reason</th><th>Points</th></tr></thead>
+              <tbody id="cadet-discipline-table"><tr><td colspan="4" style="text-align:center;">Loading records...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="table-card">
+          <div style="padding: 15px; border-bottom: 1px solid var(--border);">
+            <h4 style="margin:0; font-size:14px; color:var(--text-muted);"><i class="fas fa-clock"></i> RECENT ATTENDANCE</h4>
+          </div>
+          <div class="table-wrapper" style="max-height: 250px;">
+            <table>
+              <thead><tr><th>Date</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead>
+              <tbody id="cadet-attendance-table"><tr><td colspan="4" style="text-align:center;">Loading logs...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-cadet-leaves" class="view-panel">
+      <div class="header-bar anim-1">
+        <div style="display:flex; align-items:center;">
+          <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+          <h2><i class="fas fa-envelope"></i> MY LEAVE REQUESTS</h2>
+        </div>
+        <button style="width:auto; padding:10px 15px;" onclick="forceRefresh(loadCadetData)"><i class="fas fa-sync"></i> REFRESH DATA</button>
+      </div>
+
+      <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px;">
+        <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-paper-plane"></i> SUBMIT NEW LEAVE REQUEST</h3>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; font-family:'Inter',sans-serif;">Submit a formal excuse letter or leave request to the Command Admin.</p>
+        
+        <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
+          <div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted);">FROM DATE</label><input type="date" id="cadet-lv-from"></div>
+          <div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted);">TO DATE</label><input type="date" id="cadet-lv-to"></div>
+        </div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">REASON FOR LEAVE</label>
+        <textarea id="cadet-lv-reason" rows="3" placeholder="State your exact reason for requesting leave..."></textarea>
+        
+        <button class="btn-success" style="width:auto; padding:14px 20px; margin-top:10px;" onclick="submitCadetLeave()"><i class="fas fa-paper-plane"></i> SUBMIT REQUEST</button>
+      </div>
+
+      <div class="table-card anim-3">
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Date Submitted</th><th>Leave Range</th><th>Reason</th><th>Status</th></tr></thead>
+            <tbody id="cadet-leaves-table"><tr><td colspan="4" style="text-align:center;">Loading requests...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
 
     <div id="panel-scanner" class="view-panel">
       <div class="header-bar anim-1">
@@ -319,6 +443,7 @@
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
           <input type="text" id="search-masterlist" placeholder="Search cadet name or ID..." style="width:250px; margin:0; padding:10px;" oninput="filterMasterlist()">
+          <button class="btn-warning" style="width:auto; padding: 10px 15px; color:#fff;" onclick="openBulkDisciplineModal()"><i class="fas fa-layer-group"></i> BATCH ACTION</button>
           <button class="btn-info" style="width:auto; padding: 10px 15px;" onclick="exportTableToExcel('masterlist-table', 'Unit_Roster')"><i class="fas fa-file-excel"></i> EXPORT EXCEL</button>
           <button style="width:auto; padding: 10px 15px;" onclick="forceRefresh(loadDashboardData)"><i class="fas fa-sync"></i> REFRESH</button>
         </div>
@@ -735,11 +860,14 @@
     }
   };
 
+  // 🔥 FIX #1: SETUP ROLE UI NOW INCLUDES 'CADET' 🔥
   function setupRoleUI(role) {
+    document.getElementById('sidebar-menu-admin').style.display = 'none';
+    document.getElementById('sidebar-menu-scanner').style.display = 'none';
+    document.getElementById('sidebar-menu-cadet').style.display = 'none';
+
     if (role === 'Super Admin' || role === 'Admin') {
       document.getElementById('sidebar-menu-admin').style.display = 'block'; 
-      document.getElementById('sidebar-menu-scanner').style.display = 'none';
-      
       let btnClass = document.getElementById('btn-submit-class');
 
       if (role === 'Super Admin') {
@@ -756,10 +884,12 @@
         document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); 
       }
       switchTab('panel-dashboard', document.querySelectorAll('#sidebar-menu-admin button')[0]);
-    } else {
-      document.getElementById('sidebar-menu-admin').style.display = 'none'; 
+    } else if (role === 'Scanner') {
       document.getElementById('sidebar-menu-scanner').style.display = 'block'; 
       switchTab('panel-scanner', document.querySelector('#sidebar-menu-scanner button'));
+    } else if (role === 'Cadet') {
+      document.getElementById('sidebar-menu-cadet').style.display = 'block';
+      switchTab('panel-cadet-dashboard', document.querySelector('#sidebar-menu-cadet button'));
     }
   }
 
@@ -853,6 +983,7 @@
     if (window.innerWidth <= 768) toggleSidebar();
     if (panelId !== 'panel-scanner') stopScanner(false);
     
+    // FIRE DATA LOADERS
     if (['panel-dashboard','panel-attendance','panel-masterlist','panel-accounts'].includes(panelId)) loadDashboardData();
     if (panelId === 'panel-leaves') { loadLeavesData(); fetchStudentsForDropdown(); }
     if (panelId === 'panel-idcards') fetchStudentsForDropdown();
@@ -860,6 +991,9 @@
     if (panelId === 'panel-profile') loadUserProfile();
     if (panelId === 'panel-legacy') { loadLegacyClassesForDropdown(); loadLegacyAdminData(); }
     if (panelId === 'panel-posts') loadPosts();
+    
+    // 🔥 FIX #1: Cadet Tabs
+    if (panelId === 'panel-cadet-dashboard' || panelId === 'panel-cadet-leaves') { loadCadetData(); }
   }
 
   function loadLegacyAdminData() {
@@ -906,6 +1040,7 @@
     });
   }
 
+  // OTP Verification functions for Editing Legacy Officers
   window.openEditOfficerModal = function(id, rank, name, desig, course, bio) {
     document.getElementById('edit-off-id').value = id;
     document.getElementById('edit-off-rank').value = rank;
@@ -1419,6 +1554,137 @@
 
     m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); }
 
+  // 🔥 FIX #1: CADET DATA LOADER 🔥
+  function loadCadetData() {
+    if (session.role !== 'Cadet') return;
+    
+    // Clear old data
+    document.getElementById('cadet-stat-score').innerText = '...';
+    document.getElementById('cadet-stat-present').innerText = '...';
+    document.getElementById('cadet-stat-absent').innerText = '...';
+    document.getElementById('cadet-attendance-table').innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
+    document.getElementById('cadet-discipline-table').innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
+    document.getElementById('cadet-leaves-table').innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
+
+    apiCall('getCadetData', { user: session.user, pass: session.pass }, (res) => {
+        document.getElementById('cadet-stat-score').innerText = res.score;
+        let sColor = res.score < 75 ? 'var(--status-red)' : (res.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)');
+        document.getElementById('cadet-stat-score').style.color = sColor;
+        document.getElementById('cadet-stat-present').innerText = res.presentDays;
+        document.getElementById('cadet-stat-absent').innerText = res.absentDays;
+
+        // Attendance Table
+        let attHtml = '';
+        res.attendance.forEach(r => {
+            let bc = r.status === 'Present' ? 'badge-present' : (r.status === 'Late' ? 'badge-late' : (r.status === 'Very Late' ? 'badge-verylate' : 'badge-absent'));
+            attHtml += `<tr><td>${r.date}</td><td style="color:var(--status-green); font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`;
+        });
+        document.getElementById('cadet-attendance-table').innerHTML = attHtml || '<tr><td colspan="4" style="text-align:center;">No records.</td></tr>';
+
+        // Discipline Table
+        let discHtml = '';
+        res.discipline.forEach(r => {
+            let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)';
+            let typeBadge = r.type === 'Merit' ? '<span class="badge badge-present">MERIT</span>' : '<span class="badge badge-absent">DEMERIT</span>';
+            discHtml += `<tr><td>${r.date}</td><td>${typeBadge}</td><td style="color:var(--text-muted);">${r.reason}</td><td style="font-weight:bold; color:${ptsColor};">${r.points > 0 ? '+'+r.points : r.points}</td></tr>`;
+        });
+        document.getElementById('cadet-discipline-table').innerHTML = discHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
+
+        // Leaves Table
+        let lvHtml = '';
+        res.leaves.forEach(lv => {
+            let bc = lv.status === 'Approved' ? 'badge-present' : (lv.status === 'Rejected' ? 'badge-absent' : 'badge-late');
+            lvHtml += `<tr><td>${lv.date}</td><td>${lv.from} – ${lv.to}</td><td>${lv.reason}</td><td><span class="badge ${bc}">${lv.status}</span></td></tr>`;
+        });
+        document.getElementById('cadet-leaves-table').innerHTML = lvHtml || '<tr><td colspan="4" style="text-align:center;">No requests found.</td></tr>';
+    });
+  }
+
+  // 🔥 FIX #1: CADET LEAVE SUBMISSION 🔥
+  function submitCadetLeave() {
+    const f = document.getElementById('cadet-lv-from').value;
+    const t = document.getElementById('cadet-lv-to').value;
+    const x = document.getElementById('cadet-lv-reason').value.trim();
+    if(!f || !t || !x) return Swal.fire('Notice', 'Fill all fields.', 'warning'); 
+    
+    Swal.fire({ title: 'TRANSMITTING...', didOpen: () => Swal.showLoading() }); 
+    // We send session.user because for Cadets, their user ID is their Student ID
+    apiCall('submitLeaveRequest', { studentId: session.user, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { 
+        Swal.fire('Success', res.message, 'success'); 
+        document.getElementById('cadet-lv-from').value = '';
+        document.getElementById('cadet-lv-to').value = '';
+        document.getElementById('cadet-lv-reason').value = '';
+        loadCadetData(); 
+    }); 
+  }
+
+  // 🔥 FIX #3: BATCH DISCIPLINE MODAL 🔥
+  function openBulkDisciplineModal() {
+      // First populate the dropdown with company names directly from the UI table to avoid an extra server call
+      const table = document.getElementById('masterlist-table');
+      const rows = table.getElementsByTagName('tr');
+      const companies = new Set();
+      
+      for(let i=1; i<rows.length; i++) {
+          let cols = rows[i].getElementsByTagName('td');
+          if(cols.length > 2) {
+              let coy = cols[2].innerText.trim();
+              if(coy && coy !== 'N/A' && coy !== '---') companies.add(coy);
+          }
+      }
+      
+      let dropdown = document.getElementById('bulk-target-group');
+      dropdown.innerHTML = '<option value="ALL">Entire Unit (All Cadets)</option>';
+      companies.forEach(c => {
+          dropdown.innerHTML += `<option value="${c}">${c} Company</option>`;
+      });
+
+      document.getElementById('bulk-custom-company').value = "";
+      document.getElementById('bulk-action-select').value = "";
+
+      const modal = document.getElementById('bulk-discipline-modal');
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('show'), 10);
+  }
+
+  function closeBulkDisciplineModal(force) {
+    const modal = document.getElementById('bulk-discipline-modal');
+    if (force === true || force.target === modal) {
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
+    }
+  }
+
+  function submitBulkDiscipline() {
+    let target = document.getElementById('bulk-target-group').value;
+    let customTarget = document.getElementById('bulk-custom-company').value.trim();
+    if(customTarget) target = customTarget; // Custom overrides dropdown
+    
+    const val = document.getElementById('bulk-action-select').value;
+    if (!val) return Swal.fire('Notice', 'Please select a batch action from the dropdown.', 'warning'); 
+    
+    const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
+
+    Swal.fire({
+      title: 'CONFIRM BATCH ACTION?',
+      html: `You are about to issue a <b>${type} (${points > 0 ? '+'+points : points} pts)</b> to:<br><br><strong style="color:var(--army-primary); font-size:20px;">${target === 'ALL' ? 'THE ENTIRE UNIT' : target.toUpperCase() + ' COMPANY'}</strong><br><br>Reason: ${reason}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d32f2f',
+      confirmButtonText: 'CONFIRM BATCH ISSUE'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({ title: 'PROCESSING BATCH...', html: 'Updating unit rosters...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        apiCall('bulkAddDiscipline', { targetCompany: target, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => {
+            Swal.fire('Success', res.message, 'success');
+            closeBulkDisciplineModal(true);
+            loadDashboardData();
+        });
+      }
+    });
+  }
+
+  // ALL OTHER FUNCTIONS REMAIN UNCHANGED
   function loadDashboardData() { 
     if(session.role!=='Admin'&&session.role!=='Super Admin') return; 
     apiCall('getAdminDashboardData', { user: session.user, pass: session.pass }, (res) => { 
@@ -1446,7 +1712,7 @@
         let sb=r[3]==='Active'?'<span class="badge badge-present">ACTIVE</span>':'<span class="badge badge-absent">REVOKED</span>'; 
         
         let legBtn = '';
-        if (r[2] === "Scanner") {
+        if (r[2] === "Scanner" || r[2] === "Cadet") {
             legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">NOT APPLICABLE</span>`;
         } else if (r[2] === "Super Admin") {
             legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">BYPASS GRANTED</span>`;
@@ -1619,3 +1885,4 @@
 </script>
 </body>
 </html>
+
