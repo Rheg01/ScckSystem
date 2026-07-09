@@ -283,24 +283,26 @@
     <h2>SCCK ROTC UNIT</h2>
     <p>Command Center & Attendance</p>
     
-    <div class="input-group" style="margin-bottom: 10px;">
+    <div class="input-group" style="margin-bottom: 15px;">
       <label>IDENTIFICATION</label>
       <input type="text" id="login-user" placeholder="Enter Username (Cadets: ID)" onkeydown="if(event.key==='Enter')performLogin()">
     </div>
     
-    <div class="input-group" style="margin-bottom: 20px;">
+    <div class="input-group" style="margin-bottom: 25px;">
       <label>PASSPHRASE</label>
       <div style="position: relative;">
-        <input type="password" id="login-pass" placeholder="Enter Password" onkeydown="if(event.key==='Enter')performLogin()" style="padding-right: 45px;">
-        <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility('login-pass', 'toggle-pass-icon')" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted);"></i>
+        <input type="password" id="login-pass" placeholder="Enter Password" onkeydown="if(event.key==='Enter')performLogin()" style="width: 100%; padding-right: 45px;">
+        <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility('login-pass', 'toggle-pass-icon')" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;" onmouseover="this.style.color='var(--army-gold)'" onmouseout="this.style.color='var(--text-muted)'"></i>
       </div>
     </div>
     
-    <button onclick="performLogin()" id="btn-login"><i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS</button>
-    <div id="login-err" style="color: var(--status-red); margin-top: 15px; font-size: 14px; font-weight: bold;"></div>
+    <!-- 🔥 FIX: Added 'width: 100%;' to force the button to stretch across the form -->
+    <button onclick="performLogin()" id="btn-login" style="width: 100%;"><i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS</button>
+    
+    <div id="login-err" style="color: var(--status-red); margin-top: 15px; font-size: 14px; font-weight: bold; font-family: 'Inter', sans-serif;"></div>
+    <div style="margin-top:20px;"><a href="index.html" style="font-size:12px; color:var(--text-muted); text-decoration:none; font-family:'Inter',sans-serif; border-bottom:1px dashed var(--text-muted);">Return to Public Landing Page</a></div>
   </div>
 </div>
-
 <div id="app-container" class="app-container" style="display:none;">
   <div class="sidebar">
     <div class="sidebar-header">
