@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +30,6 @@
     .login-box h2 { color: var(--army-primary); font-size: 26px; margin-bottom: 5px; } .login-box p { color: var(--text-muted); font-size: 13px; margin-bottom: 25px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
     input[type="text"], input[type="password"], input[type="number"], input[type="date"], select, textarea { width: 100%; padding: 14px; margin: 8px 0 16px 0; border: 2px solid var(--border); border-radius: 4px; font-size: 14px; outline: none; background: var(--bg); color: var(--text); transition: all 0.3s; font-family: 'Inter', sans-serif; resize: vertical; } input:focus, select:focus, textarea:focus { border-color: var(--army-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); } input[type="file"] { width: 100%; padding: 10px; margin: 8px 0 16px 0; border: 2px dashed var(--border); border-radius: 4px; font-size: 13px; color: var(--text-muted); background: var(--light); cursor: pointer; }
     button { background: var(--army-primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; gap: 8px; } button:hover:not(:disabled) { background: var(--army-light); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); } button:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
-    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
     .btn-danger { background: var(--status-red); } .btn-danger:hover:not(:disabled) { background: #b71c1c; } .btn-success { background: var(--status-green); } .btn-success:hover:not(:disabled) { background: #2e7d32; } .btn-warning { background: var(--status-yellow); color: #fff; } .btn-warning:hover:not(:disabled) { background: #f9a825; } .btn-secondary { background: #607d8b; color: white; } .btn-secondary:hover:not(:disabled) { background: #455a64; } .btn-info { background: #0288d1; color: white; } .btn-info:hover:not(:disabled) { background: #01579b; }
     
     .app-container { display: flex; height: 100vh; } .sidebar { width: 260px; background: var(--army-dark); color: #e0e0e0; display: flex; flex-direction: column; transition: left 0.3s ease; border-right: 2px solid var(--army-gold); z-index: 10000; } .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); } .sidebar-header h3 { color: var(--army-gold); font-size: 18px; margin-top: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;} .sidebar-logo { width: 70px; height: 70px; margin: 0 auto; border-radius: 50%; overflow: hidden; background: var(--army-primary); display: flex; align-items: center; justify-content: center; border: 2px solid var(--army-gold); } .sidebar-logo img { width: 100%; height: 100%; object-fit: cover; }
@@ -141,7 +141,7 @@
     <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">SELECT TARGET GROUP</label>
     <select id="bulk-target-group" style="margin-bottom:15px;">
       <option value="ALL">Entire Unit (All Cadets)</option>
-    </select>
+      </select>
     <input type="text" id="bulk-custom-company" placeholder="Or type exact Company Name (e.g. Alpha, Bravo)..." style="margin-bottom:15px;">
     
     <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">ISSUE BATCH MERIT / DEMERIT</label>
@@ -161,8 +161,8 @@
     </select>
 
     <div style="display: flex; gap: 10px; margin-top: 15px;">
-      <button id="btn-submit-bulk" class="btn-success" onclick="submitBulkDiscipline()" style="flex:2;"><i class="fas fa-gavel"></i> ISSUE TO ALL</button>
-      <button id="btn-cancel-bulk" class="btn-danger" onclick="closeBulkDisciplineModal(true)" style="flex:1;">CANCEL</button>
+      <button class="btn-success" onclick="submitBulkDiscipline()" style="flex:2;"><i class="fas fa-gavel"></i> ISSUE TO ALL</button>
+      <button class="btn-danger" onclick="closeBulkDisciplineModal(true)" style="flex:1;">CANCEL</button>
     </div>
   </div>
 </div>
@@ -256,7 +256,7 @@
     <div style="text-align: left; margin-bottom: 8px;"><label style="font-size: 12px; font-weight: 700; color: var(--text-muted); font-family: 'Inter', sans-serif;">PASSPHRASE</label></div>
     <div style="position: relative; margin: 8px 0 16px 0;">
       <input type="password" id="login-pass" placeholder="Enter Password" onkeydown="if(event.key==='Enter')performLogin()" style="margin: 0; padding-right: 45px;">
-      <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility('login-pass', 'toggle-pass-icon')" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;" onmouseover="this.style.color='var(--army-gold)'" onmouseout="this.style.color='var(--text-muted)'"></i>
+      <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;" onmouseover="this.style.color='var(--army-gold)'" onmouseout="this.style.color='var(--text-muted)'"></i>
     </div>
     
     <button onclick="performLogin()" id="btn-login" style="margin-top: 10px;"><i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS</button>
@@ -346,6 +346,7 @@
             </table>
           </div>
         </div>
+        
         <div class="table-card">
           <div style="padding: 15px; border-bottom: 1px solid var(--border);">
             <h4 style="margin:0; font-size:14px; color:var(--text-muted);"><i class="fas fa-clock"></i> RECENT ATTENDANCE</h4>
@@ -380,7 +381,7 @@
         <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">REASON FOR LEAVE</label>
         <textarea id="cadet-lv-reason" rows="3" placeholder="State your exact reason for requesting leave..."></textarea>
         
-        <button id="btn-submit-cadet-leave" class="btn-success" style="width:auto; padding:14px 20px; margin-top:10px;" onclick="submitCadetLeave()"><i class="fas fa-paper-plane"></i> SUBMIT REQUEST</button>
+        <button class="btn-success" style="width:auto; padding:14px 20px; margin-top:10px;" onclick="submitCadetLeave()"><i class="fas fa-paper-plane"></i> SUBMIT REQUEST</button>
       </div>
 
       <div class="table-card anim-3">
@@ -468,7 +469,7 @@
         <div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">FROM DATE</label><input type="date" id="lv-from" style="margin-top:5px; margin-bottom:0;"></div>
         <div style="flex:1; min-width:140px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">TO DATE</label><input type="date" id="lv-to" style="margin-top:5px; margin-bottom:0;"></div>
         <div style="flex:2; min-width:200px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif;">REASON</label><input type="text" id="lv-reason" placeholder="State reason..." style="margin-top:5px; margin-bottom:0;"></div>
-        <button id="btn-submit-leave" class="btn-success" style="width:auto; padding:14px 20px; white-space:nowrap;" onclick="submitLeave()"><i class="fas fa-paper-plane"></i> SUBMIT</button>
+        <button class="btn-success" style="width:auto; padding:14px 20px; white-space:nowrap;" onclick="submitLeave()"><i class="fas fa-paper-plane"></i> SUBMIT</button>
       </div>
       
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date Range</th><th>Cadet ID</th><th>Name</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaves-table"><tr><td colspan="6" style="text-align:center;">Loading requests...</td></tr></tbody></table></div></div>
@@ -522,7 +523,7 @@
           <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px; margin-top: 10px;">OFFICER PHOTO (Upload Image)</label>
           <input type="file" id="leg-off-photo" accept="image/*">
           <p id="leg-off-status" style="font-size:11px; color:var(--text-muted); margin-top:5px; margin-bottom:15px;">Select an image to crop and upload.</p>
-          <button id="btn-submit-officer" class="btn-success" onclick="submitLegacyOfficer()"><i class="fas fa-user-check"></i> UPLOAD OFFICER</button>
+          <button class="btn-success" onclick="submitLegacyOfficer()"><i class="fas fa-user-check"></i> UPLOAD OFFICER</button>
         </div>
       </div>
       
@@ -594,19 +595,7 @@
 
     <div id="panel-accounts" class="view-panel">
       <div class="header-bar anim-1"><div style="display:flex; align-items:center;"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2><i class="fas fa-user-shield"></i> PERSONNEL ACCESS CONTROL</h2></div><button style="width:auto; padding:10px 15px;" onclick="forceRefresh(loadDashboardData)"><i class="fas fa-sync"></i> REFRESH</button></div>
-      <div class="anim-2" style="display:flex; gap:15px; margin-bottom:20px; flex-wrap:wrap; background:var(--card-bg); padding:20px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02);">
-        <input type="text" id="new-user" placeholder="Assign Username" style="flex:1; margin:0; min-width:180px;">
-        <div style="position: relative; flex:1; margin:0; min-width:200px;">
-          <input type="password" id="new-pass" placeholder="Assign Password" style="width:100%; margin:0; padding-right:40px;">
-          <i class="fas fa-eye" id="toggle-new-pass" onclick="togglePasswordVisibility('new-pass', 'toggle-new-pass')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--text-muted);"></i>
-        </div>
-        <select id="new-role" style="flex:1; margin:0; min-width:180px;">
-          <option value="Scanner">Scanner Terminal</option>
-          <option value="Admin">Command Admin</option>
-          <option value="Super Admin">Super Admin (Commander)</option>
-        </select>
-        <button id="btn-create-acc" style="width:auto; white-space:nowrap; padding:14px 20px;" onclick="createAcc()"><i class="fas fa-user-plus"></i> ADD PERSONNEL</button>
-      </div>
+      <div class="anim-2" style="display:flex; gap:15px; margin-bottom:20px; flex-wrap:wrap; background:var(--card-bg); padding:20px; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 6px rgba(0,0,0,0.02);"><input type="text" id="new-user" placeholder="Assign Username" style="flex:1; margin:0;"><input type="password" id="new-pass" placeholder="Assign Password" style="flex:1; margin:0;"><select id="new-role" style="flex:1; margin:0;"><option value="Scanner">Scanner Terminal</option><option value="Admin">Command Admin</option><option value="Super Admin">Super Admin (Commander)</option></select><button style="width:auto; white-space:nowrap; padding:14px 20px;" onclick="createAcc()"><i class="fas fa-user-plus"></i> ADD PERSONNEL</button></div>
       <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Username</th><th>Clearance Level</th><th>Legacy DB</th><th>Status</th><th>Action</th></tr></thead><tbody id="accounts-table"><tr><td colspan="5" style="text-align:center;">Loading access list...</td></tr></tbody></table></div></div>
     </div>
 
@@ -628,7 +617,7 @@
         <div style="margin-bottom:20px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif; display:block; margin-bottom:5px;">LOGIN SHIELD LOGO (Upload File)</label><input type="file" id="set-logo-file" accept="image/*"><p id="set-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop and upload.</p></div>
         <div style="margin-bottom:20px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif; display:block; margin-bottom:5px;">HEADER / NAVBAR LOGO (For Landing Page)</label><input type="file" id="set-nav-logo-file" accept="image/*"><p id="set-nav-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop and upload.</p></div>
         <div style="margin-bottom:20px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); font-family:'Inter',sans-serif; display:block; margin-bottom:5px;">BACKGROUND IMAGE (Upload File)</label><input type="file" id="set-bg-file" accept="image/*"><p id="set-bg-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop and upload.</p></div>
-        <div style="display:flex; gap:10px;"><button id="btn-save-settings" class="btn-success" style="flex:2;" onclick="saveSystemSettings()"><i class="fas fa-save"></i> UPLOAD & SAVE BRANDING</button><button class="btn-danger" style="flex:1;" onclick="resetBackground()"><i class="fas fa-eraser"></i> RESET BACKGROUND</button></div>
+        <div style="display:flex; gap:10px;"><button class="btn-success" style="flex:2;" onclick="saveSystemSettings()"><i class="fas fa-save"></i> UPLOAD & SAVE BRANDING</button><button class="btn-danger" style="flex:1;" onclick="resetBackground()"><i class="fas fa-eraser"></i> RESET BACKGROUND</button></div>
       </div>
     </div>
 
@@ -638,7 +627,7 @@
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px; font-family:'Inter',sans-serif;">Update your personal details. This information and photo will appear on your sidebar.</p>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom:15px;"><div><label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">FULL NAME</label><input type="text" id="prof-name" placeholder="E.g. Juan Dela Cruz"></div><div><label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">RANK</label><input type="text" id="prof-rank" placeholder="E.g. Cadet Officer"></div><div><label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">AGE</label><input type="number" id="prof-age" placeholder="Age"></div><div><label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">COURSE</label><input type="text" id="prof-course" placeholder="E.g. BSCS"></div><div><label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">POSITION / DESIGNATION</label><input type="text" id="prof-position" placeholder="Designation"></div><div><label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">CONTACT NUMBER</label><input type="text" id="prof-contact" placeholder="Phone Number"></div></div>
         <div style="margin-bottom:20px;"><label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">PROFILE IMAGE (Upload File)</label><input type="file" id="prof-image-file" accept="image/*"><p id="prof-image-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop and upload.</p></div>
-        <button id="btn-save-profile" class="btn-success" onclick="saveUserProfile()"><i class="fas fa-save"></i> UPDATE PROFILE</button>
+        <button class="btn-success" onclick="saveUserProfile()"><i class="fas fa-save"></i> UPDATE PROFILE</button>
       </div>
     </div>
 
@@ -753,8 +742,11 @@
   function exportTableToExcel(tableId, filename) {
     let table = document.getElementById(tableId).closest('table');
     let rows = table.querySelectorAll('tr');
+    
     if (rows.length <= 1) return Swal.fire('Notice', 'No data available to export.', 'info');
+
     let aoa = []; 
+
     let headerRow = [];
     let headers = rows[0].querySelectorAll("th, td");
     for (let j = 0; j < headers.length; j++) {
@@ -762,10 +754,12 @@
       headerRow.push(headers[j].innerText.trim());
     }
     aoa.push(headerRow);
+
     let bodyData = [];
     for (let i = 1; i < rows.length; i++) {
       let cols = rows[i].querySelectorAll("td, th");
       if (cols.length === 1 && cols[0].colSpan > 1) continue; 
+
       let rowArr = [];
       for (let j = 0; j < cols.length; j++) {
         if(cols[j].querySelector('button') && j === cols.length - 1) continue; 
@@ -773,33 +767,57 @@
       }
       bodyData.push(rowArr);
     }
+
     if (bodyData.length === 0) return Swal.fire('Notice', 'No data available to export.', 'info');
+
     if (tableId === 'attendance-table' || tableId === 'masterlist-table') {
-      bodyData.sort((a, b) => { let compA = a[2] ? a[2].toLowerCase() : ""; let compB = b[2] ? b[2].toLowerCase() : ""; return compA.localeCompare(compB); });
+      bodyData.sort((a, b) => {
+         let compA = a[2] ? a[2].toLowerCase() : "";
+         let compB = b[2] ? b[2].toLowerCase() : "";
+         return compA.localeCompare(compB);
+      });
     }
+
     bodyData.forEach(r => aoa.push(r));
+
     let ws = XLSX.utils.aoa_to_sheet(aoa);
     let range = XLSX.utils.decode_range(ws['!ref']);
+
     for (let R = range.s.r; R <= range.e.r; ++R) {
       for (let C = range.s.c; C <= range.e.c; ++C) {
-        let cellAddress = {c:C, r:R}; let cellRef = XLSX.utils.encode_cell(cellAddress); if (!ws[cellRef]) continue;
-        if (R === 0) { ws[cellRef].s = { font: { bold: true, color: { rgb: "FFFFFFFF" } }, fill: { fgColor: { rgb: "FF2D3821" } }, alignment: { horizontal: "center" } }; continue; }
+        let cellAddress = {c:C, r:R};
+        let cellRef = XLSX.utils.encode_cell(cellAddress);
+        if (!ws[cellRef]) continue;
+
+        if (R === 0) {
+          ws[cellRef].s = {
+            font: { bold: true, color: { rgb: "FFFFFFFF" } },
+            fill: { fgColor: { rgb: "FF2D3821" } },
+            alignment: { horizontal: "center" }
+          };
+          continue;
+        }
+
         let val = String(ws[cellRef].v).toUpperCase();
-        if (val === "PRESENT" || val === "APPROVED") { ws[cellRef].s = { fill: { fgColor: { rgb: "FF388E3C" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } }; } 
-        else if (val === "LATE" || val === "PENDING") { ws[cellRef].s = { fill: { fgColor: { rgb: "FFF57F17" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } }; } 
-        else if (val === "VERY LATE" || val === "ABSENT" || val === "REJECTED") { ws[cellRef].s = { fill: { fgColor: { rgb: "FFD32F2F" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } }; }
+        if (val === "PRESENT" || val === "APPROVED") {
+          ws[cellRef].s = { fill: { fgColor: { rgb: "FF388E3C" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
+        } else if (val === "LATE" || val === "PENDING") {
+          ws[cellRef].s = { fill: { fgColor: { rgb: "FFF57F17" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
+        } else if (val === "VERY LATE" || val === "ABSENT" || val === "REJECTED") {
+          ws[cellRef].s = { fill: { fgColor: { rgb: "FFD32F2F" } }, font: { color: { rgb: "FFFFFFFF" }, bold: true }, alignment: { horizontal: "center" } };
+        }
       }
     }
+
     ws['!cols'] = [{wch: 15}, {wch: 30}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}];
     let wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Unit Data");
     XLSX.writeFile(wb, filename + ".xlsx");
   }
 
-  // 🔥 HCI FIX: Universal Password Visibility Toggle 🔥
-  window.togglePasswordVisibility = function(inputId, iconId) {
-    const passInput = document.getElementById(inputId);
-    const toggleIcon = document.getElementById(iconId);
+  function togglePasswordVisibility() {
+    const passInput = document.getElementById('login-pass');
+    const toggleIcon = document.getElementById('toggle-pass-icon');
     if (passInput.type === 'password') {
       passInput.type = 'text';
       toggleIcon.classList.remove('fa-eye');
@@ -842,6 +860,7 @@
     }
   };
 
+  // 🔥 FIX #1: SETUP ROLE UI NOW INCLUDES 'CADET' 🔥
   function setupRoleUI(role) {
     document.getElementById('sidebar-menu-admin').style.display = 'none';
     document.getElementById('sidebar-menu-scanner').style.display = 'none';
@@ -964,6 +983,7 @@
     if (window.innerWidth <= 768) toggleSidebar();
     if (panelId !== 'panel-scanner') stopScanner(false);
     
+    // FIRE DATA LOADERS
     if (['panel-dashboard','panel-attendance','panel-masterlist','panel-accounts'].includes(panelId)) loadDashboardData();
     if (panelId === 'panel-leaves') { loadLeavesData(); fetchStudentsForDropdown(); }
     if (panelId === 'panel-idcards') fetchStudentsForDropdown();
@@ -971,6 +991,8 @@
     if (panelId === 'panel-profile') loadUserProfile();
     if (panelId === 'panel-legacy') { loadLegacyClassesForDropdown(); loadLegacyAdminData(); }
     if (panelId === 'panel-posts') loadPosts();
+    
+    // 🔥 FIX #1: Cadet Tabs
     if (panelId === 'panel-cadet-dashboard' || panelId === 'panel-cadet-leaves') { loadCadetData(); }
   }
 
@@ -1018,6 +1040,7 @@
     });
   }
 
+  // OTP Verification functions for Editing Legacy Officers
   window.openEditOfficerModal = function(id, rank, name, desig, course, bio) {
     document.getElementById('edit-off-id').value = id;
     document.getElementById('edit-off-rank').value = rank;
@@ -1068,7 +1091,8 @@
         course: document.getElementById('edit-off-course').value,
         bio: document.getElementById('edit-off-bio').value,
         otp: otp,
-        user: session.user, pass: session.pass
+        user: session.user, 
+        pass: session.pass
     };
     apiCall('submitOfficerEdit', payload, (res) => {
         Swal.fire('Success', res.message, 'success');
@@ -1120,30 +1144,25 @@
     });
   }
 
-  // 🔥 HCI FIX: Inline Loading for Post Submission 🔥
   async function submitPublicPost() {
     const title = document.getElementById('post-title').value.trim();
     const desc = document.getElementById('post-desc').value.trim();
     const vid = document.getElementById('post-video-url').value.trim();
     
-    if (!title || !desc) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Title & Description required.', showConfirmButton:false, timer:2500});
-    if (!editingPostId && stagedImages.length === 0 && !vid) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Media required.', showConfirmButton:false, timer:2500});
+    if (!title || !desc) return Swal.fire('Notice', 'Title and description are required.', 'warning');
+    if (!editingPostId && stagedImages.length === 0 && !vid) return Swal.fire('Notice', 'At least one image or video URL is required.', 'warning');
     
-    const btn = document.getElementById('btn-submit-post');
-    const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...';
-    btn.disabled = true;
+    Swal.fire({ title: 'UPLOADING TO COMMAND...', html: 'This may take a moment...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     
     let actionName = editingPostId ? 'resubmitPost' : 'submitPost';
     let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, pass: session.pass };
     if (editingPostId) payload.postId = editingPostId;
 
     apiCall(actionName, payload, (res) => {
-      Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
-      btn.innerHTML = oldHtml; btn.disabled = false;
+      Swal.fire('Success', res.message, 'success');
       cancelEdit();
       loadPosts();
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
+    });
   }
 
   function editPost(id) {
@@ -1279,7 +1298,7 @@
   function updatePost(id, status) {
     let feedback = document.getElementById(`feedback-${id}`) ? document.getElementById(`feedback-${id}`).value.trim() : '';
     if (status === 'Revise' && !feedback) {
-      return Swal.fire({toast:true, position:'top', icon:'warning', title:'Provide correction instructions.', showConfirmButton:false, timer:2500});
+      return Swal.fire('Notice', 'Please provide correction instructions for the Admin before clicking Revise.', 'warning');
     }
 
     Swal.fire({ title: `Set status to ${status}?`, showCancelButton: true, confirmButtonText: 'CONFIRM' }).then(r => {
@@ -1378,11 +1397,11 @@
     const u = document.getElementById('login-user').value.trim(), p = document.getElementById('login-pass').value;
     const btn = document.getElementById('btn-login'), err = document.getElementById('login-err');
     if (!u || !p) { err.innerText = 'Credentials required.'; return; }
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; btn.disabled = true; err.innerText = '';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; err.innerText = '';
 
     apiCall('systemLogin', { user: u, pass: p }, 
       (res) => {
-        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS';
         session = { user: u, pass: p, role: res.role };
         localStorage.setItem('scck_session', JSON.stringify({ user: u, pass: p, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
         document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
@@ -1391,7 +1410,7 @@
         setupRoleUI(res.role);
         updateOfflineSyncUI();
       },
-      (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; btn.disabled = false; err.innerText = "Error: " + e.message; }
+      (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; err.innerText = "Error: " + e.message; }
     );
   }
   
@@ -1419,19 +1438,13 @@
   function syncOfflineScans() {
     let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
     if (offlineScans.length === 0) return;
-    
-    const btn = document.getElementById('btn-sync-offline');
-    const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNCING...';
-    btn.disabled = true;
-
+    Swal.fire({ title: 'SYNCING DATA...', html: `Uploading ${offlineScans.length} scans...`, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     apiCall('bulkMarkAttendance', { scans: offlineScans, user: session.user, pass: session.pass }, (res) => {
        localStorage.removeItem('scck_offline_scans');
        updateOfflineSyncUI();
-       Swal.fire({toast:true, position:'top-end', icon:'success', title:'Synced successfully!', showConfirmButton:false, timer:2000});
-       btn.disabled = false;
+       Swal.fire('Synced!', `Successfully uploaded offline records.`, 'success');
        if(document.getElementById('panel-dashboard').classList.contains('active-panel')) loadDashboardData();
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
+    });
   }
 
   function showCameraError(t, d) { document.getElementById('qr-video').style.display='none'; document.getElementById('camera-error').style.display='block'; document.getElementById('camera-error-title').innerText=t; document.getElementById('camera-error-detail').innerHTML=d; document.getElementById('msg').innerText='CAMERA FAILED'; document.getElementById('btn-start-cam').style.display='block'; document.getElementById('btn-stop-cam').style.display='none'; document.getElementById('btn-torch').style.display='none'; }
@@ -1500,7 +1513,7 @@
       QrScanner.scanImage(f, { returnDetailedScanResult: true, alsoTryWithoutScanRegion: true })
       .then(r => onScanSuccess(r.data))
       .catch(e => { 
-          Swal.fire({toast:true, position:'top', icon:'error', title:'No QR code found.', showConfirmButton:false, timer:2000}); 
+          Swal.fire('Scan Failed', 'No valid QR code found. Ensure the image is clear.', 'error'); 
           m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; 
           m.style.background='rgba(232, 240, 254, 0.9)'; 
           m.style.color='var(--army-primary)'; 
@@ -1541,8 +1554,11 @@
 
     m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); }
 
+  // 🔥 FIX #1: CADET DATA LOADER 🔥
   function loadCadetData() {
     if (session.role !== 'Cadet') return;
+    
+    // Clear old data
     document.getElementById('cadet-stat-score').innerText = '...';
     document.getElementById('cadet-stat-present').innerText = '...';
     document.getElementById('cadet-stat-absent').innerText = '...';
@@ -1557,6 +1573,7 @@
         document.getElementById('cadet-stat-present').innerText = res.presentDays;
         document.getElementById('cadet-stat-absent').innerText = res.absentDays;
 
+        // Attendance Table
         let attHtml = '';
         res.attendance.forEach(r => {
             let bc = r.status === 'Present' ? 'badge-present' : (r.status === 'Late' ? 'badge-late' : (r.status === 'Very Late' ? 'badge-verylate' : 'badge-absent'));
@@ -1564,6 +1581,7 @@
         });
         document.getElementById('cadet-attendance-table').innerHTML = attHtml || '<tr><td colspan="4" style="text-align:center;">No records.</td></tr>';
 
+        // Discipline Table
         let discHtml = '';
         res.discipline.forEach(r => {
             let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)';
@@ -1572,6 +1590,7 @@
         });
         document.getElementById('cadet-discipline-table').innerHTML = discHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
 
+        // Leaves Table
         let lvHtml = '';
         res.leaves.forEach(lv => {
             let bc = lv.status === 'Approved' ? 'badge-present' : (lv.status === 'Rejected' ? 'badge-absent' : 'badge-late');
@@ -1581,30 +1600,31 @@
     });
   }
 
-  // 🔥 HCI FIX: Inline Loading for Buttons 🔥
+  // 🔥 FIX #1: CADET LEAVE SUBMISSION 🔥
   function submitCadetLeave() {
     const f = document.getElementById('cadet-lv-from').value;
     const t = document.getElementById('cadet-lv-to').value;
     const x = document.getElementById('cadet-lv-reason').value.trim();
-    if(!f || !t || !x) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill all fields.', showConfirmButton:false, timer:2000}); 
+    if(!f || !t || !x) return Swal.fire('Notice', 'Fill all fields.', 'warning'); 
     
-    const btn = document.getElementById('btn-submit-cadet-leave');
-    const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SUBMITTING...';
-    btn.disabled = true;
-
+    Swal.fire({ title: 'TRANSMITTING...', didOpen: () => Swal.showLoading() }); 
+    // We send session.user because for Cadets, their user ID is their Student ID
     apiCall('submitLeaveRequest', { studentId: session.user, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { 
-        Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
-        document.getElementById('cadet-lv-from').value = ''; document.getElementById('cadet-lv-to').value = ''; document.getElementById('cadet-lv-reason').value = '';
-        btn.innerHTML = oldHtml; btn.disabled = false;
+        Swal.fire('Success', res.message, 'success'); 
+        document.getElementById('cadet-lv-from').value = '';
+        document.getElementById('cadet-lv-to').value = '';
+        document.getElementById('cadet-lv-reason').value = '';
         loadCadetData(); 
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
+    }); 
   }
 
+  // 🔥 FIX #3: BATCH DISCIPLINE MODAL 🔥
   function openBulkDisciplineModal() {
+      // First populate the dropdown with company names directly from the UI table to avoid an extra server call
       const table = document.getElementById('masterlist-table');
       const rows = table.getElementsByTagName('tr');
       const companies = new Set();
+      
       for(let i=1; i<rows.length; i++) {
           let cols = rows[i].getElementsByTagName('td');
           if(cols.length > 2) {
@@ -1612,63 +1632,97 @@
               if(coy && coy !== 'N/A' && coy !== '---') companies.add(coy);
           }
       }
+      
       let dropdown = document.getElementById('bulk-target-group');
       dropdown.innerHTML = '<option value="ALL">Entire Unit (All Cadets)</option>';
-      companies.forEach(c => { dropdown.innerHTML += `<option value="${c}">${c} Company</option>`; });
-      document.getElementById('bulk-custom-company').value = ""; document.getElementById('bulk-action-select').value = "";
-      const modal = document.getElementById('bulk-discipline-modal'); modal.style.display = 'flex'; setTimeout(() => modal.classList.add('show'), 10);
+      companies.forEach(c => {
+          dropdown.innerHTML += `<option value="${c}">${c} Company</option>`;
+      });
+
+      document.getElementById('bulk-custom-company').value = "";
+      document.getElementById('bulk-action-select').value = "";
+
+      const modal = document.getElementById('bulk-discipline-modal');
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('show'), 10);
   }
 
   function closeBulkDisciplineModal(force) {
     const modal = document.getElementById('bulk-discipline-modal');
-    if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); }
+    if (force === true || force.target === modal) {
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
+    }
   }
 
   function submitBulkDiscipline() {
     let target = document.getElementById('bulk-target-group').value;
     let customTarget = document.getElementById('bulk-custom-company').value.trim();
-    if(customTarget) target = customTarget;
+    if(customTarget) target = customTarget; // Custom overrides dropdown
     
     const val = document.getElementById('bulk-action-select').value;
-    if (!val) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Select a batch action.', showConfirmButton:false, timer:2000}); 
+    if (!val) return Swal.fire('Notice', 'Please select a batch action from the dropdown.', 'warning'); 
     
     const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
 
-    const btn = document.getElementById('btn-submit-bulk');
-    const cancelBtn = document.getElementById('btn-cancel-bulk');
-    
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING BATCH...';
-    btn.disabled = true; cancelBtn.disabled = true;
-
-    apiCall('bulkAddDiscipline', { targetCompany: target, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => {
-        Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:3000});
-        btn.innerHTML = '<i class="fas fa-gavel"></i> ISSUE TO ALL'; btn.disabled = false; cancelBtn.disabled = false;
-        closeBulkDisciplineModal(true); loadDashboardData();
-    }, (err) => { btn.innerHTML = '<i class="fas fa-gavel"></i> ISSUE TO ALL'; btn.disabled = false; cancelBtn.disabled = false; });
+    Swal.fire({
+      title: 'CONFIRM BATCH ACTION?',
+      html: `You are about to issue a <b>${type} (${points > 0 ? '+'+points : points} pts)</b> to:<br><br><strong style="color:var(--army-primary); font-size:20px;">${target === 'ALL' ? 'THE ENTIRE UNIT' : target.toUpperCase() + ' COMPANY'}</strong><br><br>Reason: ${reason}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d32f2f',
+      confirmButtonText: 'CONFIRM BATCH ISSUE'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({ title: 'PROCESSING BATCH...', html: 'Updating unit rosters...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        apiCall('bulkAddDiscipline', { targetCompany: target, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => {
+            Swal.fire('Success', res.message, 'success');
+            closeBulkDisciplineModal(true);
+            loadDashboardData();
+        });
+      }
+    });
   }
 
+  // ALL OTHER FUNCTIONS REMAIN UNCHANGED
   function loadDashboardData() { 
     if(session.role!=='Admin'&&session.role!=='Super Admin') return; 
     apiCall('getAdminDashboardData', { user: session.user, pass: session.pass }, (res) => { 
+      
       if (res.alerts) {
-         let bl = document.getElementById('badge-leaves'), bp = document.getElementById('badge-posts'), blg = document.getElementById('badge-legacy');
+         let bl = document.getElementById('badge-leaves');
+         let bp = document.getElementById('badge-posts');
+         let blg = document.getElementById('badge-legacy');
          if (session.role === 'Super Admin') {
              if(bl) { bl.innerText = res.alerts.leaves; bl.style.display = res.alerts.leaves > 0 ? 'inline-block' : 'none'; }
              if(bp) { bp.innerText = res.alerts.posts; bp.style.display = res.alerts.posts > 0 ? 'inline-block' : 'none'; }
              if(blg) { blg.innerText = res.alerts.legacy; blg.style.display = res.alerts.legacy > 0 ? 'inline-block' : 'none'; }
          } else {
-             if(bl) bl.style.display = 'none'; if(bp) bp.style.display = 'none'; if(blg) blg.style.display = 'none';
+             if(bl) bl.style.display = 'none';
+             if(bp) bp.style.display = 'none';
+             if(blg) blg.style.display = 'none';
          }
       }
+
       document.getElementById('admin-active-day').innerText=res.activeDay; const t=res.stats.total||1, p=res.stats.present, l=res.stats.late, a=res.stats.absent; document.getElementById('stat-total').innerText=res.stats.total; document.getElementById('stat-present').innerText=p; document.getElementById('stat-present-pct').innerText=Math.round((p/t)*100)+'%'; document.getElementById('stat-late').innerText=l; document.getElementById('stat-late-pct').innerText=Math.round((l/t)*100)+'%'; document.getElementById('stat-absent').innerText=a; document.getElementById('stat-absent-pct').innerText=Math.round((a/t)*100)+'%'; renderDonut(p,l,a); if(res.weeklyData) renderWeekly(res.weeklyData); let ah=''; res.attendance.forEach(r => { let bc=r.status==='Present'?'badge-present':(r.status==='Late'?'badge-late':(r.status==='Very Late'?'badge-verylate':'badge-absent')); let tc=(r.status==='Late'||r.status==='Very Late')?'var(--status-red)':'var(--status-green)'; ah+=`<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.course}</td><td style="color:${tc}; font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; }); document.getElementById('attendance-table').innerHTML=ah||'<tr><td colspan="6" style="text-align:center;">No records.</td></tr>'; let mh=''; res.masterlist.forEach(r => { let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); mh+=`<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-info" onclick="showQR('${r.id}','${r.name}')" title="Show QR"><i class="fas fa-qrcode"></i></button> <button class="btn-icon btn-warning" onclick="editStudent('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button> <button class="btn-icon btn-danger" onclick="deleteStudentPrompt('${r.id}')"><i class="fas fa-trash"></i></button></td></tr>`; }); document.getElementById('masterlist-table').innerHTML=mh||'<tr><td colspan="6" style="text-align:center;">No cadets found.</td></tr>'; 
+      
       let ach=''; for(let i=1; i<res.accounts.length; i++) { 
         let r=res.accounts[i]; 
         let btn=r[3]==='Active'?`<button class="btn-danger" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${r[0]}','Disabled')">REVOKE</button>`:`<button class="btn-success" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${r[0]}','Active')">GRANT</button>`; 
         let sb=r[3]==='Active'?'<span class="badge badge-present">ACTIVE</span>':'<span class="badge badge-absent">REVOKED</span>'; 
+        
         let legBtn = '';
-        if (r[2] === "Scanner" || r[2] === "Cadet") { legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">NOT APPLICABLE</span>`; } 
-        else if (r[2] === "Super Admin") { legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">BYPASS GRANTED</span>`; } 
-        else { let legAccess = r[4] || "Denied"; legBtn = legAccess === "Granted" ? `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Granted')">ACCESS: ON</button>` : `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Denied')">ACCESS: OFF</button>`; }
+        if (r[2] === "Scanner" || r[2] === "Cadet") {
+            legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">NOT APPLICABLE</span>`;
+        } else if (r[2] === "Super Admin") {
+            legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">BYPASS GRANTED</span>`;
+        } else {
+            let legAccess = r[4] || "Denied";
+            legBtn = legAccess === "Granted" ? 
+                `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Granted')">ACCESS: ON</button>` : 
+                `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Denied')">ACCESS: OFF</button>`;
+        }
+
         ach+=`<tr><td>${r[0]}</td><td><b>${r[2]}</b></td><td>${legBtn}</td><td>${sb}</td><td>${btn}</td></tr>`; 
       } 
       document.getElementById('accounts-table').innerHTML=ach||'<tr><td colspan="5" style="text-align:center;">No accounts.</td></tr>'; 
@@ -1681,92 +1735,95 @@
   
   function submitDiscipline() { 
     const val = document.getElementById('disc-action-select').value; 
-    if (!val) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Select an action.', showConfirmButton:false, timer:2000}); 
+    if (!val) return Swal.fire('Notice', 'Please select an action from the dropdown.', 'warning'); 
     
     const btn = document.getElementById('btn-submit-discipline');
-    const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECORDING...';
     btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECORDING...';
+    btn.style.opacity = '0.7';
+    btn.style.cursor = 'not-allowed';
 
     const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
+    Swal.fire({ title: 'RECORDING...', didOpen: () => Swal.showLoading() }); 
     
     apiCall('addDiscipline', { studentId: currentDiscStudentId, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => { 
-        Swal.fire({toast:true, position:'top-end', icon:'success', title:'Discipline logged.', showConfirmButton:false, timer:2000}); 
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-gavel"></i> RECORD ACTION';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+
+        Swal.fire('Success', 'Discipline action recorded.', 'success'); 
         document.getElementById('disc-action-select').value = ""; 
-        btn.innerHTML = oldHtml; btn.disabled = false;
-        loadDashboardData(); loadDisciplineHistory(currentDiscStudentId); 
+        
+        loadDashboardData(); 
+        loadDisciplineHistory(currentDiscStudentId); 
         let currScore = parseInt(document.getElementById('disc-cadet-score').innerText); 
         document.getElementById('disc-cadet-score').innerText = currScore + points; 
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
+    }); 
   }
 
   function renderDonut(p,l,a) { const ctx=document.getElementById('chart-donut').getContext('2d'); if(donutChart) donutChart.destroy(); donutChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Present','Late','Absent'], datasets: [{ data: [p,l,a], backgroundColor: ['#388e3c','#f57f17','#d32f2f'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: isDarkMode?'#e0e0e0':'#2c3539', font: { family: 'Inter', size: 13, weight: '600' } } } } } }); }
   function renderWeekly(d) { const ctx=document.getElementById('chart-weekly').getContext('2d'), c=isDarkMode?'#e0e0e0':'#2c3539', gc=isDarkMode?'#3a4230':'#d4d8cc'; if(weeklyChart) weeklyChart.destroy(); weeklyChart = new Chart(ctx, { type: 'bar', data: { labels: d.labels, datasets: [{ label: 'Present', data: d.present, backgroundColor: '#388e3c' }, { label: 'Late', data: d.late, backgroundColor: '#f57f17' }, { label: 'Absent', data: d.absent, backgroundColor: '#d32f2f' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: c, font: { family: 'Inter', size: 12, weight: '600' } } } }, scales: { x: { stacked: true, ticks: { color: c }, grid: { color: gc } }, y: { stacked: true, ticks: { color: c }, grid: { color: gc } } } } }); }
 
   function filterMasterlist() { const q=document.getElementById('search-masterlist').value.toLowerCase(), r=document.getElementById('masterlist-table').getElementsByTagName('tr'); for(let x of r) x.style.display=x.innerText.toLowerCase().includes(q)?'':'none'; }
-  
-  function createAcc() { 
-    const u=document.getElementById('new-user').value.trim(), p=document.getElementById('new-pass').value, r=document.getElementById('new-role').value; 
-    if(!u||!p) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill all fields.', showConfirmButton:false, timer:2000}); 
-    
-    const btn = document.getElementById('btn-create-acc');
-    const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREATING...';
-    btn.disabled = true;
-
-    apiCall('createAccount', { newUser: u, newPass: p, role: r, user: session.user, pass: session.pass }, (res) => { 
-      Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-      document.getElementById('new-user').value=''; document.getElementById('new-pass').value=''; 
-      btn.innerHTML = oldHtml; btn.disabled = false;
-      loadDashboardData(); 
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
-
+  function createAcc() { const u=document.getElementById('new-user').value.trim(), p=document.getElementById('new-pass').value, r=document.getElementById('new-role').value; if(!u||!p) return Swal.fire('Notice', 'Fill fields.', 'warning'); Swal.fire({ title: 'CREATING...', didOpen: () => Swal.showLoading() }); apiCall('createAccount', { newUser: u, newPass: p, role: r, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('new-user').value=''; document.getElementById('new-pass').value=''; loadDashboardData(); }); }
   function changeAccStatus(u, s) { Swal.fire({ title: `Change ${u} to ${s}?`, showCancelButton: true }).then(r => { if(r.isConfirmed) apiCall('updateAccountStatus', { targetUser: u, newStatus: s, user: session.user, pass: session.pass }, () => loadDashboardData()); }); }
   
   window.toggleLegacyAccess = function(userTarget, currentStatus) {
-      const btnId = 'toggle-btn-' + userTarget; const btn = document.getElementById(btnId);
+      const btnId = 'toggle-btn-' + userTarget;
+      const btn = document.getElementById(btnId);
+      
       let newStatus = currentStatus === 'Granted' ? 'Denied' : 'Granted';
+      
       if (btn) {
-          if(newStatus === 'Granted') { btn.outerHTML = `<button id="${btnId}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${userTarget}', 'Granted')">ACCESS: ON</button>`; } 
-          else { btn.outerHTML = `<button id="${btnId}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${userTarget}', 'Denied')">ACCESS: OFF</button>`; }
+          if(newStatus === 'Granted') {
+              btn.outerHTML = `<button id="${btnId}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${userTarget}', 'Granted')">ACCESS: ON</button>`;
+          } else {
+              btn.outerHTML = `<button id="${btnId}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${userTarget}', 'Denied')">ACCESS: OFF</button>`;
+          }
       }
+
       Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Updating clearance...', showConfirmButton: false, timer: 1500 });
-      apiCall('toggleLegacyAccess', { targetUser: userTarget, user: session.user, pass: session.pass }, (res) => { Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Clearance Updated!', showConfirmButton: false, timer: 2000 }); }, (err) => { loadDashboardData(); });
+
+      apiCall('toggleLegacyAccess', { targetUser: userTarget, user: session.user, pass: session.pass }, (res) => {
+          Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Clearance Updated!', showConfirmButton: false, timer: 2000 });
+      }, (err) => {
+          loadDashboardData(); 
+      });
   }
 
   function showQR(id, name) { 
-      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'); let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
-      Swal.fire({ title: name, html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${id}</p><div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;"><div id="swal-qr"></div><img src="${sysLogo}" style="position:absolute; width:45px; height:45px; background:white; padding:4px; border-radius:8px; z-index:10;"></div>`, confirmButtonColor: 'var(--army-primary)', confirmButtonText: 'CLOSE', didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821', correctLevel: QRCode.CorrectLevel.H }) }); 
+      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}');
+      let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+      
+      Swal.fire({ 
+          title: name, 
+          html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${id}</p>
+                 <div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;">
+                    <div id="swal-qr"></div>
+                    <img src="${sysLogo}" style="position:absolute; width:45px; height:45px; background:white; padding:4px; border-radius:8px; z-index:10;">
+                 </div>`, 
+          confirmButtonColor: 'var(--army-primary)', 
+          confirmButtonText: 'CLOSE', 
+          didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821', correctLevel: QRCode.CorrectLevel.H }) 
+      }); 
   }
   
   function editStudent(id, coy, con) { Swal.fire({ title: 'UPDATE DOSSIER', html: `<div style="text-align:left;"><label>Company</label><input id="swal-company" class="swal2-input" value="${coy}"></div><div style="text-align:left;"><label>Contact</label><input id="swal-contact" class="swal2-input" value="${con}"></div>`, showCancelButton: true, confirmButtonText: 'SAVE', preConfirm: () => [ document.getElementById('swal-company').value, document.getElementById('swal-contact').value ] }).then(r => { if(r.isConfirmed) { Swal.fire({ title: 'UPDATING...', didOpen: () => Swal.showLoading() }); apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, pass: session.pass }, () => { Swal.fire('Saved!', 'Dossier updated.', 'success'); loadDashboardData(); }); } }); }
   function deleteStudentPrompt(id) { Swal.fire({ title: 'CONFIRM DISCHARGE?', text: 'Type DELETE', input: 'text', showCancelButton: true, confirmButtonColor: 'var(--status-red)', confirmButtonText: 'DISCHARGE', inputValidator: v => v!=='DELETE'?'Type DELETE':null }).then(r => { if(r.isConfirmed) { Swal.fire({ title: 'REMOVING...', didOpen: () => Swal.showLoading() }); apiCall('deleteStudentData', { id: id, user: session.user, pass: session.pass }, () => { Swal.fire('Removed!', 'Cadet discharged.', 'success'); loadDashboardData(); }); } }); }
   function loadLeavesData() { document.getElementById('leaves-table').innerHTML='<tr><td colspan="6" style="text-align:center;">Loading...</td></tr>'; apiCall('getLeaveRequests', { user: session.user, pass: session.pass }, (res) => { let p=0, a=0, r=0, h=''; res.leaves.forEach(lv => { if(lv.status==='Pending') p++; else if(lv.status==='Approved') a++; else if(lv.status==='Rejected') r++; let ab='-'; if(lv.status==='Pending'&&session.role==='Super Admin') ab=`<button class="btn-success" style="padding:6px 10px; font-size:11px;" onclick="updateLeave('${lv.id}','Approved')">APPROVE</button> <button class="btn-danger" style="padding:6px 10px; font-size:11px;" onclick="updateLeave('${lv.id}','Rejected')">DENY</button>`; let bc=lv.status==='Approved'?'badge-approved':(lv.status==='Rejected'?'badge-rejected':'badge-pending'); h+=`<tr><td>${lv.from?new Date(lv.from).toLocaleDateString():''} – ${lv.to?new Date(lv.to).toLocaleDateString():''}</td><td><b>${lv.studentId}</b></td><td>${lv.name}</td><td>${lv.reason}</td><td><span class="badge ${bc}">${lv.status}</span></td><td>${ab}</td></tr>`; }); document.getElementById('leaves-table').innerHTML=h||'<tr><td colspan="6" style="text-align:center;">No requests.</td></tr>'; document.getElementById('lv-stat-pending').innerText=p; document.getElementById('lv-stat-approved').innerText=a; document.getElementById('lv-stat-rejected').innerText=r; }); }
-  
-  function submitLeave() { 
-    const id=document.getElementById('lv-id').value.trim(), f=document.getElementById('lv-from').value, t=document.getElementById('lv-to').value, x=document.getElementById('lv-reason').value.trim(); 
-    if(!id||!f||!t||!x) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill all fields.', showConfirmButton:false, timer:2000}); 
-    
-    const btn = document.getElementById('btn-submit-leave');
-    const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SUBMITTING...';
-    btn.disabled = true;
-
-    apiCall('submitLeaveRequest', { studentId: id, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { 
-      Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-      ['id','from','to','reason'].forEach(k => document.getElementById(`lv-${k}`).value=''); 
-      btn.innerHTML = oldHtml; btn.disabled = false;
-      loadLeavesData(); 
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
+  function submitLeave() { const id=document.getElementById('lv-id').value.trim(), f=document.getElementById('lv-from').value, t=document.getElementById('lv-to').value, x=document.getElementById('lv-reason').value.trim(); if(!id||!f||!t||!x) return Swal.fire('Notice', 'Fill fields.', 'warning'); Swal.fire({ title: 'TRANSMITTING...', didOpen: () => Swal.showLoading() }); apiCall('submitLeaveRequest', { studentId: id, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); ['id','from','to','reason'].forEach(k => document.getElementById(`lv-${k}`).value=''); loadLeavesData(); }); }
   
   function updateLeave(id, s) { 
       Swal.fire({ title: `Set status to ${s}?`, showCancelButton: true }).then(r => { 
           if(r.isConfirmed) { 
               if(session.role === 'Super Admin') {
                   let bl = document.getElementById('badge-leaves');
-                  if(bl && bl.style.display !== 'none') { let count = parseInt(bl.innerText || 0) - 1; bl.innerText = count; if(count <= 0) bl.style.display = 'none'; }
+                  if(bl && bl.style.display !== 'none') {
+                      let count = parseInt(bl.innerText || 0) - 1;
+                      bl.innerText = count;
+                      if(count <= 0) bl.style.display = 'none';
+                  }
               }
               Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Processing...', showConfirmButton: false, timer: 1500 });
               apiCall('updateLeaveStatus', { leaveId: id, status: s, user: session.user, pass: session.pass }, () => loadLeavesData()); 
@@ -1781,85 +1838,47 @@
       c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; 
       const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); 
       if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; 
-      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'); let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
-      c.innerHTML=f.map(s => { let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; }).join(''); 
+      
+      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}');
+      let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+
+      c.innerHTML=f.map(s => { 
+          let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; 
+          return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; 
+      }).join(''); 
+      
       setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H })), 300); 
   }
   
   function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire('Notice', 'Generate preview before printing.', 'warning'); window.print(); }
   function loadAuditLogs() { document.getElementById('audit-table').innerHTML='<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>'; document.getElementById('audit-tamper-warning').style.display='none'; apiCall('getAuditLogs', { user: session.user, pass: session.pass }, (res) => { if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${l.user}</b></td><td><span class="badge badge-action">${l.action}</span></td><td style="color:var(--text-muted); font-size:13px;">${l.details}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }); }
+  
   function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${c.name} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
   
   function submitLegacyClass() { 
       const n=document.getElementById('leg-class-name').value.trim(), y=document.getElementById('leg-class-year').value.trim(), l=croppedData['leg-class-logo']; 
-      if(!n||!y||!l) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fields required.', showConfirmButton:false, timer:2000}); 
-      
-      const btn = document.getElementById('btn-submit-class');
-      const oldHtml = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...';
-      btn.disabled = true;
-
+      if(!n||!y||!l) return Swal.fire('Notice', 'Fields required.', 'warning'); 
+      Swal.fire({ title: 'PROCESSING...', didOpen: () => Swal.showLoading() }); 
       apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false;
-          loadLegacyAdminData(); 
-      }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
+          Swal.fire('Success', res.message, 'success'); 
+          document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; loadLegacyAdminData(); 
+      }); 
   }
   
   function submitLegacyOfficer() { 
       const c=document.getElementById('leg-off-class').value, r=document.getElementById('leg-off-rank').value.trim(), n=document.getElementById('leg-off-name').value.trim(), d=document.getElementById('leg-off-desig').value.trim(), course=document.getElementById('leg-off-course').value.trim(), bio=document.getElementById('leg-off-bio').value.trim(), i=croppedData['leg-off-photo']; 
-      if(!c||!r||!n||!d||!i) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill fields and upload photo.', showConfirmButton:false, timer:2000}); 
-      
-      const btn = document.getElementById('btn-submit-officer');
-      const oldHtml = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...';
-      btn.disabled = true;
-
+      if(!c||!r||!n||!d||!i) return Swal.fire('Notice', 'Please fill all required fields and upload an image.', 'warning'); 
+      Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); 
       apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false;
-          loadLegacyAdminData(); 
-      }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
+          Swal.fire('Success', res.message, 'success'); 
+          document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; loadLegacyAdminData(); 
+      }); 
   }
 
   function loadUserProfile() { apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { document.getElementById('prof-name').value=res.name||""; document.getElementById('prof-rank').value=res.rank||""; document.getElementById('prof-age').value=res.age||""; document.getElementById('prof-course').value=res.course||""; document.getElementById('prof-position').value=res.position||""; document.getElementById('prof-contact').value=res.contact||""; updateSidebarProfile(res); }); }
-  
-  function saveUserProfile() { 
-      const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; 
-      if(croppedData['prof-image-file']) d.imageData=croppedData['prof-image-file']; 
-      
-      const btn = document.getElementById('btn-save-profile');
-      const oldHtml = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPDATING...'; btn.disabled = true;
-
-      apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('prof-image-file').value=""; delete croppedData['prof-image-file']; document.getElementById('prof-image-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false;
-          loadUserProfile(); 
-      }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
-  
+  function saveUserProfile() { const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; if(croppedData['prof-image-file']) d.imageData=croppedData['prof-image-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('prof-image-file').value=""; delete croppedData['prof-image-file']; document.getElementById('prof-image-status').innerHTML='Select an image...'; loadUserProfile(); }); }
   function updateSidebarProfile(d) { document.getElementById('sidebar-profile-name').innerText=(d.name||session.user||"PERSONNEL").toUpperCase(); document.getElementById('sidebar-profile-role').innerText=(d.rank?d.rank+" - ":"")+(d.position||session.role||"SYSTEM ACTIVE"); if(d.image) { document.getElementById('sidebar-profile-img').src=d.image; document.getElementById('sidebar-profile-img').style.display='block'; document.getElementById('sidebar-icon').style.display='none'; } else { document.getElementById('sidebar-profile-img').style.display='none'; document.getElementById('sidebar-icon').style.display='block'; } }
-  
-  function saveSystemSettings() { 
-      let p={ user: session.user, pass: session.pass, clearBg: false }; 
-      if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; 
-      
-      const btn = document.getElementById('btn-save-settings');
-      const oldHtml = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; btn.disabled = true;
-
-      apiCall('saveSettings', p, (res) => { 
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('set-logo-file').value=""; delete croppedData['set-logo-file']; document.getElementById('set-logo-status').innerHTML='Select an image...'; document.getElementById('set-bg-file').value=""; delete croppedData['set-bg-file']; document.getElementById('set-bg-status').innerHTML='Select an image...'; document.getElementById('set-nav-logo-file').value=""; delete croppedData['set-nav-logo-file']; document.getElementById('set-nav-logo-status').innerHTML='Select an image...'; 
-          apiCall('getSettings', {}, (n) => { if(n.logoUrl) { document.getElementById('system-logo-login').src=n.logoUrl; document.getElementById('system-logo-login').style.display='block'; } if(n.bgUrl) document.getElementById('view-login').style.backgroundImage=`url('${n.bgUrl}')`; }); 
-          btn.innerHTML = oldHtml; btn.disabled = false;
-      }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
-  
+  function saveSystemSettings() { let p={ user: session.user, pass: session.pass, clearBg: false }; if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; Swal.fire({ title: 'UPLOADING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', p, (res) => { Swal.fire('Success', res.message, 'success'); document.getElementById('set-logo-file').value=""; delete croppedData['set-logo-file']; document.getElementById('set-logo-status').innerHTML='Select an image...'; document.getElementById('set-bg-file').value=""; delete croppedData['set-bg-file']; document.getElementById('set-bg-status').innerHTML='Select an image...'; document.getElementById('set-nav-logo-file').value=""; delete croppedData['set-nav-logo-file']; document.getElementById('set-nav-logo-status').innerHTML='Select an image...'; apiCall('getSettings', {}, (n) => { if(n.logoUrl) { document.getElementById('system-logo-login').src=n.logoUrl; document.getElementById('system-logo-login').style.display='block'; } if(n.bgUrl) document.getElementById('view-login').style.backgroundImage=`url('${n.bgUrl}')`; }); }); }
   function resetBackground() { Swal.fire({ title: 'RESETTING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', { clearBg: true, user: session.user, pass: session.pass }, (res) => { Swal.fire('Success', 'Background removed.', 'success'); document.getElementById('view-login').style.backgroundImage=`radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%)`; }); }
 
   try { if (localStorage.getItem('sccks_dark') === '1') applyTheme(true); } catch(e) {}
