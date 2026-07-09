@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,10 +20,11 @@
       --bg: #e8ece1; --card-bg: #ffffff; --text: #2c3539; --text-muted: #6b705c; 
       --border: #d4d8cc; --hover-bg: #f2f5ed; --table-head: #dce0d5; 
       --status-green: #388e3c; --status-red: #d32f2f; --status-yellow: #f57f17; 
+      --status-gray: #b0bec5;
     }
     body.dark-mode { 
       --bg: #12140e; --card-bg: #1e2418; --text: #e0e0e0; --text-muted: #9aa08f; 
-      --border: #3a4230; --hover-bg: #262e1e; --table-head: #232a1b; 
+      --border: #3a4230; --hover-bg: #262e1e; --table-head: #232a1b; --status-gray: #455a64;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
@@ -54,7 +54,7 @@
     .action-bar { display: flex; gap: 15px; flex-wrap: wrap; background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); align-items: flex-end; margin-bottom: 25px; }
     .action-bar-header { width: 100%; margin-bottom: 5px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
     .action-bar-header h3 { color: var(--army-primary); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px; }
-    .action-bar-header p { color: var(--text-muted); font-size: 13px; margin-top: 4px; font-family: 'Inter', sans-serif; text-transform: none; font-weight: normal; letter-spacing: normal;}
+    .action-bar-header p { color: var(--text-muted); font-size: 13px; margin-top: 4px; font-family: 'Inter', sans-serif; text-transform: none; font-weight: normal;}
 
     button { background: var(--army-primary); color: white; border: none; height: 46px; padding: 0 20px; border-radius: 6px; font-size: 15px; cursor: pointer; transition: all 0.2s; position: relative; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 600; white-space: nowrap; } 
     button:hover:not(:disabled) { background: var(--army-light); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); } 
@@ -77,9 +77,8 @@
     
     .sidebar-menu { list-style: none; padding: 15px; flex: 1; overflow-y: auto; } 
     .sidebar-menu button { background: transparent; color: #b0bec5; text-align: left; padding: 14px 15px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; font-size: 15px; margin-bottom: 4px; border-radius: 6px; height: auto; width: 100%; } 
-    .sidebar-menu button:hover { background: rgba(255,255,255,0.05); color: white; transform: none; box-shadow: none; } 
+    .sidebar-menu button:hover { background: rgba(255,255,255,0.05); color: white; } 
     .sidebar-menu button.active { background: var(--army-primary); color: var(--army-gold); border-left: 4px solid var(--army-gold); border-radius: 0 6px 6px 0; }
-    
     .nav-badge { background: #d32f2f; color: white; padding: 2px 6px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-left: auto; box-shadow: 0 0 5px rgba(211,47,47,0.5); font-family: 'Inter', sans-serif;}
 
     .main-content { flex: 1; background: var(--bg); overflow-y: auto; padding: 30px; transition: 0.3s; } 
@@ -90,7 +89,6 @@
     .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     
     .mobile-menu-btn { display: none; background: transparent; color: var(--army-primary); font-size: 24px; border: none; cursor: pointer; margin-right: 15px; width: auto; height: auto; padding: 0; box-shadow: none; } 
-    .mobile-menu-btn:hover { background: transparent; box-shadow: none; transform: none; color: var(--army-gold); }
     
     .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; } 
     .stat-card { background: var(--card-bg); padding: 25px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border-radius: 8px; border-bottom: 4px solid var(--army-primary); display: flex; align-items: center; gap: 15px; border-top: 1px solid var(--border); border-left: 1px solid var(--border); border-right: 1px solid var(--border); transition: transform 0.2s; } 
@@ -100,6 +98,17 @@
     .stat-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; } 
     .stat-sub { font-size: 12px; color: var(--text-muted); font-family: 'Inter', sans-serif; font-weight: 500; }
     
+    /* 15-DAY TRACKER CSS */
+    .tracker-container { background: var(--card-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 30px; }
+    .tracker-header { font-size: 15px; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; text-transform: uppercase;}
+    .tracker-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tracker-box { flex: 1; min-width: 45px; height: 50px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; font-weight: bold; font-size: 14px; border: 2px solid transparent; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .tracker-box span { font-size: 10px; font-family: 'Inter', sans-serif; font-weight: 600; opacity: 0.9; margin-top: 2px;}
+    .box-present { background: var(--status-green); }
+    .box-late { background: var(--status-yellow); }
+    .box-absent { background: var(--status-red); }
+    .box-upcoming { background: var(--status-gray); color: rgba(255,255,255,0.7); box-shadow: none; border-color: var(--border); }
+
     .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px; } 
     .chart-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); } 
     .chart-card h4 { font-size: 15px; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px; } 
@@ -161,7 +170,6 @@
 
 <div id="mobile-overlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
 
-<!-- CROPPER MODAL -->
 <div class="cropper-modal" id="cropper-modal" style="display:none; position:fixed; inset:0; background:#000; z-index:99999; align-items:center; justify-content:center;">
   <div class="cropper-content" style="background:var(--card-bg); width:95%; max-width:700px; padding:25px; border-radius:12px; border:3px solid var(--army-gold);">
     <h2 style="color:var(--army-gold); margin-bottom:15px;"><i class="fas fa-crop-alt"></i> ADJUST IMAGE</h2>
@@ -177,23 +185,14 @@
 
 <div class="post-preview-overlay" id="post-preview-modal" onclick="closePostPreview(event)"><div class="post-preview-content" onclick="event.stopPropagation()"><i class="fas fa-times close-preview-btn" onclick="closePostPreview(true)"></i><div id="preview-dynamic-content"></div></div></div>
 
-<!-- BATCH DISCIPLINE MODAL -->
 <div class="post-preview-overlay" id="bulk-discipline-modal" onclick="closeBulkDisciplineModal(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()">
     <i class="fas fa-times close-preview-btn" onclick="closeBulkDisciplineModal(true)"></i>
     <h3 style="color:var(--army-primary); margin-bottom:5px; border-bottom:1px solid var(--border); padding-bottom:10px;"><i class="fas fa-layer-group"></i> BATCH DISCIPLINE</h3>
     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Issue a mass action to a Company.</p>
     
-    <div class="input-group">
-      <label>SELECT TARGET GROUP</label>
-      <select id="bulk-target-group"><option value="ALL">Entire Unit (All Cadets)</option></select>
-    </div>
-    
-    <div class="input-group" style="margin-top: 15px;">
-      <label>OR TYPE EXACT COMPANY NAME</label>
-      <input type="text" id="bulk-custom-company" placeholder="e.g. Alpha, Bravo...">
-    </div>
-    
+    <div class="input-group"><label>SELECT TARGET GROUP</label><select id="bulk-target-group"><option value="ALL">Entire Unit (All Cadets)</option></select></div>
+    <div class="input-group" style="margin-top: 15px;"><label>OR TYPE EXACT COMPANY NAME</label><input type="text" id="bulk-custom-company" placeholder="e.g. Alpha, Bravo..."></div>
     <div class="input-group" style="margin-top: 15px;">
       <label>ISSUE BATCH MERIT / DEMERIT</label>
       <select id="bulk-action-select">
@@ -208,7 +207,6 @@
           </optgroup>
       </select>
     </div>
-
     <div style="display: flex; gap: 10px; margin-top: 25px;">
       <button id="btn-submit-bulk" class="btn-success" onclick="submitBulkDiscipline()" style="flex:2;"><i class="fas fa-gavel"></i> ISSUE TO ALL</button>
       <button class="btn-outline" onclick="closeBulkDisciplineModal(true)" style="flex:1;">CANCEL</button>
@@ -216,7 +214,6 @@
   </div>
 </div>
 
-<!-- INDIVIDUAL DISCIPLINE MODAL -->
 <div class="post-preview-overlay" id="discipline-modal" onclick="closeDisciplineModal(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()">
     <i class="fas fa-times close-preview-btn" onclick="closeDisciplineModal(true)"></i>
@@ -257,19 +254,16 @@
   </div>
 </div>
 
-<!-- EDIT OFFICER MODAL -->
 <div class="post-preview-overlay" id="edit-officer-modal" onclick="closeEditOfficerModal(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()">
     <i class="fas fa-times close-preview-btn" onclick="closeEditOfficerModal(true)"></i>
     <h3 style="color:var(--army-primary); margin-bottom:15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;"><i class="fas fa-user-edit"></i> EDIT LEGACY OFFICER</h3>
     <input type="hidden" id="edit-off-id">
-    
     <div class="input-group"><label>RANK</label><input type="text" id="edit-off-rank"></div>
     <div class="input-group" style="margin-top:10px;"><label>FULL NAME</label><input type="text" id="edit-off-name"></div>
     <div class="input-group" style="margin-top:10px;"><label>DESIGNATION</label><input type="text" id="edit-off-desig"></div>
     <div class="input-group" style="margin-top:10px;"><label>COURSE</label><input type="text" id="edit-off-course"></div>
     <div class="input-group" style="margin-top:10px;"><label>OFFICER BIOGRAPHY</label><textarea id="edit-off-bio" rows="4"></textarea></div>
-    
     <div style="display: flex; gap: 10px; margin-top: 20px;">
       <button class="btn-warning" onclick="requestOfficerEditOTP()" style="flex:2;"><i class="fas fa-key"></i> REQUEST OTP & SAVE</button>
       <button class="btn-outline" onclick="closeEditOfficerModal(true)" style="flex:1;">CANCEL</button>
@@ -277,7 +271,6 @@
   </div>
 </div>
 
-<!-- LOGIN SCREEN -->
 <div id="view-login">
   <div class="login-box">
     <div class="login-logo-container"><img src="" class="app-logo" id="system-logo-login" alt="Logo"></div>
@@ -288,22 +281,21 @@
       <label>IDENTIFICATION</label>
       <input type="text" id="login-user" placeholder="Enter Username (Cadets: ID)" onkeydown="if(event.key==='Enter')performLogin()">
     </div>
-    
     <div class="input-group" style="margin-bottom: 25px;">
       <label>PASSPHRASE</label>
       <div style="position: relative;">
         <input type="password" id="login-pass" placeholder="Enter Password" onkeydown="if(event.key==='Enter')performLogin()" style="width: 100%; padding-right: 45px;">
-        <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility('login-pass', 'toggle-pass-icon')" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;" onmouseover="this.style.color='var(--army-gold)'" onmouseout="this.style.color='var(--text-muted)'"></i>
+        <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility('login-pass', 'toggle-pass-icon')" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;"></i>
       </div>
     </div>
     
-    <!-- 🔥 FIX: Added 'width: 100%;' to force the button to stretch across the form -->
     <button onclick="performLogin()" id="btn-login" style="width: 100%;"><i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS</button>
     
-    <div id="login-err" style="color: var(--status-red); margin-top: 15px; font-size: 14px; font-weight: bold; font-family: 'Inter', sans-serif;"></div>
+    <div id="login-err" style="color: var(--status-red); margin-top: 15px; font-size: 14px; font-weight: bold;"></div>
     <div style="margin-top:20px;"><a href="index.html" style="font-size:12px; color:var(--text-muted); text-decoration:none; font-family:'Inter',sans-serif; border-bottom:1px dashed var(--text-muted);">Return to Public Landing Page</a></div>
   </div>
 </div>
+
 <div id="app-container" class="app-container" style="display:none;">
   <div class="sidebar">
     <div class="sidebar-header">
@@ -312,9 +304,9 @@
       <div id="sidebar-profile-role" style="font-size: 11px; color:#9aa08f;">System Active</div>
     </div>
 
-    <!-- ADMIN MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-admin" style="display:none;">
       <li><button onclick="switchTab('panel-dashboard',this)"><i class="fas fa-chart-pie"></i> <span>DASHBOARD</span></button></li>
+      <li class="admin-only"><button onclick="switchTab('panel-gradebook',this)"><i class="fas fa-graduation-cap"></i> <span>GRADEBOOK</span></button></li>
       <li><button onclick="switchTab('panel-attendance',this)"><i class="fas fa-clipboard-list"></i> <span>ATTENDANCE LOG</span></button></li>
       <li><button onclick="switchTab('panel-masterlist',this)"><i class="fas fa-users"></i> <span>UNIT ROSTER</span></button></li>
       <li><button onclick="switchTab('panel-leaves',this)"><i class="fas fa-calendar-alt"></i> <span>LEAVE REQUESTS</span> <span id="badge-leaves" class="nav-badge" style="display:none;">0</span></button></li>
@@ -327,13 +319,11 @@
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
     </ul>
 
-    <!-- SCANNER MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-scanner" style="display:none;">
       <li><button onclick="switchTab('panel-scanner',this)" class="active"><i class="fas fa-qrcode"></i> <span>QR SCANNER TERMINAL</span></button></li>
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
     </ul>
 
-    <!-- CADET MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-cadet" style="display:none;">
       <li><button onclick="switchTab('panel-cadet-dashboard',this)" class="active"><i class="fas fa-id-badge"></i> <span>MY DOSSIER & LOGS</span></button></li>
       <li><button onclick="switchTab('panel-cadet-leaves',this)"><i class="fas fa-envelope"></i> <span>MY LEAVE REQUESTS</span></button></li>
@@ -348,24 +338,40 @@
 
   <div class="main-content">
 
-    <!-- CADET DOSSIER -->
     <div id="panel-cadet-dashboard" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-id-badge"></i> CADET DOSSIER & LOGS</h2>
         <div class="header-actions"><button id="btn-ref-cadet1" class="btn-outline" onclick="silentRefresh('getCadetData', 'btn-ref-cadet1')"><i class="fas fa-sync"></i> SYNC</button></div>
       </div>
+      
       <div class="dashboard-grid anim-2">
-        <div class="stat-card" style="border-bottom-color:var(--army-gold);"><div class="stat-icon" style="color:var(--army-gold);"><i class="fas fa-balance-scale"></i></div><div><div class="stat-label">Military Bearing Score</div><div class="stat-val" id="cadet-stat-score">100</div></div></div>
-        <div class="stat-card" style="border-bottom-color:var(--status-green);"><div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-check-circle"></i></div><div><div class="stat-label">Days Present</div><div class="stat-val" id="cadet-stat-present">0</div></div></div>
-        <div class="stat-card" style="border-bottom-color:var(--status-red);"><div class="stat-icon" style="color:var(--status-red);"><i class="fas fa-times-circle"></i></div><div><div class="stat-label">Days Absent</div><div class="stat-val" id="cadet-stat-absent">0</div></div></div>
+        <div class="stat-card" style="border-bottom-color:var(--army-gold);">
+          <div class="stat-icon" style="color:var(--army-gold);"><i class="fas fa-star"></i></div>
+          <div><div class="stat-label">Final Grade (Live)</div><div class="stat-val" id="cadet-stat-final">--</div></div>
+        </div>
+        <div class="stat-card" style="border-bottom-color:var(--status-green);">
+          <div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-file-alt"></i></div>
+          <div><div class="stat-label">Exam Average</div><div class="stat-val" id="cadet-stat-exam">--</div><div class="stat-sub">Prelim / Mid / Final</div></div>
+        </div>
+        <div class="stat-card" style="border-bottom-color:var(--status-yellow);">
+          <div class="stat-icon" style="color:var(--status-yellow);"><i class="fas fa-balance-scale"></i></div>
+          <div><div class="stat-label">Aptitude Score</div><div class="stat-val" id="cadet-stat-score">100</div><div class="stat-sub">Merits & Demerits</div></div>
+        </div>
       </div>
-      <div class="charts-row anim-3">
+
+      <div class="tracker-container anim-3">
+        <h4 class="tracker-header"><i class="fas fa-calendar-check"></i> 15-DAY TRAINING PROGRESSION (<span id="cadet-stat-att-pct">0%</span>)</h4>
+        <div class="tracker-grid" id="cadet-15day-tracker">
+          <p style="color:var(--text-muted); font-size:12px; width:100%; text-align:center;">Loading tracker...</p>
+        </div>
+      </div>
+
+      <div class="charts-row anim-4">
         <div class="table-card"><div style="padding: 15px; border-bottom: 1px solid var(--border);"><h4 style="margin:0; font-size:14px; color:var(--text-muted);"><i class="fas fa-gavel"></i> RECENT DISCIPLINE RECORDS</h4></div><div class="table-wrapper" style="max-height: 250px;"><table><thead><tr><th>Date</th><th>Type</th><th>Reason</th><th>Pts</th></tr></thead><tbody id="cadet-discipline-table"></tbody></table></div></div>
         <div class="table-card"><div style="padding: 15px; border-bottom: 1px solid var(--border);"><h4 style="margin:0; font-size:14px; color:var(--text-muted);"><i class="fas fa-clock"></i> RECENT ATTENDANCE</h4></div><div class="table-wrapper" style="max-height: 250px;"><table><thead><tr><th>Date</th><th>In</th><th>Out</th><th>Status</th></tr></thead><tbody id="cadet-attendance-table"></tbody></table></div></div>
       </div>
     </div>
 
-    <!-- CADET LEAVES -->
     <div id="panel-cadet-leaves" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-envelope"></i> MY LEAVE REQUESTS</h2>
@@ -381,7 +387,6 @@
       <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Date Submitted</th><th>Leave Range</th><th>Reason</th><th>Status</th></tr></thead><tbody id="cadet-leaves-table"></tbody></table></div></div>
     </div>
 
-    <!-- SCANNER -->
     <div id="panel-scanner" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-qrcode"></i> QR SCANNER TERMINAL</h2>
@@ -399,17 +404,67 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Personnel</th><th>Time Logged</th><th>Action</th></tr></thead><tbody id="recent-scans"></tbody></table></div></div>
     </div>
 
-    <!-- COMMAND DASHBOARD -->
+    <div id="panel-gradebook" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-graduation-cap"></i> UNIT GRADEBOOK</h2>
+        <div class="header-actions">
+          <button class="btn-info" onclick="exportTableToExcel('gradebook-table', 'ROTC_Gradebook')"><i class="fas fa-file-excel"></i> EXPORT</button>
+          <button id="btn-ref-grade" class="btn-outline" onclick="silentRefresh('getGradebookData', 'btn-ref-grade')"><i class="fas fa-sync"></i> SYNC</button>
+        </div>
+      </div>
+      <div class="action-bar anim-2">
+         <div class="input-group" style="flex:2;">
+            <label>FILTER BY COMPANY</label>
+            <select id="gradebook-filter" onchange="filterGradebook()">
+               <option value="ALL">Entire Unit</option>
+            </select>
+         </div>
+      </div>
+      <div class="table-card anim-3">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Cadet ID</th>
+                <th>Full Name</th>
+                <th>Days<br>(/15)</th>
+                <th>Prelim</th>
+                <th>Midterm</th>
+                <th>Finals</th>
+                <th>Exam<br>(40%)</th>
+                <th>Apt.<br>(30%)</th>
+                <th>Att.<br>(30%)</th>
+                <th style="color:var(--army-primary);">FINAL GRADE</th>
+              </tr>
+            </thead>
+            <tbody id="gradebook-table">
+               <tr><td colspan="10" style="text-align:center;">Syncing academic engine...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <div id="panel-dashboard" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-chart-pie"></i> COMMAND DASHBOARD</h2>
         <div class="header-actions"><span style="font-size:13px; color:var(--text-muted); font-weight:600; margin-right:10px;">DATE: <strong id="admin-active-day" style="color:var(--text);">--</strong></span><button id="btn-ref-dash" class="btn-outline" onclick="silentRefresh('getAdminDashboardData', 'btn-ref-dash')"><i class="fas fa-sync"></i> SYNC</button></div>
       </div>
-      <div class="dashboard-grid anim-2"><div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div><div class="stat-label">Total Cadets</div><div class="stat-val" id="stat-total">--</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green);"><div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-user-check"></i></div><div><div class="stat-label">Present Today</div><div class="stat-val" id="stat-present">--</div><div class="stat-sub" id="stat-present-pct"></div></div></div><div class="stat-card" style="border-bottom-color:var(--status-yellow);"><div class="stat-icon" style="color:var(--status-yellow);"><i class="fas fa-clock"></i></div><div><div class="stat-label">Late / Very Late</div><div class="stat-val" id="stat-late">--</div><div class="stat-sub" id="stat-late-pct"></div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red);"><div class="stat-icon" style="color:var(--status-red);"><i class="fas fa-user-times"></i></div><div><div class="stat-label">Absent Today</div><div class="stat-val" id="stat-absent">--</div><div class="stat-sub" id="stat-absent-pct"></div></div></div></div>
-      <div class="charts-row anim-3"><div class="chart-card"><h4><i class="fas fa-chart-bar"></i> 7-DAY ATTENDANCE TREND</h4><div class="chart-container"><canvas id="chart-weekly"></canvas></div></div><div class="chart-card"><h4><i class="fas fa-chart-pie"></i> DAILY BREAKDOWN</h4><div class="chart-container"><canvas id="chart-donut"></canvas></div></div></div>
+      <div class="dashboard-grid anim-2">
+        <div class="stat-card" style="border-bottom-color:var(--army-gold);">
+          <div class="stat-icon" style="color:var(--army-gold);"><i class="fas fa-calendar-check"></i></div>
+          <div><div class="stat-label">Training Days</div><div class="stat-val" id="stat-training-days">0/15</div><div class="stat-sub">Semester Progression</div></div>
+        </div>
+        <div class="stat-card" style="border-bottom-color:var(--status-green);"><div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-user-check"></i></div><div><div class="stat-label">Present Today</div><div class="stat-val" id="stat-present">--</div><div class="stat-sub" id="stat-present-pct"></div></div></div>
+        <div class="stat-card" style="border-bottom-color:var(--status-yellow);"><div class="stat-icon" style="color:var(--status-yellow);"><i class="fas fa-clock"></i></div><div><div class="stat-label">Late / Very Late</div><div class="stat-val" id="stat-late">--</div><div class="stat-sub" id="stat-late-pct"></div></div></div>
+        <div class="stat-card" style="border-bottom-color:var(--status-red);"><div class="stat-icon" style="color:var(--status-red);"><i class="fas fa-user-times"></i></div><div><div class="stat-label">Absent Today</div><div class="stat-val" id="stat-absent">--</div><div class="stat-sub" id="stat-absent-pct"></div></div></div>
+      </div>
+      <div class="charts-row anim-3">
+        <div class="chart-card"><h4><i class="fas fa-chart-bar"></i> 15-DAY ATTENDANCE PROGRESSION</h4><div class="chart-container"><canvas id="chart-weekly"></canvas></div></div>
+        <div class="chart-card"><h4><i class="fas fa-chart-pie"></i> DAILY BREAKDOWN</h4><div class="chart-container"><canvas id="chart-donut"></canvas></div></div>
+      </div>
     </div>
 
-    <!-- ATTENDANCE -->
     <div id="panel-attendance" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-clipboard-list"></i> ATTENDANCE LOG</h2>
@@ -418,7 +473,6 @@
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead><tbody id="attendance-table"></tbody></table></div></div>
     </div>
 
-    <!-- UNIT ROSTER -->
     <div id="panel-masterlist" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-users"></i> UNIT ROSTER & DISCIPLINE</h2>
@@ -432,7 +486,6 @@
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Cadet ID</th><th>Full Name</th><th>Company</th><th>Score</th><th>Contact</th><th>Actions</th></tr></thead><tbody id="masterlist-table"></tbody></table></div></div>
     </div>
 
-    <!-- LEAVE REQUESTS -->
     <div id="panel-leaves" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2>
@@ -452,7 +505,6 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date Range</th><th>Cadet ID</th><th>Name</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaves-table"></tbody></table></div></div>
     </div>
 
-    <!-- ID GENERATOR -->
     <div id="panel-idcards" class="view-panel">
       <div class="header-bar anim-1">
           <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-id-card"></i> ID GENERATOR</h2>
@@ -466,7 +518,6 @@
       <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0;">Select a target and generate preview to render Identification Cards.</p></div>
     </div>
 
-    <!-- LEGACY -->
     <div id="panel-legacy" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-landmark"></i> LEGACY MANAGEMENT</h2>
@@ -512,7 +563,6 @@
       <div class="table-card anim-4 super-admin-only"><div class="table-wrapper"><table id="table-legacy-officers"><thead><tr><th>Class ID</th><th>Rank & Name</th><th>Designation</th><th>Action</th></tr></thead><tbody id="legacy-officers-tbody"></tbody></table></div></div>
     </div>
 
-    <!-- POSTS -->
     <div id="panel-posts" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-images"></i> PUBLIC POSTS</h2>
@@ -538,7 +588,6 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date</th><th>Media</th><th>Post Details</th><th>Status</th><th>Action</th></tr></thead><tbody id="posts-table"></tbody></table></div></div>
     </div>
 
-    <!-- ACCESS CONTROL -->
     <div id="panel-accounts" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-user-shield"></i> PERSONNEL ACCESS CONTROL</h2>
@@ -560,7 +609,6 @@
       <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Username</th><th>Clearance Level</th><th>Legacy DB</th><th>Status</th><th>Action</th></tr></thead><tbody id="accounts-table"></tbody></table></div></div>
     </div>
 
-    <!-- AUDIT LOG -->
     <div id="panel-audit" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-history"></i> SYSTEM AUDIT LOG</h2>
@@ -570,7 +618,6 @@
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Date & Time</th><th>User / Operator</th><th>Action Taken</th><th>Activity Details</th></tr></thead><tbody id="audit-table"></tbody></table></div></div>
     </div>
 
-    <!-- SETTINGS -->
     <div id="panel-settings" class="view-panel">
       <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-cog"></i> SYSTEM BRANDING</h2></div>
       <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 600px;">
@@ -581,7 +628,6 @@
       </div>
     </div>
 
-    <!-- PROFILE -->
     <div id="panel-profile" class="view-panel">
       <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-user-circle"></i> MY PROFILE</h2></div>
       <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 600px;">
@@ -602,12 +648,16 @@
 </div>
 
 <script>
-  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw63y63Mk-wyqa1a846oBhnDTHj29dUEJznvrG52sjEtwONa6kOEzDVCy_GlnAMqPXPAg/exec";
+  // =========================================================================
+  // 🔥 CRITICAL: PASTE YOUR NEW DEPLOYMENT URL HERE 🔥
+  // =========================================================================
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycby_stp2rmmdpX4E1kBtgA9BM6IrHwmV9kpKWhwevU1HjP34fTcGDlb7rzdrvon_2pW6xQ/exec";
 
   let session = {};
   let isDarkMode = false;
   let globalStudentCache = [];
   let globalAdminPostCache = []; 
+  let globalGradebookCache = [];
   let isScanning = false;
   let recentScanCount = 0;
   const MAX_RECENT_SCANS = 50;
@@ -638,6 +688,7 @@
               if(actionName === 'getAdminLegacyData') processLegacyData(res);
               if(actionName === 'getPostsAdmin') { globalAdminPostCache = res.posts; renderAdminPostsHTML(); }
               if(actionName === 'getAuditLogs') processAuditLogs(res);
+              if(actionName === 'getGradebookData') processGradebookData(res);
               
               btn.innerHTML = oldHtml; btn.disabled = false;
           }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
@@ -649,40 +700,32 @@
           if(actionName === 'getAdminLegacyData') apiCall(actionName, { user: session.user, pass: session.pass }, processLegacyData);
           if(actionName === 'getPostsAdmin') apiCall(actionName, { user: session.user, pass: session.pass }, (res) => { globalAdminPostCache = res.posts; renderAdminPostsHTML(); });
           if(actionName === 'getAuditLogs') apiCall(actionName, { user: session.user, pass: session.pass }, processAuditLogs);
+          if(actionName === 'getGradebookData') apiCall(actionName, { user: session.user, pass: session.pass }, processGradebookData);
       }
+  }
+
+  window.forceRefresh = function(targetFunc) {
+      if(targetFunc.name === 'loadDashboardData') silentRefresh('getAdminDashboardData');
+      else if(targetFunc.name === 'loadCadetData') silentRefresh('getCadetData');
+      else if(targetFunc.name === 'loadLeavesData') silentRefresh('getLeaveRequests');
+      else if(targetFunc.name === 'fetchStudentsForDropdown') silentRefresh('getStudentsForIDCards');
+      else if(targetFunc.name === 'loadLegacyAdminData') silentRefresh('getAdminLegacyData');
+      else if(targetFunc.name === 'loadPosts') silentRefresh('getPostsAdmin');
+      else if(targetFunc.name === 'loadAuditLogs') silentRefresh('getAuditLogs');
+      else targetFunc();
   }
 
   function apiCall(action, payload, onSuccess, onFailure) {
+    if(GAS_API_URL === "PASTE_YOUR_NEW_DEPLOYMENT_URL_HERE") return Swal.fire('Deployment Error', 'You must paste your Google Web App URL into Line 333 of app.html!', 'error');
     payload.action = action;
-    fetch(GAS_API_URL, { 
-      method: 'POST', 
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-      body: JSON.stringify(payload) 
-    })
+    fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
     .then(response => response.json())
-    .then(data => { 
-      if (data.error && data.error !== false) {
-          throw new Error(data.message || "Unknown Database Failure");
-      }
-      onSuccess(data); 
-    })
-    .catch(error => { 
-        console.error("API Error:", error); 
-        if (onFailure) {
-            onFailure(error); 
-        } else {
-            if(error.message.includes('DENIED')) {
-                Swal.fire({ title: 'CLEARANCE DENIED', text: error.message, icon: 'error', background: '#1b0002', color: '#ff5252', confirmButtonColor: '#d32f2f' });
-            } else {
-                Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: error.message, showConfirmButton: false, timer: 3000 });
-            }
-        }
-    });
+    .then(data => { if (data.error && data.error !== false) { throw new Error(data.message || "Unknown Database Failure"); } onSuccess(data); })
+    .catch(error => { console.error("API Error:", error); if (onFailure) { onFailure(error); } else { if(error.message.includes('DENIED')) { Swal.fire({ title: 'CLEARANCE DENIED', text: error.message, icon: 'error', background: '#1b0002', color: '#ff5252', confirmButtonColor: '#d32f2f' }); } else { Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: error.message, showConfirmButton: false, timer: 3000 }); } } });
   }
 
   function createEmbed(url) {
-      if (!url) return '';
-      let finalUrl = url;
+      if (!url) return ''; let finalUrl = url;
       if (url.includes('youtube.com/watch?v=')) { finalUrl = url.replace('watch?v=', 'embed/').split('&')[0]; } 
       else if (url.includes('youtu.be/')) { finalUrl = url.replace('youtu.be/', 'youtube.com/embed/'); } 
       else if (url.includes('drive.google.com/file/d/')) { finalUrl = url.replace('/view', '/preview'); } 
@@ -691,63 +734,36 @@
   }
 
   document.getElementById('post-image-file').addEventListener('change', async function(e) {
-    const files = e.target.files;
-    if(files.length === 0) return;
+    const files = e.target.files; if(files.length === 0) return;
     document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;"><i class="fas fa-spinner fa-spin"></i> Processing images...</span>';
-    stagedImages = []; 
-    for(let i=0; i < files.length; i++) {
-      let b64 = await compressAutoImage(files[i]);
-      stagedImages.push(b64);
-    }
-    renderStagingGrid();
+    stagedImages = []; for(let i=0; i < files.length; i++) { let b64 = await compressAutoImage(files[i]); stagedImages.push(b64); } renderStagingGrid();
   });
 
   function renderStagingGrid() {
-    const grid = document.getElementById('image-staging-grid');
-    grid.innerHTML = '';
+    const grid = document.getElementById('image-staging-grid'); grid.innerHTML = '';
     stagedImages.forEach((b64, idx) => {
-      let isCover = (idx === 0);
-      let border = isCover ? 'border: 3px solid var(--army-gold);' : 'border: 1px solid var(--border);';
-      let coverBadge = isCover ? `<div style="position:absolute; top:0; left:0; background:var(--army-gold); color:#000; font-size:10px; font-weight:bold; padding:2px 5px; z-index:10;">COVER</div>` : '';
-      let makeCoverBtn = isCover ? '' : `<button type="button" style="padding:4px; font-size:10px; margin-top:5px; background:var(--bg); color:var(--text); border:1px solid var(--border); width:100%; height:auto;" onclick="setCoverImage(${idx})">Set Cover</button>`;
+      let isCover = (idx === 0); let border = isCover ? 'border: 3px solid var(--army-gold);' : 'border: 1px solid var(--border);'; let coverBadge = isCover ? `<div style="position:absolute; top:0; left:0; background:var(--army-gold); color:#000; font-size:10px; font-weight:bold; padding:2px 5px; z-index:10;">COVER</div>` : ''; let makeCoverBtn = isCover ? '' : `<button type="button" style="padding:4px; font-size:10px; margin-top:5px; background:var(--bg); color:var(--text); border:1px solid var(--border); width:100%; height:auto;" onclick="setCoverImage(${idx})">Set Cover</button>`;
       grid.innerHTML += `<div style="position:relative; width: 100px; display:flex; flex-direction:column; animation: fadeUp 0.3s ease;"><div style="width:100px; height:100px; overflow:hidden; border-radius:4px; ${border} position:relative;">${coverBadge}<img src="${b64}" style="width:100%; height:100%; object-fit:cover;"></div>${makeCoverBtn}</div>`;
     });
   }
 
   window.setCoverImage = function(idx) { let selected = stagedImages.splice(idx, 1)[0]; stagedImages.unshift(selected); renderStagingGrid(); }
-
   function formatHashtags(text) { if (!text) return ""; return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>'); }
 
   function exportTableToExcel(tableId, filename) {
-    let table = document.getElementById(tableId).closest('table');
-    let rows = table.querySelectorAll('tr');
-    if (rows.length <= 1) return Swal.fire({toast:true, position:'top', icon:'info', title:'No data to export.', showConfirmButton:false, timer:2000});
-    let aoa = []; 
-    let headerRow = [];
-    let headers = rows[0].querySelectorAll("th, td");
-    for (let j = 0; j < headers.length; j++) {
-      if(headers[j].querySelector('button') && j === headers.length - 1) continue; 
-      headerRow.push(headers[j].innerText.trim());
-    }
-    aoa.push(headerRow);
+    let table = document.getElementById(tableId).closest('table'); let rows = table.querySelectorAll('tr'); if (rows.length <= 1) return Swal.fire({toast:true, position:'top', icon:'info', title:'No data to export.', showConfirmButton:false, timer:2000});
+    let aoa = []; let headerRow = []; let headers = rows[0].querySelectorAll("th, td");
+    for (let j = 0; j < headers.length; j++) { if(headers[j].querySelector('button') && j === headers.length - 1) continue; headerRow.push(headers[j].innerText.trim()); } aoa.push(headerRow);
     let bodyData = [];
     for (let i = 1; i < rows.length; i++) {
-      let cols = rows[i].querySelectorAll("td, th");
-      if (cols.length === 1 && cols[0].colSpan > 1) continue; 
+      let cols = rows[i].querySelectorAll("td, th"); if (cols.length === 1 && cols[0].colSpan > 1) continue; 
       let rowArr = [];
-      for (let j = 0; j < cols.length; j++) {
-        if(cols[j].querySelector('button') && j === cols.length - 1) continue; 
-        rowArr.push(cols[j].innerText.trim());
-      }
-      bodyData.push(rowArr);
+      for (let j = 0; j < cols.length; j++) { if(cols[j].querySelector('button') && j === cols.length - 1) continue; rowArr.push(cols[j].innerText.trim()); } bodyData.push(rowArr);
     }
     if (bodyData.length === 0) return Swal.fire({toast:true, position:'top', icon:'info', title:'No data to export.', showConfirmButton:false, timer:2000});
-    if (tableId === 'attendance-table' || tableId === 'masterlist-table') {
-      bodyData.sort((a, b) => { let compA = a[2] ? a[2].toLowerCase() : ""; let compB = b[2] ? b[2].toLowerCase() : ""; return compA.localeCompare(compB); });
-    }
+    if (tableId === 'attendance-table' || tableId === 'masterlist-table') { bodyData.sort((a, b) => { let compA = a[2] ? a[2].toLowerCase() : ""; let compB = b[2] ? b[2].toLowerCase() : ""; return compA.localeCompare(compB); }); }
     bodyData.forEach(r => aoa.push(r));
-    let ws = XLSX.utils.aoa_to_sheet(aoa);
-    let range = XLSX.utils.decode_range(ws['!ref']);
+    let ws = XLSX.utils.aoa_to_sheet(aoa); let range = XLSX.utils.decode_range(ws['!ref']);
     for (let R = range.s.r; R <= range.e.r; ++R) {
       for (let C = range.s.c; C <= range.e.c; ++C) {
         let cellAddress = {c:C, r:R}; let cellRef = XLSX.utils.encode_cell(cellAddress); if (!ws[cellRef]) continue;
@@ -759,32 +775,19 @@
       }
     }
     ws['!cols'] = [{wch: 15}, {wch: 30}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}];
-    let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Unit Data");
-    XLSX.writeFile(wb, filename + ".xlsx");
+    let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Unit Data"); XLSX.writeFile(wb, filename + ".xlsx");
   }
 
   window.togglePasswordVisibility = function(inputId, iconId) {
-    const passInput = document.getElementById(inputId);
-    const toggleIcon = document.getElementById(iconId);
-    if (passInput.type === 'password') {
-      passInput.type = 'text';
-      toggleIcon.classList.remove('fa-eye');
-      toggleIcon.classList.add('fa-eye-slash');
-    } else {
-      passInput.type = 'password';
-      toggleIcon.classList.remove('fa-eye-slash');
-      toggleIcon.classList.add('fa-eye');
-    }
+    const passInput = document.getElementById(inputId); const toggleIcon = document.getElementById(iconId);
+    if (passInput.type === 'password') { passInput.type = 'text'; toggleIcon.classList.remove('fa-eye'); toggleIcon.classList.add('fa-eye-slash'); } 
+    else { passInput.type = 'password'; toggleIcon.classList.remove('fa-eye-slash'); toggleIcon.classList.add('fa-eye'); }
   }
 
   window.onload = () => {
     initCropperInputs();
     const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
-    if (cachedBranding) {
-      if(cachedBranding.logoUrl) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = cachedBranding.logoUrl; logoImg.style.display = 'block'; }
-      if(cachedBranding.bgUrl) document.getElementById('view-login').style.backgroundImage = `url('${cachedBranding.bgUrl}')`;
-    }
+    if (cachedBranding) { if(cachedBranding.logoUrl) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = cachedBranding.logoUrl; logoImg.style.display = 'block'; } if(cachedBranding.bgUrl) document.getElementById('view-login').style.backgroundImage = `url('${cachedBranding.bgUrl}')`; }
     apiCall('getSettings', {}, (res) => {
       localStorage.setItem('scck_branding', JSON.stringify(res));
       if(res.logoUrl && !cachedBranding) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = res.logoUrl; logoImg.style.display = 'block'; }
@@ -797,22 +800,15 @@
         const parsed = JSON.parse(savedSession);
         if (parsed.expiry > Date.now()) {
           session = { user: parsed.user, pass: parsed.pass, role: parsed.role };
-          document.getElementById('view-login').style.display = 'none'; 
-          document.getElementById('app-container').style.display = 'flex';
-          loadUserProfile();
-          setupRoleUI(parsed.role);
-          updateOfflineSyncUI();
-        } else {
-          localStorage.removeItem('scck_session');
-        }
+          document.getElementById('view-login').style.display = 'none'; document.getElementById('app-container').style.display = 'flex';
+          loadUserProfile(); setupRoleUI(parsed.role); updateOfflineSyncUI();
+        } else { localStorage.removeItem('scck_session'); }
       } catch(e) {}
     }
   };
 
   function setupRoleUI(role) {
-    document.getElementById('sidebar-menu-admin').style.display = 'none';
-    document.getElementById('sidebar-menu-scanner').style.display = 'none';
-    document.getElementById('sidebar-menu-cadet').style.display = 'none';
+    document.getElementById('sidebar-menu-admin').style.display = 'none'; document.getElementById('sidebar-menu-scanner').style.display = 'none'; document.getElementById('sidebar-menu-cadet').style.display = 'none';
 
     if (role === 'Super Admin' || role === 'Admin') {
       document.getElementById('sidebar-menu-admin').style.display = 'block'; 
@@ -820,24 +816,18 @@
 
       if (role === 'Super Admin') {
         if(btnClass) btnClass.innerHTML = '<i class="fas fa-check-double"></i> DIRECT APPROVAL';
-        document.getElementById('admin-draft-section').style.display = 'none';
-        document.getElementById('admin-leave-submit-section').style.display = 'none'; 
-        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block');
-        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none'); 
+        document.getElementById('admin-draft-section').style.display = 'none'; document.getElementById('admin-leave-submit-section').style.display = 'none'; 
+        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'block'); document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none'); 
       } else {
         if(btnClass) btnClass.innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT REQUEST';
-        document.getElementById('admin-draft-section').style.display = 'block';
-        document.getElementById('admin-leave-submit-section').style.display = 'flex'; 
-        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); 
+        document.getElementById('admin-draft-section').style.display = 'block'; document.getElementById('admin-leave-submit-section').style.display = 'flex'; 
+        document.querySelectorAll('.super-admin-only').forEach(el => el.style.display = 'none'); document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); 
       }
       switchTab('panel-dashboard', document.querySelectorAll('#sidebar-menu-admin button')[0]);
     } else if (role === 'Scanner') {
-      document.getElementById('sidebar-menu-scanner').style.display = 'block'; 
-      switchTab('panel-scanner', document.querySelector('#sidebar-menu-scanner button'));
+      document.getElementById('sidebar-menu-scanner').style.display = 'block'; switchTab('panel-scanner', document.querySelector('#sidebar-menu-scanner button'));
     } else if (role === 'Cadet') {
-      document.getElementById('sidebar-menu-cadet').style.display = 'block';
-      switchTab('panel-cadet-dashboard', document.querySelector('#sidebar-menu-cadet button'));
+      document.getElementById('sidebar-menu-cadet').style.display = 'block'; switchTab('panel-cadet-dashboard', document.querySelector('#sidebar-menu-cadet button'));
     }
   }
 
@@ -845,44 +835,24 @@
     const inputs = ['prof-image-file', 'set-logo-file', 'set-nav-logo-file', 'set-bg-file', 'leg-class-logo', 'leg-off-photo'];
     inputs.forEach(id => {
       const el = document.getElementById(id);
-      if(el) {
-        el.addEventListener('change', function(e) {
-          if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(event) { openCropper(event.target.result, id); };
-            reader.readAsDataURL(e.target.files[0]);
-          }
-        });
-      }
+      if(el) { el.addEventListener('change', function(e) { if (e.target.files && e.target.files[0]) { const reader = new FileReader(); reader.onload = function(event) { openCropper(event.target.result, id); }; reader.readAsDataURL(e.target.files[0]); } }); }
     });
   }
 
   function openCropper(imageSrc, targetId) {
-    currentCropTarget = targetId;
-    const modal = document.getElementById('cropper-modal');
-    const img = document.getElementById('cropper-image');
-    img.src = imageSrc;
-    modal.style.display = 'flex';
-    let aspectRatio = (targetId === 'set-bg-file') ? NaN : 1; 
-    if(currentCropper) currentCropper.destroy();
-    currentCropper = new Cropper(img, { aspectRatio: aspectRatio, viewMode: 2, autoCropArea: 1 });
+    currentCropTarget = targetId; const modal = document.getElementById('cropper-modal'); const img = document.getElementById('cropper-image'); img.src = imageSrc; modal.style.display = 'flex';
+    let aspectRatio = (targetId === 'set-bg-file') ? NaN : 1; if(currentCropper) currentCropper.destroy(); currentCropper = new Cropper(img, { aspectRatio: aspectRatio, viewMode: 2, autoCropArea: 1 });
   }
 
   document.getElementById('btn-crop-apply').addEventListener('click', () => {
     if (!currentCropper) return;
-    const canvas = currentCropper.getCroppedCanvas({ maxWidth: 800, maxHeight: 800 });
-    croppedData[currentCropTarget] = canvas.toDataURL('image/png');
+    const canvas = currentCropper.getCroppedCanvas({ maxWidth: 800, maxHeight: 800 }); croppedData[currentCropTarget] = canvas.toDataURL('image/png');
     let statusTextMap = { 'prof-image-file': 'prof-image-status', 'set-logo-file': 'set-logo-status', 'set-nav-logo-file': 'set-nav-logo-status', 'set-bg-file': 'set-bg-status', 'leg-class-logo': 'leg-class-status', 'leg-off-photo': 'leg-off-status' };
-    let statusEl = document.getElementById(statusTextMap[currentCropTarget]);
-    if(statusEl) statusEl.innerHTML = '<span style="color:var(--status-green); font-weight:bold;"><i class="fas fa-check"></i> Image Cropped & Ready</span>';
+    let statusEl = document.getElementById(statusTextMap[currentCropTarget]); if(statusEl) statusEl.innerHTML = '<span style="color:var(--status-green); font-weight:bold;"><i class="fas fa-check"></i> Image Cropped & Ready</span>';
     closeCropper();
   });
 
-  function closeCropper() {
-    document.getElementById('cropper-modal').style.display = 'none';
-    if(currentCropper) { currentCropper.destroy(); currentCropper = null; }
-    if(!croppedData[currentCropTarget]) document.getElementById(currentCropTarget).value = '';
-  }
+  function closeCropper() { document.getElementById('cropper-modal').style.display = 'none'; if(currentCropper) { currentCropper.destroy(); currentCropper = null; } if(!croppedData[currentCropTarget]) document.getElementById(currentCropTarget).value = ''; }
 
   function compressAutoImage(file) {
     return new Promise((resolve) => {
@@ -890,17 +860,9 @@
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_SIZE = 1080; 
-          let width = img.width, height = img.height;
-          if (width > MAX_SIZE || height > MAX_SIZE) {
-            if (width > height) { height = Math.round((height * MAX_SIZE) / width); width = MAX_SIZE; } 
-            else { width = Math.round((width * MAX_SIZE) / height); height = MAX_SIZE; }
-          }
-          canvas.width = width; canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/jpeg', 0.8)); 
+          const canvas = document.createElement('canvas'); const MAX_SIZE = 1080; let width = img.width, height = img.height;
+          if (width > MAX_SIZE || height > MAX_SIZE) { if (width > height) { height = Math.round((height * MAX_SIZE) / width); width = MAX_SIZE; } else { width = Math.round((width * MAX_SIZE) / height); height = MAX_SIZE; } }
+          canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); resolve(canvas.toDataURL('image/jpeg', 0.8)); 
         };
         img.src = e.target.result;
       };
@@ -909,131 +871,89 @@
   }
 
   function applyTheme(dark) {
-    isDarkMode = dark; document.body.classList.toggle('dark-mode', dark);
-    document.getElementById('theme-icon').className = dark ? 'fas fa-sun' : 'fas fa-moon';
-    document.getElementById('theme-text').innerText = dark ? 'LIGHT MODE' : 'DARK MODE';
-    try { localStorage.setItem('sccks_dark', dark ? '1' : '0'); } catch(e){}
-    if (weeklyChart) weeklyChart.update(); if (donutChart) donutChart.update();
+    isDarkMode = dark; document.body.classList.toggle('dark-mode', dark); document.getElementById('theme-icon').className = dark ? 'fas fa-sun' : 'fas fa-moon'; document.getElementById('theme-text').innerText = dark ? 'LIGHT MODE' : 'DARK MODE';
+    try { localStorage.setItem('sccks_dark', dark ? '1' : '0'); } catch(e){} if (weeklyChart) weeklyChart.update(); if (donutChart) donutChart.update();
   }
   function toggleTheme() { applyTheme(!isDarkMode); }
-
-  function toggleSidebar() {
-    document.querySelector('.sidebar').classList.toggle('open');
-    document.getElementById('mobile-overlay').classList.toggle('show');
-  }
+  function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('open'); document.getElementById('mobile-overlay').classList.toggle('show'); }
 
   function switchTab(panelId, btnElement) {
-    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-    document.getElementById(panelId).classList.add('active-panel');
-    document.querySelectorAll('.sidebar-menu button').forEach(b => b.classList.remove('active'));
-    if (btnElement) btnElement.classList.add('active');
-
-    if (window.innerWidth <= 768) toggleSidebar();
-    if (panelId !== 'panel-scanner') stopScanner(false);
+    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel')); document.getElementById(panelId).classList.add('active-panel');
+    document.querySelectorAll('.sidebar-menu button').forEach(b => b.classList.remove('active')); if (btnElement) btnElement.classList.add('active');
+    if (window.innerWidth <= 768) toggleSidebar(); if (panelId !== 'panel-scanner') stopScanner(false);
     
     if (['panel-dashboard','panel-attendance','panel-masterlist','panel-accounts'].includes(panelId)) silentRefresh('getAdminDashboardData');
+    if (panelId === 'panel-gradebook') silentRefresh('getGradebookData');
     if (panelId === 'panel-leaves') { silentRefresh('getLeaveRequests'); silentRefresh('getStudentsForIDCards'); }
     if (panelId === 'panel-idcards') silentRefresh('getStudentsForIDCards');
     if (panelId === 'panel-audit') silentRefresh('getAuditLogs');
     if (panelId === 'panel-profile') loadUserProfile();
-    if (panelId === 'panel-legacy') { loadLegacyClassesForDropdown(); silentRefresh('getAdminLegacyData'); }
+    if (panelId === 'panel-legacy') { silentRefresh('getAdminLegacyData'); }
     if (panelId === 'panel-posts') silentRefresh('getPostsAdmin');
     if (panelId === 'panel-cadet-dashboard' || panelId === 'panel-cadet-leaves') { silentRefresh('getCadetData'); }
   }
 
-  // SILENT DATA PROCESSORS
+  // --- GRADEBOOK LOGIC ---
+  function processGradebookData(res) {
+      if(!res.success) return;
+      globalGradebookCache = res.gradebook; 
+      
+      const compSet = new Set();
+      res.gradebook.forEach(g => { if(g.company && g.company !== '---' && g.company !== 'N/A') compSet.add(g.company); });
+      const sel = document.getElementById('gradebook-filter');
+      sel.innerHTML = '<option value="ALL">Entire Unit</option>';
+      compSet.forEach(c => sel.innerHTML += `<option value="${c}">${c} Company</option>`);
+
+      filterGradebook();
+  }
+
+  function filterGradebook() {
+      const filter = document.getElementById('gradebook-filter').value;
+      let html = '';
+      globalGradebookCache.forEach(g => {
+          if (filter !== "ALL" && g.company !== filter) return;
+          let colorClass = g.finalGrade >= 75 ? 'var(--status-green)' : 'var(--status-red)';
+          let daysColor = g.daysAttended < 10 ? 'var(--status-red)' : 'var(--text)';
+          html += `<tr>
+              <td><b>${g.id}</b></td>
+              <td>${g.name}</td>
+              <td style="color:${daysColor}; font-weight:bold;">${g.daysAttended}</td>
+              <td>${g.prelim}</td>
+              <td>${g.midterm}</td>
+              <td>${g.final}</td>
+              <td>${g.examAvg}</td>
+              <td>${g.aptitudePct}</td>
+              <td>${g.attendancePct}</td>
+              <td style="color:${colorClass}; font-weight:bold; font-size:16px;">${g.finalGrade}</td>
+          </tr>`;
+      });
+      document.getElementById('gradebook-table').innerHTML = html || '<tr><td colspan="10" style="text-align:center;">No academic records found.</td></tr>';
+  }
+
   function processLegacyData(res) {
-      let cHtml = '';
-      res.classes.forEach(c => {
-        let actionBtn = '';
-        if (session.role === 'Super Admin') {
-          if (c.status === 'Pending') {
-            actionBtn = `
-              <button class="btn-success" style="padding:4px 8px; font-size:11px; margin-right:5px; height:auto; width:auto; display:inline-block;" onclick="updateLegacyClass('${c.id}','Approved')">APPROVE</button>
-              <button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="updateLegacyClass('${c.id}','Rejected')">REJECT</button>`;
-          } else {
-            actionBtn = `<button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="deleteLegacyClass('${c.id}')"><i class="fas fa-trash"></i></button>`;
-          }
-        }
-        let bClass = c.status === 'Approved' ? 'badge-present' : (c.status === 'Pending' ? 'badge-late' : 'badge-absent');
-        cHtml += `<tr><td>${c.year}</td><td><b>${c.name}</b></td><td><span class="badge ${bClass}">${c.status}</span></td><td>${actionBtn}</td></tr>`;
-      });
-      document.getElementById('legacy-classes-tbody').innerHTML = cHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
-
-      let oHtml = '';
-      res.officers.forEach(o => {
-        let actionBtn = session.role === 'Super Admin' ? `
-          <button class="btn-warning" style="padding:4px 8px; font-size:11px; color:#fff; margin-right:5px; height:auto; width:auto; display:inline-block;" onclick="openEditOfficerModal('${o.id}', '${o.rank}', '${o.name}', '${o.designation}', '${o.course}', \`${o.bio.replace(/`/g, "'").replace(/'/g, "\\'")}\`)"><i class="fas fa-edit"></i></button>
-          <button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="deleteLegacyOfficer('${o.id}')"><i class="fas fa-trash"></i></button>
-        ` : '';
-        oHtml += `<tr><td>${o.classId}</td><td><b>${o.rank} ${o.name}</b></td><td>${o.designation}</td><td>${actionBtn}</td></tr>`;
-      });
-      document.getElementById('legacy-officers-tbody').innerHTML = oHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
+      let cHtml = ''; res.classes.forEach(c => { let actionBtn = ''; if (session.role === 'Super Admin') { if (c.status === 'Pending') { actionBtn = `<button class="btn-success" style="padding:4px 8px; font-size:11px; margin-right:5px; height:auto; width:auto; display:inline-block;" onclick="updateLegacyClass('${c.id}','Approved')">APPROVE</button><button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="updateLegacyClass('${c.id}','Rejected')">REJECT</button>`; } else { actionBtn = `<button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="deleteLegacyClass('${c.id}')"><i class="fas fa-trash"></i></button>`; } } let bClass = c.status === 'Approved' ? 'badge-present' : (c.status === 'Pending' ? 'badge-late' : 'badge-absent'); cHtml += `<tr><td>${c.year}</td><td><b>${c.name}</b></td><td><span class="badge ${bClass}">${c.status}</span></td><td>${actionBtn}</td></tr>`; }); document.getElementById('legacy-classes-tbody').innerHTML = cHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
+      let oHtml = ''; res.officers.forEach(o => { let actionBtn = session.role === 'Super Admin' ? `<button class="btn-warning" style="padding:4px 8px; font-size:11px; color:#fff; margin-right:5px; height:auto; width:auto; display:inline-block;" onclick="openEditOfficerModal('${o.id}', '${o.rank}', '${o.name}', '${o.designation}', '${o.course}', \`${o.bio.replace(/`/g, "'").replace(/'/g, "\\'")}\`)"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="deleteLegacyOfficer('${o.id}')"><i class="fas fa-trash"></i></button>` : ''; oHtml += `<tr><td>${o.classId}</td><td><b>${o.rank} ${o.name}</b></td><td>${o.designation}</td><td>${actionBtn}</td></tr>`; }); document.getElementById('legacy-officers-tbody').innerHTML = oHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
   }
 
-  window.openEditOfficerModal = function(id, rank, name, desig, course, bio) {
-    document.getElementById('edit-off-id').value = id; document.getElementById('edit-off-rank').value = rank; document.getElementById('edit-off-name').value = name; document.getElementById('edit-off-desig').value = desig; document.getElementById('edit-off-course').value = course; document.getElementById('edit-off-bio').value = bio;
-    const modal = document.getElementById('edit-officer-modal'); modal.style.display = 'flex'; setTimeout(() => modal.classList.add('show'), 10);
-  }
-
+  window.openEditOfficerModal = function(id, rank, name, desig, course, bio) { document.getElementById('edit-off-id').value = id; document.getElementById('edit-off-rank').value = rank; document.getElementById('edit-off-name').value = name; document.getElementById('edit-off-desig').value = desig; document.getElementById('edit-off-course').value = course; document.getElementById('edit-off-bio').value = bio; const modal = document.getElementById('edit-officer-modal'); modal.style.display = 'flex'; setTimeout(() => modal.classList.add('show'), 10); }
   window.closeEditOfficerModal = function(force) { const modal = document.getElementById('edit-officer-modal'); if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); } }
-
-  window.requestOfficerEditOTP = function() {
-    Swal.fire({ title: 'SECURING CONNECTION...', html: 'Requesting OTP verification...', didOpen: () => Swal.showLoading() });
-    apiCall('requestEditOTP', { user: session.user, pass: session.pass }, (res) => {
-        Swal.fire({ title: 'ENTER VERIFICATION CODE', text: 'A 6-digit OTP has been sent to the database owner\'s email.', input: 'text', inputPlaceholder: '6-Digit OTP', showCancelButton: true, confirmButtonText: 'VERIFY & SAVE', preConfirm: (otp) => { if (!otp) Swal.showValidationMessage('OTP is required to proceed'); return otp; } }).then((result) => { if (result.isConfirmed) submitOfficerEditWithOTP(result.value); });
-    });
-  }
-
-  window.submitOfficerEditWithOTP = function(otp) {
-    Swal.fire({ title: 'VERIFYING & SAVING...', didOpen: () => Swal.showLoading() });
-    const payload = { offId: document.getElementById('edit-off-id').value, rank: document.getElementById('edit-off-rank').value, name: document.getElementById('edit-off-name').value, desig: document.getElementById('edit-off-desig').value, course: document.getElementById('edit-off-course').value, bio: document.getElementById('edit-off-bio').value, otp: otp, user: session.user, pass: session.pass };
-    apiCall('submitOfficerEdit', payload, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); closeEditOfficerModal(true); silentRefresh('getAdminLegacyData'); });
-  }
-
-  window.updateLegacyClass = function(id, status) {
-    Swal.fire({ title: `Set class to ${status}?`, showCancelButton: true }).then(r => {
-      if(r.isConfirmed) {
-        if(session.role === 'Super Admin') { let blg = document.getElementById('badge-legacy'); let count = parseInt(blg.innerText || 0) - 1; if(count > 0) { blg.innerText = count; } else { blg.style.display = 'none'; } }
-        apiCall('updateLegacyClassStatus', { classId: id, status: status, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Status updated.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); loadLegacyClassesForDropdown(); });
-      }
-    });
-  }
-
-  window.deleteLegacyClass = function(id) {
-    Swal.fire({ title: 'PERMANENTLY DELETE CLASS?', text: 'All associated data will be wiped.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => {
-      if(r.isConfirmed) { apiCall('deleteLegacyClass', { classId: id, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Class removed.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); loadLegacyClassesForDropdown(); }); }
-    });
-  }
-
-  window.deleteLegacyOfficer = function(id) {
-    Swal.fire({ title: 'PERMANENTLY DELETE OFFICER?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => {
-      if(r.isConfirmed) { apiCall('deleteLegacyOfficer', { offId: id, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Officer removed.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); }); }
-    });
-  }
+  window.requestOfficerEditOTP = function() { Swal.fire({ title: 'SECURING CONNECTION...', html: 'Requesting OTP verification...', didOpen: () => Swal.showLoading() }); apiCall('requestEditOTP', { user: session.user, pass: session.pass }, (res) => { Swal.fire({ title: 'ENTER VERIFICATION CODE', text: 'A 6-digit OTP has been sent to the database owner\'s email.', input: 'text', inputPlaceholder: '6-Digit OTP', showCancelButton: true, confirmButtonText: 'VERIFY & SAVE', preConfirm: (otp) => { if (!otp) Swal.showValidationMessage('OTP is required to proceed'); return otp; } }).then((result) => { if (result.isConfirmed) submitOfficerEditWithOTP(result.value); }); }); }
+  window.submitOfficerEditWithOTP = function(otp) { Swal.fire({ title: 'VERIFYING & SAVING...', didOpen: () => Swal.showLoading() }); const payload = { offId: document.getElementById('edit-off-id').value, rank: document.getElementById('edit-off-rank').value, name: document.getElementById('edit-off-name').value, desig: document.getElementById('edit-off-desig').value, course: document.getElementById('edit-off-course').value, bio: document.getElementById('edit-off-bio').value, otp: otp, user: session.user, pass: session.pass }; apiCall('submitOfficerEdit', payload, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); closeEditOfficerModal(true); silentRefresh('getAdminLegacyData'); }); }
+  window.updateLegacyClass = function(id, status) { Swal.fire({ title: `Set class to ${status}?`, showCancelButton: true }).then(r => { if(r.isConfirmed) { if(session.role === 'Super Admin') { let blg = document.getElementById('badge-legacy'); let count = parseInt(blg.innerText || 0) - 1; if(count > 0) { blg.innerText = count; } else { blg.style.display = 'none'; } } apiCall('updateLegacyClassStatus', { classId: id, status: status, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Status updated.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); }); } }); }
+  window.deleteLegacyClass = function(id) { Swal.fire({ title: 'PERMANENTLY DELETE CLASS?', text: 'All associated data will be wiped.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => { if(r.isConfirmed) { apiCall('deleteLegacyClass', { classId: id, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Class removed.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); }); } }); }
+  window.deleteLegacyOfficer = function(id) { Swal.fire({ title: 'PERMANENTLY DELETE OFFICER?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => { if(r.isConfirmed) { apiCall('deleteLegacyOfficer', { offId: id, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Officer removed.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); }); } }); }
 
   async function submitPublicPost() {
     const title = document.getElementById('post-title').value.trim(); const desc = document.getElementById('post-desc').value.trim(); const vid = document.getElementById('post-video-url').value.trim();
     if (!title || !desc) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Title & Description required.', showConfirmButton:false, timer:2500});
     if (!editingPostId && stagedImages.length === 0 && !vid) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Media required.', showConfirmButton:false, timer:2500});
-    
     const btn = document.getElementById('btn-submit-post'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; btn.disabled = true;
     let actionName = editingPostId ? 'resubmitPost' : 'submitPost'; let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, pass: session.pass }; if (editingPostId) payload.postId = editingPostId;
-
-    apiCall(actionName, payload, (res) => {
-      Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); btn.innerHTML = oldHtml; btn.disabled = false; cancelEdit(); silentRefresh('getPostsAdmin');
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
+    apiCall(actionName, payload, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); btn.innerHTML = oldHtml; btn.disabled = false; cancelEdit(); silentRefresh('getPostsAdmin'); }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
   }
 
-  function editPost(id) {
-    const p = globalAdminPostCache.find(x => x.id === id); if (!p) return;
-    editingPostId = id; document.getElementById('post-title').value = p.title; document.getElementById('post-desc').value = p.description; document.getElementById('post-video-url').value = p.videoUrl || ''; document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST'; document.getElementById('btn-cancel-edit').style.display = 'inline-block';
-    stagedImages = []; document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;">Images unchanged. Select new ones below to override.</span>'; document.getElementById('admin-draft-section').scrollIntoView({behavior: 'smooth'});
-  }
-
-  function cancelEdit() {
-    editingPostId = null; document.getElementById('post-title').value = ''; document.getElementById('post-desc').value = ''; document.getElementById('post-video-url').value = ''; document.getElementById('post-image-file').value = ''; stagedImages = []; document.getElementById('image-staging-grid').innerHTML = ''; document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL'; document.getElementById('btn-cancel-edit').style.display = 'none';
-  }
+  function editPost(id) { const p = globalAdminPostCache.find(x => x.id === id); if (!p) return; editingPostId = id; document.getElementById('post-title').value = p.title; document.getElementById('post-desc').value = p.description; document.getElementById('post-video-url').value = p.videoUrl || ''; document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST'; document.getElementById('btn-cancel-edit').style.display = 'inline-block'; stagedImages = []; document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;">Images unchanged. Select new ones below to override.</span>'; document.getElementById('admin-draft-section').scrollIntoView({behavior: 'smooth'}); }
+  function cancelEdit() { editingPostId = null; document.getElementById('post-title').value = ''; document.getElementById('post-desc').value = ''; document.getElementById('post-video-url').value = ''; document.getElementById('post-image-file').value = ''; stagedImages = []; document.getElementById('image-staging-grid').innerHTML = ''; document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL'; document.getElementById('btn-cancel-edit').style.display = 'none'; }
 
   function renderAdminPostsHTML() {
     let html = '';
@@ -1065,29 +985,16 @@
     document.getElementById('posts-table').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No posts found.</td></tr>';
   }
 
-  window.togglePin = function(id) {
-    const postIndex = globalAdminPostCache.findIndex(x => x.id === id); if(postIndex === -1) return;
-    let currentPinned = globalAdminPostCache[postIndex].pinned; globalAdminPostCache[postIndex].pinned = (currentPinned === true || currentPinned === "TRUE") ? false : true; renderAdminPostsHTML();
-    apiCall('togglePinPost', { postId: id, user: session.user, pass: session.pass }, () => {}, () => { silentRefresh('getPostsAdmin'); });
-  }
-
-  window.deletePost = function(id) {
-    Swal.fire({ title: 'PERMANENTLY DELETE?', text: "This post will be completely erased.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f', confirmButtonText: 'ANNIHILATE POST' }).then((result) => {
-      if (result.isConfirmed) { apiCall('deletePost', { postId: id, user: session.user, pass: session.pass }, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Post wiped.', showConfirmButton:false, timer:2000}); silentRefresh('getPostsAdmin'); }); }
-    });
-  }
+  window.togglePin = function(id) { const postIndex = globalAdminPostCache.findIndex(x => x.id === id); if(postIndex === -1) return; let currentPinned = globalAdminPostCache[postIndex].pinned; globalAdminPostCache[postIndex].pinned = (currentPinned === true || currentPinned === "TRUE") ? false : true; renderAdminPostsHTML(); apiCall('togglePinPost', { postId: id, user: session.user, pass: session.pass }, () => {}, () => { silentRefresh('getPostsAdmin'); }); }
+  window.deletePost = function(id) { Swal.fire({ title: 'PERMANENTLY DELETE?', text: "This post will be completely erased.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f', confirmButtonText: 'ANNIHILATE POST' }).then((result) => { if (result.isConfirmed) { apiCall('deletePost', { postId: id, user: session.user, pass: session.pass }, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Post wiped.', showConfirmButton:false, timer:2000}); silentRefresh('getPostsAdmin'); }); } }); }
 
   function updatePost(id, status) {
     let feedback = document.getElementById(`feedback-${id}`) ? document.getElementById(`feedback-${id}`).value.trim() : '';
     if (status === 'Revise' && !feedback) { return Swal.fire({toast:true, position:'top', icon:'warning', title:'Provide correction instructions.', showConfirmButton:false, timer:2500}); }
-
     Swal.fire({ title: `Set status to ${status}?`, showCancelButton: true, confirmButtonText: 'CONFIRM' }).then(r => {
       if (r.isConfirmed) {
         const postIndex = globalAdminPostCache.findIndex(x => x.id === id);
-        if(postIndex !== -1) {
-            globalAdminPostCache[postIndex].status = status; globalAdminPostCache[postIndex].feedback = feedback;
-            if (session.role === 'Super Admin') { let bp = document.getElementById('badge-posts'); let currentCount = parseInt(bp.innerText || "0"); if(currentCount > 0) { bp.innerText = currentCount - 1; if(currentCount - 1 <= 0) bp.style.display = 'none'; } }
-        }
+        if(postIndex !== -1) { globalAdminPostCache[postIndex].status = status; globalAdminPostCache[postIndex].feedback = feedback; if (session.role === 'Super Admin') { let bp = document.getElementById('badge-posts'); let currentCount = parseInt(bp.innerText || "0"); if(currentCount > 0) { bp.innerText = currentCount - 1; if(currentCount - 1 <= 0) bp.style.display = 'none'; } } }
         renderAdminPostsHTML();
         apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, pass: session.pass }, () => { Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000 }); }, () => { silentRefresh('getPostsAdmin'); });
       }
@@ -1121,107 +1028,34 @@
     previewSlideIdx = index;
   }
 
-  function closePostPreview(force) {
-    const modal = document.getElementById('post-preview-modal');
-    if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); const iframe = modal.querySelector('iframe'); if (iframe) { let iframeSrc = iframe.src; iframe.src = iframeSrc; } }
-  }
+  function closePostPreview(force) { const modal = document.getElementById('post-preview-modal'); if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); const iframe = modal.querySelector('iframe'); if (iframe) { let iframeSrc = iframe.src; iframe.src = iframeSrc; } } }
 
-  function performLogin() {
-    const u = document.getElementById('login-user').value.trim(), p = document.getElementById('login-pass').value;
-    const btn = document.getElementById('btn-login'), err = document.getElementById('login-err');
-    if (!u || !p) { err.innerText = 'Credentials required.'; return; }
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; btn.disabled = true; err.innerText = '';
-
-    apiCall('systemLogin', { user: u, pass: p }, 
-      (res) => {
-        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; btn.disabled = false;
-        session = { user: u, pass: p, role: res.role };
-        localStorage.setItem('scck_session', JSON.stringify({ user: u, pass: p, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
-        document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
-        document.getElementById('view-login').style.display = 'none'; document.getElementById('app-container').style.display = 'flex';
-        loadUserProfile(); setupRoleUI(res.role); updateOfflineSyncUI();
-      }, (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; btn.disabled = false; err.innerText = "Error: " + e.message; }
-    );
-  }
-  
-  function logout() { session = {}; localStorage.removeItem('scck_session'); stopScanner(false); document.getElementById('app-container').style.display = 'none'; document.getElementById('view-login').style.display = 'flex'; }
-
-  function updateOfflineSyncUI() {
-    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
-    const btn = document.getElementById('btn-sync-offline');
-    if (btn) { if (offlineScans.length > 0) { btn.style.display = 'block'; btn.innerHTML = `<i class="fas fa-wifi"></i> SYNC OFFLINE SCANS (${offlineScans.length})`; } else { btn.style.display = 'none'; } }
-  }
-
-  function syncOfflineScans() {
-    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]"); if (offlineScans.length === 0) return;
-    const btn = document.getElementById('btn-sync-offline'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNCING...'; btn.disabled = true;
-    apiCall('bulkMarkAttendance', { scans: offlineScans, user: session.user, pass: session.pass }, (res) => {
-       localStorage.removeItem('scck_offline_scans'); updateOfflineSyncUI(); Swal.fire({toast:true, position:'top-end', icon:'success', title:'Synced successfully!', showConfirmButton:false, timer:2000}); btn.disabled = false;
-       if(document.getElementById('panel-dashboard').classList.contains('active-panel')) silentRefresh('getAdminDashboardData');
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
-  }
-
-  function showCameraError(t, d) { document.getElementById('qr-video').style.display='none'; document.getElementById('camera-error').style.display='block'; document.getElementById('camera-error-title').innerText=t; document.getElementById('camera-error-detail').innerHTML=d; document.getElementById('msg').innerText='CAMERA FAILED'; document.getElementById('btn-start-cam').style.display='block'; document.getElementById('btn-stop-cam').style.display='none'; document.getElementById('btn-torch').style.display='none'; }
-  function hideCameraError() { document.getElementById('qr-video').style.display='block'; document.getElementById('camera-error').style.display='none'; }
-  
-  function startScanner() { 
-      const v = document.getElementById('qr-video'), m = document.getElementById('msg'); 
-      m.innerText='REQUESTING HIGH-RES OPTICS...'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; 
-      if(!qrScanner) { qrScanner = new QrScanner(v, r => { if(!isScanning) onScanSuccess(r.data); }, { onDecodeError: e => {}, highlightScanRegion: true, preferredCamera: 'environment', maxScansPerSecond: 10 }); }
-      qrScanner.start().then(() => { 
-          hideCameraError(); m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; document.getElementById('btn-start-cam').style.display='none'; document.getElementById('btn-stop-cam').style.display='block'; 
-          qrScanner.hasFlash().then(hasFlash => { if (hasFlash) document.getElementById('btn-torch').style.display = 'block'; });
-      }).catch(err => { showCameraError('ACCESS DENIED', 'Camera access blocked.'); }); 
-  }
-  
-  function toggleFlashlight() {
-      if(qrScanner) {
-          qrScanner.isFlashOn().then(isOn => {
-              if(isOn) { qrScanner.turnFlashOff(); document.getElementById('btn-torch').innerHTML = '<i class="fas fa-bolt"></i> LIGHT'; } 
-              else { qrScanner.turnFlashOn(); document.getElementById('btn-torch').innerHTML = '<i class="fas fa-lightbulb"></i> LIGHT OFF'; }
-          });
-      }
-  }
-
-  function stopScanner(manual) { 
-      if(qrScanner) { qrScanner.turnFlashOff(); qrScanner.stop(); }
-      isScanning=false; 
-      if(manual){ document.getElementById('btn-start-cam').style.display='block'; document.getElementById('btn-stop-cam').style.display='none'; document.getElementById('btn-torch').style.display='none'; document.getElementById('msg').innerText='CAMERA OFFLINE'; document.getElementById('msg').style.background='rgba(232, 240, 254, 0.9)'; document.getElementById('msg').style.color='var(--army-primary)'; } 
-  }
-
-  function handleQRImageUpload(event) { 
-      const f = event.target.files[0]; if(!f) return; 
-      const m = document.getElementById('msg'); 
-      m.innerHTML='<i class="fas fa-spinner fa-spin"></i> ISOLATING MATRIX...'; m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; 
-      QrScanner.scanImage(f, { returnDetailedScanResult: true, alsoTryWithoutScanRegion: true }).then(r => onScanSuccess(r.data)).catch(e => { 
-          Swal.fire({toast:true, position:'top', icon:'error', title:'No QR code found.', showConfirmButton:false, timer:2000}); 
-          m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; 
-      }); 
-      event.target.value=''; 
-  }
-
-  function clearRecentScans() { document.getElementById('recent-scans').innerHTML=''; recentScanCount=0; document.getElementById('scan-count').innerText='0'; }
-  
-  function onScanSuccess(text) { 
-    if(isScanning) return; isScanning=true; const m=document.getElementById('msg'); 
-    
-    if (!navigator.onLine) {
-      let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
-      const now = new Date(); const offDate = ('0' + (now.getMonth() + 1)).slice(-2) + '/' + ('0' + now.getDate()).slice(-2) + '/' + now.getFullYear(); let hours = now.getHours(); let ampm = hours >= 12 ? 'PM' : 'AM'; hours = hours % 12; hours = hours ? hours : 12; let mins = ('0' + now.getMinutes()).slice(-2); let secs = ('0' + now.getSeconds()).slice(-2); let offTime = ('0' + hours).slice(-2) + ':' + mins + ':' + secs + ' ' + ampm;
-      offlineScans.push({ scannedData: text, offlineDate: offDate, offlineTime: offTime }); localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
-      m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-save"></i> SAVED OFFLINE'; document.getElementById('scan-name').innerText='OFFLINE SCAN CACHED'; document.getElementById('scan-id').innerText=text;
-      updateOfflineSyncUI(); setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 2000); return;
-    }
-
-    m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; 
-    apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); 
-  }
-
+  // --- CADET DASHBOARD & TRACKER ---
   function processCadetData(res) {
     if (session.role !== 'Cadet') return;
     document.getElementById('cadet-stat-score').innerText = res.score;
-    let sColor = res.score < 75 ? 'var(--status-red)' : (res.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); document.getElementById('cadet-stat-score').style.color = sColor;
-    document.getElementById('cadet-stat-present').innerText = res.presentDays; document.getElementById('cadet-stat-absent').innerText = res.absentDays;
+    let sColor = res.score < 75 ? 'var(--status-red)' : (res.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); 
+    document.getElementById('cadet-stat-score').style.color = sColor;
+    
+    // NEW GRADES
+    document.getElementById('cadet-stat-final').innerText = res.finalGrade || '0.00';
+    document.getElementById('cadet-stat-final').style.color = (res.finalGrade >= 75) ? 'var(--status-green)' : 'var(--status-red)';
+    document.getElementById('cadet-stat-exam').innerText = res.examAvg || '0.00';
+
+    // NEW 15 DAY TRACKER
+    let trackerHtml = '';
+    for(let i=0; i<15; i++) {
+        let boxClass = 'box-upcoming';
+        if (i < res.tracker.length) {
+            let s = res.tracker[i];
+            if (s === 'Present') boxClass = 'box-present';
+            else if (s === 'Late' || s === 'Very Late') boxClass = 'box-late';
+            else if (s === 'Absent') boxClass = 'box-absent';
+        }
+        trackerHtml += `<div class="tracker-box ${boxClass}">D${i+1}<span>${boxClass==='box-upcoming'?'-':res.tracker[i]}</span></div>`;
+    }
+    document.getElementById('cadet-15day-tracker').innerHTML = trackerHtml;
+    document.getElementById('cadet-stat-att-pct').innerText = res.attendancePct + "%";
 
     let attHtml = ''; res.attendance.forEach(r => { let bc = r.status === 'Present' ? 'badge-present' : (r.status === 'Late' ? 'badge-late' : (r.status === 'Very Late' ? 'badge-verylate' : 'badge-absent')); attHtml += `<tr><td>${r.date}</td><td style="color:var(--status-green); font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; }); document.getElementById('cadet-attendance-table').innerHTML = attHtml || '<tr><td colspan="4" style="text-align:center;">No records.</td></tr>';
     let discHtml = ''; res.discipline.forEach(r => { let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)'; let typeBadge = r.type === 'Merit' ? '<span class="badge badge-present">MERIT</span>' : '<span class="badge badge-absent">DEMERIT</span>'; discHtml += `<tr><td>${r.date}</td><td>${typeBadge}</td><td style="color:var(--text-muted);">${r.reason}</td><td style="font-weight:bold; color:${ptsColor};">${r.points > 0 ? '+'+r.points : r.points}</td></tr>`; }); document.getElementById('cadet-discipline-table').innerHTML = discHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
@@ -1249,43 +1083,33 @@
   function closeBulkDisciplineModal(force) { const modal = document.getElementById('bulk-discipline-modal'); if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); } }
 
   function submitBulkDiscipline() {
-    let target = document.getElementById('bulk-target-group').value;
-    let customTarget = document.getElementById('bulk-custom-company').value.trim();
-    if(customTarget) target = customTarget;
-    
-    const val = document.getElementById('bulk-action-select').value;
-    if (!val) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Select a batch action.', showConfirmButton:false, timer:2000}); 
-    
+    let target = document.getElementById('bulk-target-group').value, customTarget = document.getElementById('bulk-custom-company').value.trim(); if(customTarget) target = customTarget;
+    const val = document.getElementById('bulk-action-select').value; if (!val) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Select a batch action.', showConfirmButton:false, timer:2000}); 
     const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
-
-    // 🔥 HCI FIX 1: Immediately close and hide the custom modal to prevent double-clicking
     closeBulkDisciplineModal(true);
-
-    // 🔥 HCI FIX 2: Trigger the clean confirmation popup only AFTER the background is clear
-    Swal.fire({
-      title: 'CONFIRM BATCH ACTION?',
-      html: `You are about to issue a <b>${type} (${points > 0 ? '+'+points : points} pts)</b> to:<br><br><strong style="color:var(--army-primary); font-size:20px;">${target === 'ALL' ? 'THE ENTIRE UNIT' : target.toUpperCase() + ' COMPANY'}</strong><br><br>Reason: ${reason}`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d32f2f',
-      cancelButtonColor: '#607d8b',
-      confirmButtonText: 'CONFIRM BATCH ISSUE',
-      allowOutsideClick: false
+    Swal.fire({ title: 'CONFIRM BATCH ACTION?', html: `You are about to issue a <b>${type} (${points > 0 ? '+'+points : points} pts)</b> to:<br><br><strong style="color:var(--army-primary); font-size:20px;">${target === 'ALL' ? 'THE ENTIRE UNIT' : target.toUpperCase() + ' COMPANY'}</strong><br><br>Reason: ${reason}`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f', cancelButtonColor: '#607d8b', confirmButtonText: 'CONFIRM BATCH ISSUE', allowOutsideClick: false
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({ title: 'PROCESSING BATCH...', html: 'Updating unit rosters...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-        
-        apiCall('bulkAddDiscipline', { targetCompany: target, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => {
-            Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:3000});
-            silentRefresh('getAdminDashboardData');
-        }, (err) => { });
+        apiCall('bulkAddDiscipline', { targetCompany: target, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:3000}); silentRefresh('getAdminDashboardData'); });
       }
     });
   }
 
   function processDashboardData(res) { 
       if (res.alerts) { let bl = document.getElementById('badge-leaves'), bp = document.getElementById('badge-posts'), blg = document.getElementById('badge-legacy'); if (session.role === 'Super Admin') { if(bl) { bl.innerText = res.alerts.leaves; bl.style.display = res.alerts.leaves > 0 ? 'inline-block' : 'none'; } if(bp) { bp.innerText = res.alerts.posts; bp.style.display = res.alerts.posts > 0 ? 'inline-block' : 'none'; } if(blg) { blg.innerText = res.alerts.legacy; blg.style.display = res.alerts.legacy > 0 ? 'inline-block' : 'none'; } } else { if(bl) bl.style.display = 'none'; if(bp) bp.style.display = 'none'; if(blg) blg.style.display = 'none'; } }
-      document.getElementById('admin-active-day').innerText=res.activeDay; const t=res.stats.total||1, p=res.stats.present, l=res.stats.late, a=res.stats.absent; document.getElementById('stat-total').innerText=res.stats.total; document.getElementById('stat-present').innerText=p; document.getElementById('stat-present-pct').innerText=Math.round((p/t)*100)+'%'; document.getElementById('stat-late').innerText=l; document.getElementById('stat-late-pct').innerText=Math.round((l/t)*100)+'%'; document.getElementById('stat-absent').innerText=a; document.getElementById('stat-absent-pct').innerText=Math.round((a/t)*100)+'%'; renderDonut(p,l,a); if(res.weeklyData) renderWeekly(res.weeklyData); let ah=''; res.attendance.forEach(r => { let bc=r.status==='Present'?'badge-present':(r.status==='Late'?'badge-late':(r.status==='Very Late'?'badge-verylate':'badge-absent')); let tc=(r.status==='Late'||r.status==='Very Late')?'var(--status-red)':'var(--status-green)'; ah+=`<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.course}</td><td style="color:${tc}; font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; }); document.getElementById('attendance-table').innerHTML=ah||'<tr><td colspan="6" style="text-align:center;">No records.</td></tr>'; let mh=''; res.masterlist.forEach(r => { let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); mh+=`<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-info" onclick="showQR('${r.id}','${r.name}')" title="Show QR"><i class="fas fa-qrcode"></i></button> <button class="btn-icon btn-warning" onclick="editStudent('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button> <button class="btn-icon btn-danger" onclick="deleteStudentPrompt('${r.id}')"><i class="fas fa-trash"></i></button></td></tr>`; }); document.getElementById('masterlist-table').innerHTML=mh||'<tr><td colspan="6" style="text-align:center;">No cadets found.</td></tr>'; 
+      document.getElementById('admin-active-day').innerText=res.activeDay; 
+      
+      const t=res.stats.total||1, p=res.stats.present, l=res.stats.late, a=res.stats.absent; 
+      document.getElementById('stat-present').innerText=p; document.getElementById('stat-present-pct').innerText=Math.round((p/t)*100)+'%'; document.getElementById('stat-late').innerText=l; document.getElementById('stat-late-pct').innerText=Math.round((l/t)*100)+'%'; document.getElementById('stat-absent').innerText=a; document.getElementById('stat-absent-pct').innerText=Math.round((a/t)*100)+'%'; 
+      
+      if(res.trainingDaysCompleted !== undefined) {
+          document.getElementById('stat-training-days').innerText = res.trainingDaysCompleted + "/15";
+      }
+
+      renderDonut(p,l,a); if(res.weeklyData) renderWeekly(res.weeklyData);
+      
+      let ah=''; res.attendance.forEach(r => { let bc=r.status==='Present'?'badge-present':(r.status==='Late'?'badge-late':(r.status==='Very Late'?'badge-verylate':'badge-absent')); let tc=(r.status==='Late'||r.status==='Very Late')?'var(--status-red)':'var(--status-green)'; ah+=`<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.course}</td><td style="color:${tc}; font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; }); document.getElementById('attendance-table').innerHTML=ah||'<tr><td colspan="6" style="text-align:center;">No records.</td></tr>'; let mh=''; res.masterlist.forEach(r => { let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); mh+=`<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-info" onclick="showQR('${r.id}','${r.name}')" title="Show QR"><i class="fas fa-qrcode"></i></button> <button class="btn-icon btn-warning" onclick="editStudent('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button> <button class="btn-icon btn-danger" onclick="deleteStudentPrompt('${r.id}')"><i class="fas fa-trash"></i></button></td></tr>`; }); document.getElementById('masterlist-table').innerHTML=mh||'<tr><td colspan="6" style="text-align:center;">No cadets found.</td></tr>'; 
       let ach=''; for(let i=1; i<res.accounts.length; i++) { let r=res.accounts[i]; let btn=r[3]==='Active'?`<button class="btn-danger" style="padding:6px 12px; font-size:12px; border-radius:4px; height:auto; display:inline-block;" onclick="changeAccStatus('${r[0]}','Disabled')">REVOKE</button>`:`<button class="btn-success" style="padding:6px 12px; font-size:12px; border-radius:4px; height:auto; display:inline-block;" onclick="changeAccStatus('${r[0]}','Active')">GRANT</button>`; let sb=r[3]==='Active'?'<span class="badge badge-present">ACTIVE</span>':'<span class="badge badge-absent">REVOKED</span>'; let legBtn = ''; if (r[2] === "Scanner" || r[2] === "Cadet") { legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">NOT APPLICABLE</span>`; } else if (r[2] === "Super Admin") { legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">BYPASS GRANTED</span>`; } else { let legAccess = r[4] || "Denied"; legBtn = legAccess === "Granted" ? `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-green); color:var(--status-green); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Granted')">ACCESS: ON</button>` : `<button id="toggle-btn-${r[0]}" style="padding:4px 8px; font-size:11px; background:transparent; border:1px solid var(--status-red); color:var(--status-red); border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleLegacyAccess('${r[0]}', 'Denied')">ACCESS: OFF</button>`; } ach+=`<tr><td>${r[0]}</td><td><b>${r[2]}</b></td><td>${legBtn}</td><td>${sb}</td><td>${btn}</td></tr>`; } document.getElementById('accounts-table').innerHTML=ach||'<tr><td colspan="5" style="text-align:center;">No accounts.</td></tr>'; 
   }
   
@@ -1335,94 +1159,10 @@
   
   function editStudent(id, coy, con) { Swal.fire({ title: 'UPDATE DOSSIER', html: `<div style="text-align:left;"><label>Company</label><input id="swal-company" class="swal2-input" value="${coy}"></div><div style="text-align:left;"><label>Contact</label><input id="swal-contact" class="swal2-input" value="${con}"></div>`, showCancelButton: true, confirmButtonText: 'SAVE', preConfirm: () => [ document.getElementById('swal-company').value, document.getElementById('swal-contact').value ] }).then(r => { if(r.isConfirmed) { Swal.fire({ title: 'UPDATING...', didOpen: () => Swal.showLoading() }); apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Dossier updated.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminDashboardData'); }); } }); }
   function deleteStudentPrompt(id) { Swal.fire({ title: 'CONFIRM DISCHARGE?', text: 'Type DELETE', input: 'text', showCancelButton: true, confirmButtonColor: 'var(--status-red)', confirmButtonText: 'DISCHARGE', inputValidator: v => v!=='DELETE'?'Type DELETE':null }).then(r => { if(r.isConfirmed) { Swal.fire({ title: 'REMOVING...', didOpen: () => Swal.showLoading() }); apiCall('deleteStudentData', { id: id, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Cadet discharged.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminDashboardData'); }); } }); }
-  function processLeaveRequests(res) { let p=0, a=0, r=0, h=''; res.leaves.forEach(lv => { if(lv.status==='Pending') p++; else if(lv.status==='Approved') a++; else if(lv.status==='Rejected') r++; let ab='-'; if(lv.status==='Pending'&&session.role==='Super Admin') ab=`<button class="btn-success" style="padding:6px 10px; font-size:11px; height:auto; display:inline-block;" onclick="updateLeave('${lv.id}','Approved')">APPROVE</button> <button class="btn-danger" style="padding:6px 10px; font-size:11px; height:auto; display:inline-block;" onclick="updateLeave('${lv.id}','Rejected')">DENY</button>`; let bc=lv.status==='Approved'?'badge-approved':(lv.status==='Rejected'?'badge-rejected':'badge-pending'); h+=`<tr><td>${lv.from?new Date(lv.from).toLocaleDateString():''} – ${lv.to?new Date(lv.to).toLocaleDateString():''}</td><td><b>${lv.studentId}</b></td><td>${lv.name}</td><td>${lv.reason}</td><td><span class="badge ${bc}">${lv.status}</span></td><td>${ab}</td></tr>`; }); document.getElementById('leaves-table').innerHTML=h||'<tr><td colspan="6" style="text-align:center;">No requests.</td></tr>'; document.getElementById('lv-stat-pending').innerText=p; document.getElementById('lv-stat-approved').innerText=a; document.getElementById('lv-stat-rejected').innerText=r; }
-  
-  function submitLeave() { 
-    const id=document.getElementById('lv-id').value.trim(), f=document.getElementById('lv-from').value, t=document.getElementById('lv-to').value, x=document.getElementById('lv-reason').value.trim(); 
-    if(!id||!f||!t||!x) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill all fields.', showConfirmButton:false, timer:2000}); 
-    const btn = document.getElementById('btn-submit-admin-leave'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
-    apiCall('submitLeaveRequest', { studentId: id, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { 
-      Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-      ['id','from','to','reason'].forEach(k => document.getElementById(`lv-${k}`).value=''); btn.innerHTML = oldHtml; btn.disabled = false; silentRefresh('getLeaveRequests'); 
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
-  
-  function updateLeave(id, s) { 
-      Swal.fire({ title: `Set status to ${s}?`, showCancelButton: true }).then(r => { 
-          if(r.isConfirmed) { 
-              if(session.role === 'Super Admin') { let bl = document.getElementById('badge-leaves'); if(bl && bl.style.display !== 'none') { let count = parseInt(bl.innerText || 0) - 1; bl.innerText = count; if(count <= 0) bl.style.display = 'none'; } }
-              apiCall('updateLeaveStatus', { leaveId: id, status: s, user: session.user, pass: session.pass }, () => silentRefresh('getLeaveRequests')); 
-          } 
-      }); 
-  }
-
-  function processIDStudents(res) { globalStudentCache = res.students; let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; res.students.forEach(s => { o+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; lo+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; }); document.getElementById('id-target-select').innerHTML=o; document.getElementById('lv-id').innerHTML=lo; }
-  
-  function generateIDPreview() { 
-      const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; 
-      const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; 
-      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'); let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
-      c.innerHTML=f.map(s => { let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; }).join(''); 
-      setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H })), 300); 
-  }
-  
-  function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Generate preview before printing.', showConfirmButton:false, timer:2000}); window.print(); }
-  function processAuditLogs(res) { document.getElementById('audit-tamper-warning').style.display='none'; if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${l.user}</b></td><td><span class="badge badge-action">${l.action}</span></td><td style="color:var(--text-muted); font-size:13px;">${l.details}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }
-  function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${c.name} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
-  
-  function submitLegacyClass() { 
-      const n=document.getElementById('leg-class-name').value.trim(), y=document.getElementById('leg-class-year').value.trim(), l=croppedData['leg-class-logo']; 
-      if(!n||!y||!l) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fields required.', showConfirmButton:false, timer:2000}); 
-      const btn = document.getElementById('btn-submit-class'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...'; btn.disabled = true;
-      apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false; silentRefresh('getAdminLegacyData'); 
-      }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
-  
-  function submitLegacyOfficer() { 
-      const c=document.getElementById('leg-off-class').value, r=document.getElementById('leg-off-rank').value.trim(), n=document.getElementById('leg-off-name').value.trim(), d=document.getElementById('leg-off-desig').value.trim(), course=document.getElementById('leg-off-course').value.trim(), bio=document.getElementById('leg-off-bio').value.trim(), i=croppedData['leg-off-photo']; 
-      if(!c||!r||!n||!d||!i) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill fields and upload photo.', showConfirmButton:false, timer:2000}); 
-      const btn = document.getElementById('btn-submit-officer'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; btn.disabled = true;
-      apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false; silentRefresh('getAdminLegacyData'); 
-      }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
-
-  function loadUserProfile() { apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { document.getElementById('prof-name').value=res.name||""; document.getElementById('prof-rank').value=res.rank||""; document.getElementById('prof-age').value=res.age||""; document.getElementById('prof-course').value=res.course||""; document.getElementById('prof-position').value=res.position||""; document.getElementById('prof-contact').value=res.contact||""; updateSidebarProfile(res); }); }
-  
-  function saveUserProfile() { 
-      const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; 
-      if(croppedData['prof-image-file']) d.imageData=croppedData['prof-image-file']; 
-      const btn = document.getElementById('btn-save-profile'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPDATING...'; btn.disabled = true;
-      apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { 
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('prof-image-file').value=""; delete croppedData['prof-image-file']; document.getElementById('prof-image-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false; loadUserProfile(); 
-      }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
-  
-  function updateSidebarProfile(d) { document.getElementById('sidebar-profile-name').innerText=(d.name||session.user||"PERSONNEL").toUpperCase(); document.getElementById('sidebar-profile-role').innerText=(d.rank?d.rank+" - ":"")+(d.position||session.role||"SYSTEM ACTIVE"); if(d.image) { document.getElementById('sidebar-profile-img').src=d.image; document.getElementById('sidebar-profile-img').style.display='block'; document.getElementById('sidebar-icon').style.display='none'; } else { document.getElementById('sidebar-profile-img').style.display='none'; document.getElementById('sidebar-icon').style.display='block'; } }
-  
-  function saveSystemSettings() { 
-      let p={ user: session.user, pass: session.pass, clearBg: false }; 
-      if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; 
-      const btn = document.getElementById('btn-save-settings'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; btn.disabled = true;
-      apiCall('saveSettings', p, (res) => { 
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('set-logo-file').value=""; delete croppedData['set-logo-file']; document.getElementById('set-logo-status').innerHTML='Select an image...'; document.getElementById('set-bg-file').value=""; delete croppedData['set-bg-file']; document.getElementById('set-bg-status').innerHTML='Select an image...'; document.getElementById('set-nav-logo-file').value=""; delete croppedData['set-nav-logo-file']; document.getElementById('set-nav-logo-status').innerHTML='Select an image...'; 
-          apiCall('getSettings', {}, (n) => { if(n.logoUrl) { document.getElementById('system-logo-login').src=n.logoUrl; document.getElementById('system-logo-login').style.display='block'; } if(n.bgUrl) document.getElementById('view-login').style.backgroundImage=`url('${n.bgUrl}')`; }); 
-          btn.innerHTML = oldHtml; btn.disabled = false;
-      }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
-  }
-  
-  function resetBackground() { Swal.fire({ title: 'RESETTING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', { clearBg: true, user: session.user, pass: session.pass }, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Background removed.', showConfirmButton:false, timer:2000}); document.getElementById('view-login').style.backgroundImage=`radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%)`; }); }
+  function loadUserProfile() { apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { document.getElementById('sidebar-profile-name').innerText = res.name || session.user; document.getElementById('sidebar-profile-role').innerText = session.role; if (res.image) { document.getElementById('sidebar-profile-img').src = res.image; document.getElementById('sidebar-profile-img').style.display = 'block'; document.getElementById('sidebar-icon').style.display = 'none'; } else { document.getElementById('sidebar-profile-img').style.display = 'none'; document.getElementById('sidebar-icon').style.display = 'block'; } if (document.getElementById('panel-profile').classList.contains('active-panel')) { document.getElementById('prof-name').value = res.name || ''; document.getElementById('prof-rank').value = res.rank || ''; document.getElementById('prof-age').value = res.age || ''; document.getElementById('prof-course').value = res.course || ''; document.getElementById('prof-position').value = res.position || ''; document.getElementById('prof-contact').value = res.contact || ''; } }); }
+  function saveUserProfile() { const btn = document.getElementById('btn-save-profile'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SAVING...'; btn.disabled = true; const pData = { name: document.getElementById('prof-name').value, rank: document.getElementById('prof-rank').value, age: document.getElementById('prof-age').value, course: document.getElementById('prof-course').value, position: document.getElementById('prof-position').value, contact: document.getElementById('prof-contact').value, imageData: croppedData['prof-image-file'] || "" }; apiCall('saveProfile', { profileData: pData, user: session.user, pass: session.pass }, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Profile Updated', showConfirmButton:false, timer:2000}); btn.innerHTML = oldHtml; btn.disabled = false; loadUserProfile(); }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); }
 
   try { if (localStorage.getItem('sccks_dark') === '1') applyTheme(true); } catch(e) {}
 </script>
 </body>
 </html>
-
