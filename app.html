@@ -891,7 +891,6 @@
 
       let oHtml = '';
       res.officers.forEach(o => {
-        // FIXED: Super Admin now gets the Edit Button with OTP verification
         let actionBtn = session.role === 'Super Admin' ? `
           <button class="btn-warning" style="padding:4px 8px; font-size:11px; color:#fff; margin-right:5px;" onclick="openEditOfficerModal('${o.id}', '${o.rank}', '${o.name}', '${o.designation}', '${o.course}', \`${o.bio.replace(/`/g, "'").replace(/'/g, "\\'")}\`)"><i class="fas fa-edit"></i></button>
           <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteLegacyOfficer('${o.id}')"><i class="fas fa-trash"></i></button>
@@ -907,7 +906,6 @@
     });
   }
 
-  // OTP Verification functions for Editing Legacy Officers
   window.openEditOfficerModal = function(id, rank, name, desig, course, bio) {
     document.getElementById('edit-off-id').value = id;
     document.getElementById('edit-off-rank').value = rank;
@@ -1010,7 +1008,6 @@
       }
     });
   }
-
 
   async function submitPublicPost() {
     const title = document.getElementById('post-title').value.trim();
@@ -1448,7 +1445,6 @@
         let btn=r[3]==='Active'?`<button class="btn-danger" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${r[0]}','Disabled')">REVOKE</button>`:`<button class="btn-success" style="padding:6px 12px; font-size:12px; border-radius:4px;" onclick="changeAccStatus('${r[0]}','Active')">GRANT</button>`; 
         let sb=r[3]==='Active'?'<span class="badge badge-present">ACTIVE</span>':'<span class="badge badge-absent">REVOKED</span>'; 
         
-        // FIXED: Scanners no longer get the Legacy Access button
         let legBtn = '';
         if (r[2] === "Scanner") {
             legBtn = `<span style="font-size:11px; color:var(--text-muted); font-weight:bold;">NOT APPLICABLE</span>`;
