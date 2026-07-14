@@ -369,7 +369,7 @@
     </ul>
     
     <!-- CADET MENU -->
-    <ul class="sidebar-menu" id="sidebar-menu-cadet" style="display:none;">
+   <ul class="sidebar-menu" id="sidebar-menu-cadet" style="display:none;">
       <li><button onclick="switchTab('panel-cadet-dashboard',this)" class="active"><i class="fas fa-id-badge"></i> <span>MY DASHBOARD</span></button></li>
       <li><button onclick="switchTab('panel-cadet-leaves',this)"><i class="fas fa-envelope"></i> <span>MY LEAVE REQUESTS</span></button></li>
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
@@ -386,7 +386,7 @@
     <!-- CADET DOSSIER WITH LIVE 15-DAY TRACKER -->
     <div id="panel-cadet-dashboard" class="view-panel">
       <div class="header-bar anim-1">
-        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-id-badge"></i> CADET DOSSIER & LOGS</h2>
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-id-badge"></i> MY DASHBOARD </h2>
         <div class="header-actions"><button id="btn-ref-cadet1" class="btn-outline" onclick="silentRefresh('getCadetData', 'btn-ref-cadet1')"><i class="fas fa-sync"></i> SYNC</button></div>
       </div>
       
@@ -710,7 +710,7 @@
   // =========================================================================
   // 🔥 CRITICAL: PASTE YOUR NEW DEPLOYMENT URL HERE 🔥
   // =========================================================================
-  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzyyhaUnb23upiEhyG-5Zfw7XZ-aJ64YNUSDlxRxtfvDWiysHnpMWOawta1YT_xy7QLEQ/exec";
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyi-rYsOjTdvfzPYPmlbKh47tNqTA3drmBL2ThKRo2Y6Ss2EHqLPBZ7UZWxh4krLkdGOw/exec";
 
   let session = {};
   let isDarkMode = false;
@@ -1340,8 +1340,9 @@
   // --- DATA DASHBOARDS ---
   function processCadetData(res) {
     if (session.role !== 'Cadet') return;
-    document.getElementById('cadet-stat-score').innerText = res.score;
-    let sColor = res.score < 75 ? 'var(--status-red)' : (res.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); 
+    
+    document.getElementById('cadet-stat-score').innerText = res.score || 100;
+    let sColor = (res.score || 100) < 75 ? 'var(--status-red)' : ((res.score || 100) < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); 
     document.getElementById('cadet-stat-score').style.color = sColor;
     
     document.getElementById('cadet-stat-final').innerText = res.finalGrade || '0.00';
@@ -1349,28 +1350,43 @@
     document.getElementById('cadet-stat-exam').innerText = res.examAvg || '0.00';
 
     let trackerHtml = '';
+    let trackerArr = res.tracker || [];
     for(let i=0; i<15; i++) {
         let boxClass = 'box-upcoming';
-        if (i < res.tracker.length) {
-            let s = res.tracker[i];
+        if (i < trackerArr.length) {
+            let s = trackerArr[i];
             if (s === 'Present') boxClass = 'box-present';
             else if (s === 'Late' || s === 'Very Late') boxClass = 'box-late';
             else if (s === 'Absent') boxClass = 'box-absent';
         }
-        trackerHtml += `<div class="tracker-box ${boxClass}">D${i+1}<span>${boxClass==='box-upcoming'?'-':res.tracker[i]}</span></div>`;
+        trackerHtml += `<div class="tracker-box ${boxClass}">D${i+1}<span>${boxClass==='box-upcoming'?'-':trackerArr[i]}</span></div>`;
     }
     document.getElementById('cadet-15day-tracker').innerHTML = trackerHtml;
-    document.getElementById('cadet-stat-att-pct').innerText = res.attendancePct + "%";
+    document.getElementById('cadet-stat-att-pct').innerText = (res.attendancePct || 0) + "%";
 
-    let attHtml = ''; res.attendance.forEach(r => { let bc = r.status === 'Present' ? 'badge-present' : (r.status === 'Late' ? 'badge-late' : (r.status === 'Very Late' ? 'badge-verylate' : 'badge-absent')); attHtml += `<tr><td>${r.date}</td><td style="color:var(--status-green); font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; }); document.getElementById('cadet-attendance-table').innerHTML = attHtml || '<tr><td colspan="4" style="text-align:center;">No attendance history logged.</td></tr>';
+    let attHtml = ''; 
+    (res.attendance || []).forEach(r => { 
+        let bc = r.status === 'Present' ? 'badge-present' : (r.status === 'Late' ? 'badge-late' : (r.status === 'Very Late' ? 'badge-verylate' : 'badge-absent')); 
+        attHtml += `<tr><td>${r.date}</td><td style="color:var(--status-green); font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; 
+    }); 
+    document.getElementById('cadet-attendance-table').innerHTML = attHtml || '<tr><td colspan="4" style="text-align:center;">No attendance history logged.</td></tr>';
     
-    let discHtml = ''; res.discipline.forEach(r => { let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)'; let typeBadge = r.type === 'Merit' ? '<span class="badge badge-present">MERIT</span>' : '<span class="badge badge-absent">DEMERIT</span>'; discHtml += `<tr><td>${r.date}</td><td>${typeBadge}</td><td style="color:var(--text-muted);">${r.reason}</td><td style="font-weight:bold; color:${ptsColor};">${r.points > 0 ? '+'+r.points : r.points}</td></tr>`; }); document.getElementById('cadet-discipline-table').innerHTML = discHtml || '<tr><td colspan="4" style="text-align:center;">No clean records.</td></tr>';
+    let discHtml = ''; 
+    (res.discipline || []).forEach(r => { 
+        let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)'; 
+        let typeBadge = r.type === 'Merit' ? '<span class="badge badge-present">MERIT</span>' : '<span class="badge badge-absent">DEMERIT</span>'; 
+        let adminLbl = r.admin ? `<br><span style="font-size:10px; color:var(--text-muted);">Issued by: ${r.admin}</span>` : '';
+        discHtml += `<tr><td>${r.date}</td><td>${typeBadge}</td><td style="color:var(--text-muted);">${r.reason}${adminLbl}</td><td style="font-weight:bold; color:${ptsColor};">${r.points > 0 ? '+'+r.points : r.points}</td></tr>`; 
+    }); 
+    document.getElementById('cadet-discipline-table').innerHTML = discHtml || '<tr><td colspan="4" style="text-align:center;">No clean records.</td></tr>';
     
-    let lvHtml = ''; res.leaves.forEach(lv => { 
+    let lvHtml = ''; 
+    (res.leaves || []).forEach(lv => { 
         let bc = lv.status === 'Approved' ? 'badge-present' : (lv.status === 'Rejected' ? 'badge-absent' : 'badge-late'); 
         let reviewText = lv.status === 'Pending' ? `<span style="font-size:10px; color:var(--text-muted); display:block; margin-top:4px;">Awaiting Review</span>` : `<span style="font-size:10px; color:var(--text-muted); display:block; margin-top:4px;">Reviewed by: <b>${lv.admin}</b></span>`;
         lvHtml += `<tr><td>${lv.date}</td><td>${lv.from} – ${lv.to}</td><td>${lv.reason}</td><td><span class="badge ${bc}">${lv.status}</span>${reviewText}</td></tr>`; 
-    }); document.getElementById('cadet-leaves-table').innerHTML = lvHtml || '<tr><td colspan="4" style="text-align:center;">No leaves filed.</td></tr>';
+    }); 
+    document.getElementById('cadet-leaves-table').innerHTML = lvHtml || '<tr><td colspan="4" style="text-align:center;">No leaves filed.</td></tr>';
   }
 
   function submitCadetLeave() {
@@ -1489,13 +1505,13 @@
       Swal.fire({ 
           title: 'UPDATE DOSSIER', 
           html: `
-          <div style="display:flex; flex-direction:column; text-align:left; margin-bottom:15px; padding: 0 10px;">
-              <label style="font-size:12px; font-weight:bold; color:var(--text-muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.5px;">Company</label>
-              <input id="swal-coy" class="swal2-input" style="margin:0; width:100%; height:46px; border:2px solid var(--border); border-radius:6px; font-size:14px; outline:none;" value="${coy}">
+          <div style="text-align: left; margin-bottom: 15px;">
+            <label style="font-size:12px; font-weight:bold; color:var(--text-muted); text-transform:uppercase;">Company</label>
+            <input id="swal-coy" style="width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; margin-top: 5px;" value="${coy}">
           </div>
-          <div style="display:flex; flex-direction:column; text-align:left; padding: 0 10px;">
-              <label style="font-size:12px; font-weight:bold; color:var(--text-muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.5px;">Contact</label>
-              <input id="swal-con" class="swal2-input" style="margin:0; width:100%; height:46px; border:2px solid var(--border); border-radius:6px; font-size:14px; outline:none;" value="${con}">
+          <div style="text-align: left;">
+            <label style="font-size:12px; font-weight:bold; color:var(--text-muted); text-transform:uppercase;">Contact</label>
+            <input id="swal-con" style="width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; margin-top: 5px;" value="${con}">
           </div>`, 
           showCancelButton: true, 
           confirmButtonColor: 'var(--army-primary)',
