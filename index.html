@@ -48,18 +48,19 @@
     .nav-btn { background: var(--army-gold) !important; color: #1b2015 !important; padding: 8px 20px; border-radius: 4px; font-weight: 700; transition: all 0.3s !important; border: 1px solid transparent !important; font-family: 'Oswald', sans-serif !important;}
     .nav-btn:hover { background: transparent !important; color: var(--army-gold) !important; border: 1px solid var(--army-gold) !important; }
 
-    .landing-showcase { position: relative; z-index: 1; padding: 120px 20px; min-height: 60vh; border-bottom: 1px solid var(--border-color); }
+    .landing-showcase { position: relative; z-index: 1; padding: 120px 20px 60px 20px; min-height: 60vh; border-bottom: 1px solid var(--border-color); }
     .section-title { color: var(--army-gold); font-size: 32px; margin-bottom: 40px; text-align: center; border-bottom: 2px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; max-width: 900px; margin-left: auto; margin-right: auto;}
     .post-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; justify-content: center; }
     .post-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
     .post-card:hover { transform: translateY(-8px); border-color: var(--army-gold); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15); }
     
-    body.light-mode .post-card, body.light-mode .officer-card, body.light-mode .modal-content { background: var(--card-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.2); border: none; }
+    body.light-mode .post-card, body.light-mode .officer-card, body.light-mode .modal-content, body.light-mode .dossier-content { background: var(--card-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.2); border: none; }
     body.light-mode .post-title, body.light-mode .officer-name, body.light-mode .full-post-title, body.light-mode .dossier-name { color: #1b2015; }
-    body.light-mode .post-desc, body.light-mode .officer-desig, body.light-mode .full-post-desc, body.light-mode .dossier-meta, body.light-mode .dossier-bio, body.light-mode .dossier-back-btn { color: #4a5568; }
+    body.light-mode .post-desc, body.light-mode .officer-desig, body.light-mode .full-post-desc, body.light-mode .dossier-meta, body.light-mode .dossier-bio, body.light-mode .dossier-back-btn, body.light-mode .hof-title, body.light-mode .hof-hero-role, body.light-mode .hof-cc-name { color: #4a5568; }
     body.light-mode .read-more-btn { color: #4b5a36; border-color: #4b5a36; }
     body.light-mode .read-more-btn:hover { background: #4b5a36; color: #ffffff; }
     body.light-mode .class-name { text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+    body.light-mode .hof-cc-card { border-top: 4px solid var(--army-primary); }
 
     .post-img-container { overflow: hidden; height: 220px; border-bottom: 2px solid var(--army-gold); position: relative; }
     .post-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
@@ -72,7 +73,7 @@
     .read-more-btn { background: transparent; color: var(--army-gold); border: 1px solid var(--army-gold); padding: 10px 15px; border-radius: 4px; font-size: 13px; font-family: 'Oswald', sans-serif; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-weight: bold; width: 100%; }
     .read-more-btn:hover { background: var(--army-gold); color: #1b2015; }
 
-    .landing-legacy { position: relative; z-index: 1; padding: 100px 20px; min-height: 50vh; }
+    .landing-legacy { position: relative; z-index: 1; padding: 60px 20px; border-bottom: 1px solid var(--border-color); }
     .legacy-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
     .class-card { background: transparent; border: none; padding: 20px; text-align: center; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; align-items: center; }
     .class-card:hover { transform: translateY(-15px) scale(1.05); }
@@ -88,6 +89,28 @@
     .officer-rank { font-size: 12px; color: var(--army-gold); font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; }
     .officer-name { font-size: 16px; color: var(--text-main); font-weight: bold; margin-bottom: 5px; font-family: 'Oswald', sans-serif;}
     .officer-desig { font-size: 12px; color: var(--text-muted); }
+
+    /* HALL OF FAME CSS */
+    .hof-section { padding: 60px 20px; position: relative; z-index: 1; }
+    .hof-era-block { max-width: 1000px; margin: 0 auto 60px auto; }
+    .hof-hero-card { background: var(--card-bg); border: 3px solid var(--army-gold); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; margin-bottom: 30px; }
+    .hof-hero-photo { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--army-gold); object-fit: cover; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); background: #000; }
+    .hof-hero-rank { color: var(--army-gold); font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: bold; letter-spacing: 1px; }
+    .hof-hero-name { color: var(--text-main); font-family: 'Oswald', sans-serif; font-size: 32px; text-transform: uppercase; margin: 5px 0; line-height: 1.1; }
+    .hof-hero-role { font-size: 14px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px; }
+    .hof-hero-quote { font-style: italic; color: var(--text-muted); font-size: 15px; max-width: 600px; margin: 0 auto 20px auto; border-left: 3px solid var(--army-gold); border-right: 3px solid var(--army-gold); padding: 0 15px; }
+    .hof-cc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .hof-cc-card { background: var(--card-bg); border: 1px solid var(--border-color); border-top: 4px solid var(--army-gold); border-radius: 8px; padding: 25px 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s; position: relative; }
+    .hof-cc-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+    .hof-cc-photo { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--army-gold); object-fit: cover; margin-bottom: 15px; background: #000; }
+    .hof-cc-name { color: var(--text-main); font-family: 'Oswald', sans-serif; font-size: 22px; text-transform: uppercase; margin: 5px 0; line-height: 1.1; }
+    .hof-posthumous-badge { position: absolute; top: 15px; right: 15px; background: #000; color: #fff; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; }
+    .hof-btn-dossier { background: transparent; color: var(--army-gold); border: 1px solid var(--army-gold); padding: 10px 20px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; font-family: 'Oswald', sans-serif; margin-top: 15px; text-transform: uppercase; }
+    .hof-btn-dossier:hover { background: var(--army-gold); color: #1b2015; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .hof-divider { text-align: center; margin: 60px 0 40px 0; position: relative; }
+    .hof-divider::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; border-top: 2px dashed var(--border-color); z-index: 1; }
+    .hof-divider span { background: var(--army-dark); padding: 0 20px; position: relative; z-index: 2; color: var(--text-muted); font-family: 'Oswald', sans-serif; font-size: 18px; letter-spacing: 2px; transition: background 0.5s; }
+    body.light-mode .hof-divider span { background: #fdfdfd; }
 
     .carousel-container { position: relative; width: 100%; max-height: 450px; background: #000; border-radius: 8px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .carousel-slide { display: none; width: 100%; height: 100%; text-align: center; }
@@ -181,6 +204,13 @@
       <div id="post-grid-container"><p style="text-align:center; width:100%; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Retrieving intelligence reports...</p></div>
     </div>
 
+    <section class="hof-section" id="hall-of-fame-section">
+      <h2 class="section-title"><i class="fas fa-star"></i> HALL OF FAME: COMMAND ERA</h2>
+      <div id="hof-container">
+        <p style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Retrieving Unit Archives...</p>
+      </div>
+    </section>
+
     <div class="landing-legacy" id="legacy-section">
       <h2 class="section-title">CLASS LEGACY</h2>
       <div class="legacy-grid" id="legacy-grid-container"><p style="text-align:center; width:100%; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Retrieving archives...</p></div>
@@ -188,14 +218,19 @@
   </div>
 
   <div class="modal-overlay" id="public-modal" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()"><i class="fas fa-times close-btn" onclick="closeModal(true)"></i><div id="modal-dynamic-content"></div></div>
+    <div class="modal-content" id="modal-container-inner" onclick="event.stopPropagation()">
+        <i class="fas fa-times close-btn" onclick="closeModal(true)"></i>
+        <div id="modal-dynamic-content"></div>
+    </div>
   </div>
 
   <script>
+    // 🛑 MAKE SURE THIS MATCHES YOUR CURRENT DEPLOYMENT URL 🛑
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyi-rYsOjTdvfzPYPmlbKh47tNqTA3drmBL2ThKRo2Y6Ss2EHqLPBZ7UZWxh4krLkdGOw/exec";
 
     let legacyCache = [];
     let postCache = [];
+    let globalCommandData = [];
     
     let currentPostPage = 1;
     const POSTS_PER_PAGE = 6;
@@ -211,7 +246,6 @@
         } else if (url.includes('drive.google.com/file/d/')) {
             finalUrl = url.replace('/view', '/preview');
         } else if (url.includes('facebook.com') || url.includes('fb.watch')) {
-            // Facebook specific iframe plugin formatting
             finalUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
         }
         return `<iframe src="${finalUrl}" style="width:100%; height:450px; border:none; border-radius:8px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
@@ -277,6 +311,7 @@
     }
 
     window.onload = () => {
+      // 1. Fetch Branding and Class Legacy
       apiCall('getLegacyData', {}, (data) => {
         if (data.branding) {
           localStorage.setItem('scck_branding', JSON.stringify(data.branding));
@@ -289,12 +324,23 @@
         }
       });
 
+      // 2. Fetch Public Posts
       apiCall('getApprovedPosts', {}, (data) => {
         if (data.success && data.posts && data.posts.length > 0) { 
           localStorage.setItem('scck_posts', JSON.stringify(data.posts)); 
           postCache = data.posts; 
           renderPostGrid(); 
         }
+      });
+
+      // 3. Fetch Command Hall of Fame
+      apiCall('getCommandHistory', {}, (data) => {
+          if (data.success) {
+              globalCommandData = data.eras;
+              renderHallOfFame();
+          } else {
+              document.getElementById('hof-container').innerHTML = `<p style="text-align:center; color:red;">Failed to load archives.</p>`;
+          }
       });
     };
 
@@ -391,6 +437,66 @@
         document.getElementById('showcase-section').scrollIntoView({ behavior: 'smooth' });
     }
 
+    function renderHallOfFame() {
+        const container = document.getElementById('hof-container');
+        if (!globalCommandData || globalCommandData.length === 0) {
+            container.innerHTML = `<p style="text-align:center; color:var(--text-muted);">No historical records found.</p>`;
+            return;
+        }
+
+        let html = '';
+        
+        globalCommandData.forEach((era, index) => {
+            if (index > 0 && era.status === "Past" && globalCommandData[index-1].status === "Current") {
+                html += `<div class="hof-divider"><span>ARCHIVED ERAS</span></div>`;
+            }
+
+            let postBadgeCmd = era.status === "Posthumous" ? `<div class="hof-posthumous-badge"><i class="fas fa-ribbon"></i> IN MEMORIAM</div>` : '';
+            let quoteHtmlCmd = era.quote ? `<div class="hof-hero-quote">"${era.quote}"</div>` : '';
+            let bioBtnCmd = era.bio ? `<button class="hof-btn-dossier" onclick="openDossier('${era.id}')"><i class="fas fa-folder-open"></i> VIEW COMMAND DOSSIER</button>` : '';
+            let imgCmd = era.image || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+
+            html += `
+            <div class="hof-era-block">
+              <div class="hof-hero-card">
+                ${postBadgeCmd}
+                <img src="${imgCmd}" class="hof-hero-photo" alt="${era.name}">
+                <div class="hof-hero-rank">${era.rank}</div>
+                <div class="hof-hero-name">${era.name}</div>
+                <div class="hof-hero-role">Unit Commandant • ${era.tenure}</div>
+                ${quoteHtmlCmd}
+                ${bioBtnCmd}
+              </div>
+            `;
+
+            if (era.corpsCommanders && era.corpsCommanders.length > 0) {
+                html += `<div class="hof-cc-grid">`;
+                era.corpsCommanders.forEach(cc => {
+                    let postBadgeCc = cc.status === "Posthumous" ? `<div class="hof-posthumous-badge"><i class="fas fa-ribbon"></i> IN MEMORIAM</div>` : '';
+                    let quoteHtmlCc = cc.quote ? `<div style="font-size:12px; font-style:italic; color:var(--text-muted); margin:10px 0;">"${cc.quote}"</div>` : '';
+                    let bioBtnCc = cc.bio ? `<button class="hof-btn-dossier" onclick="openDossier('${cc.id}', true, '${era.id}')"><i class="fas fa-folder-open"></i> DOSSIER</button>` : '';
+                    let imgCc = cc.image || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+
+                    html += `
+                    <div class="hof-cc-card">
+                      ${postBadgeCc}
+                      <img src="${imgCc}" class="hof-cc-photo" alt="${cc.name}">
+                      <div style="color:var(--army-gold); font-family:'Oswald', sans-serif; font-size:14px; font-weight:bold;">${cc.rank}</div>
+                      <div class="hof-cc-name" style="font-size:18px;">${cc.name}</div>
+                      <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Corps Commander</div>
+                      <div style="font-size:11px; color:#888;">${cc.tenure}</div>
+                      ${quoteHtmlCc}
+                      ${bioBtnCc}
+                    </div>`;
+                });
+                html += `</div>`; 
+            }
+            html += `</div>`; 
+        });
+
+        container.innerHTML = html;
+    }
+
     let currentSlideIdx = 0;
     function openPostModal(postId) {
       const p = postCache.find(x => x.id === postId);
@@ -401,10 +507,9 @@
       let carouselHtml = '';
       let slidesArr = [];
       
-      // Add the Facebook/Video embed as the first slide if it exists
       if (p.videoUrl) slidesArr.push(`<div class="carousel-slide" id="slide-${slidesArr.length}">${createEmbed(p.videoUrl)}</div>`);
       images.forEach(img => {
-          if(img) slidesArr.push(`<div class="carousel-slide" id="slide-${slidesArr.length}"><img src="${img}"></div>`);
+        if(img) slidesArr.push(`<div class="carousel-slide" id="slide-${slidesArr.length}"><img src="${img}"></div>`);
       });
 
       if (slidesArr.length > 0) {
@@ -474,6 +579,35 @@
       document.getElementById('modal-dynamic-content').innerHTML = html;
     }
 
+    window.openDossier = function(id, isCorpsCommander = false, parentId = null) {
+        let person = null;
+        if (!isCorpsCommander) {
+            person = globalCommandData.find(e => e.id === id);
+        } else {
+            let era = globalCommandData.find(e => e.id === parentId);
+            if (era) { person = era.corpsCommanders.find(c => c.id === id); }
+        }
+        if (!person) return;
+
+        let formattedBio = person.bio ? person.bio.replace(/- /g, "• ") : '<div class="dossier-bio" style="font-style:italic; opacity:0.6;">No biography recorded.</div>';
+        const photo = person.image ? `<img src="${person.image}" class="dossier-img">` : `<div style="display:flex; height:350px; align-items:center; justify-content:center; color:#555; font-size:60px; width:100%;"><i class="fas fa-user"></i></div>`;
+
+        const html = `
+          <div class="dossier-layout">
+             <div class="dossier-img-wrap">${photo}</div>
+             <div class="dossier-info">
+                <div class="dossier-rank">${person.rank}</div>
+                <div class="dossier-name">${person.name}</div>
+                <div class="dossier-meta"><i class="fas fa-shield-alt"></i> ${person.role}</div>
+                <div class="dossier-meta"><i class="fas fa-clock"></i> ${person.tenure}</div>
+                <div class="dossier-bio">${formattedBio}</div>
+             </div>
+          </div>
+        `;
+        document.getElementById('modal-dynamic-content').innerHTML = html;
+        showModal();
+    }
+
     function showModal() {
       const modal = document.getElementById('public-modal');
       modal.style.display = 'flex';
@@ -485,8 +619,6 @@
       if (force === true || force.target === modal) {
         modal.classList.remove('show');
         setTimeout(() => modal.style.display = 'none', 300);
-        
-        // Stop iframe video playback when closing modal
         const iframe = modal.querySelector('iframe');
         if (iframe) {
             let iframeSrc = iframe.src;
