@@ -1794,13 +1794,6 @@
     apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); 
   }
 
-  // =========================================================================
-  // SETTINGS, SCHEDULE UI, AND PROFILE
-  // =========================================================================
-
-  // =========================================================================
-  // SCHEDULE UI & AUTO-LOCKING ENGINE
-  // =========================================================================
 
   function buildScheduleUI() {
       const grid = document.getElementById('schedule-config-grid');
@@ -1824,8 +1817,9 @@
   }
 
   window.updateScheduleLocks = function() {
-      let skipNext = false;
       let currentVirtualDay = 1;
+      let skipNext = false;
+      let consumedLabel = "";
       
       for(let i=1; i<=15; i++) {
           let box = document.getElementById(`sched-box-${i}`);
@@ -1835,37 +1829,53 @@
           
           if(!box) continue;
 
-          // If the previous slot was a "Double", lock this slot out entirely
+          // 1. If previous was a Double, completely lock and consume this UI box
           if(skipNext) {
               box.style.opacity = '0.5';
+              box.style.display = 'block';
               dateInput.disabled = true;
               typeInput.disabled = true;
               dateInput.value = '';
               typeInput.value = 'Single';
-              lbl.innerHTML = `DAY ${currentVirtualDay} <span style="color:var(--status-red); font-size:10px; margin-left:5px;"><i class="fas fa-lock"></i> LOCKED (Consumed by Day ${currentVirtualDay - 1} PM)</span>`;
+              
+              lbl.innerHTML = `<span style="color:var(--status-red); font-size:11px;"><i class="fas fa-lock"></i> LOCKED (Consumed by ${consumedLabel})</span>`;
+              
               skipNext = false;
-              currentVirtualDay++; 
-              continue;
+              continue; // Do NOT increment currentVirtualDay here, because this box doesn't count!
           }
           
-          // Otherwise, ensure the slot is unlocked
+          // 2. Hide boxes if we've perfectly hit the 15-day limit
+          if (currentVirtualDay > 15) {
+              box.style.display = 'none';
+              continue;
+          } else {
+              box.style.display = 'block';
+          }
+
+          // 3. Normal Active Box Setup
           box.style.opacity = '1';
           dateInput.disabled = false;
           typeInput.disabled = false;
           
-          // Check if this newly unlocked slot is set to Double
+          // 4. Enforce 15-Day Limit on the Dropdown Option
+          let doubleOption = typeInput.querySelector('option[value="Double"]');
+          if (currentVirtualDay === 15) {
+              // If it's the 15th day, force Single and disable Double option
+              if (typeInput.value === 'Double') typeInput.value = 'Single';
+              if (doubleOption) doubleOption.disabled = true;
+          } else {
+              if (doubleOption) doubleOption.disabled = false;
+          }
+
+          // 5. Update Labels and set next cycle rules
           if(typeInput.value === 'Double') {
-              if (currentVirtualDay === 15) {
-                  lbl.innerHTML = `DAY 15 <span style="color:var(--status-red); font-size:10px; margin-left:5px;">(PM session exceeds 15 days)</span>`;
-                  currentVirtualDay++;
-              } else {
-                  lbl.innerHTML = `DAY ${currentVirtualDay} & ${currentVirtualDay + 1} <span style="color:var(--army-primary); font-size:10px; margin-left:5px;">(Full Day Session)</span>`;
-                  skipNext = true; // Tell the loop to lock the next slot
-                  currentVirtualDay += 2;
-              }
+              lbl.innerHTML = `DAY ${currentVirtualDay} & ${currentVirtualDay + 1} <span style="color:var(--army-primary); font-size:10px; margin-left:5px;">(Full Day Session)</span>`;
+              consumedLabel = `Day ${currentVirtualDay} & ${currentVirtualDay + 1}`;
+              skipNext = true;
+              currentVirtualDay += 2; // Uses up 2 virtual days
           } else {
               lbl.innerHTML = `DAY ${currentVirtualDay}`;
-              currentVirtualDay++;
+              currentVirtualDay += 1; // Uses up 1 virtual day
           }
       }
   }
@@ -1893,7 +1903,7 @@
                   }
                   document.getElementById(`sched-type-${uiSlot}`).value = item.type || 'Single';
                   
-                  // Jump over the locked slot so the next date loads correctly
+                  // Jump over the locked physical slot so the next loaded date lands in the right box
                   if(item.type === 'Double') {
                       uiSlot += 2; 
                   } else {
@@ -1928,7 +1938,7 @@
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
           btn.innerHTML = oldHtml;
           btn.disabled = false;
-          silentRefresh('getAdminDashboardData'); // Instantly updates the 15-day widgets
+          silentRefresh('getAdminDashboardData'); 
       }, (err) => {
           btn.innerHTML = oldHtml;
           btn.disabled = false;
