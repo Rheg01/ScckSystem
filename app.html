@@ -1798,17 +1798,21 @@
   // SETTINGS, SCHEDULE UI, AND PROFILE
   // =========================================================================
 
+  // =========================================================================
+  // SCHEDULE UI & AUTO-LOCKING ENGINE
+  // =========================================================================
+
   function buildScheduleUI() {
       const grid = document.getElementById('schedule-config-grid');
       if(!grid) return;
       let html = '';
       for(let i=1; i<=15; i++) {
           html += `
-          <div style="background:var(--hover-bg); padding:10px; border-radius:6px; border:1px solid var(--border);">
-              <label style="font-size:12px; font-weight:bold; color:var(--army-primary);">DAY ${i}</label>
+          <div id="sched-box-${i}" style="background:var(--hover-bg); padding:10px; border-radius:6px; border:1px solid var(--border); transition: 0.3s;">
+              <label id="sched-lbl-${i}" style="font-size:12px; font-weight:bold; color:var(--army-primary);">DAY ${i}</label>
               <div style="display:flex; gap:10px; margin-top:5px;">
-                  <input type="date" id="sched-date-${i}" style="flex:2; height:36px; padding:0 10px; border:1px solid var(--border); border-radius:4px; font-size:13px; background:var(--bg); color:var(--text);">
-                  <select id="sched-type-${i}" style="flex:1; height:36px; padding:0 10px; border:1px solid var(--border); border-radius:4px; font-size:13px; background:var(--bg); color:var(--text);">
+                  <input type="date" id="sched-date-${i}" style="flex:2; height:36px; padding:0 10px; border:1px solid var(--border); border-radius:4px; font-size:13px; background:var(--bg); color:var(--text);" onchange="updateScheduleLocks()">
+                  <select id="sched-type-${i}" style="flex:1; height:36px; padding:0 10px; border:1px solid var(--border); border-radius:4px; font-size:13px; background:var(--bg); color:var(--text);" onchange="updateScheduleLocks()">
                       <option value="Single">Single (PM)</option>
                       <option value="Double">Double (AM & PM)</option>
                   </select>
@@ -1816,43 +1820,105 @@
           </div>`;
       }
       grid.innerHTML = html;
+      updateScheduleLocks(); // Initialize locks on load
+  }
+
+  window.updateScheduleLocks = function() {
+      let skipNext = false;
+      let currentVirtualDay = 1;
+      
+      for(let i=1; i<=15; i++) {
+          let box = document.getElementById(`sched-box-${i}`);
+          let dateInput = document.getElementById(`sched-date-${i}`);
+          let typeInput = document.getElementById(`sched-type-${i}`);
+          let lbl = document.getElementById(`sched-lbl-${i}`);
+          
+          if(!box) continue;
+
+          // If the previous slot was a "Double", lock this slot out entirely
+          if(skipNext) {
+              box.style.opacity = '0.5';
+              dateInput.disabled = true;
+              typeInput.disabled = true;
+              dateInput.value = '';
+              typeInput.value = 'Single';
+              lbl.innerHTML = `DAY ${currentVirtualDay} <span style="color:var(--status-red); font-size:10px; margin-left:5px;"><i class="fas fa-lock"></i> LOCKED (Consumed by Day ${currentVirtualDay - 1} PM)</span>`;
+              skipNext = false;
+              currentVirtualDay++; 
+              continue;
+          }
+          
+          // Otherwise, ensure the slot is unlocked
+          box.style.opacity = '1';
+          dateInput.disabled = false;
+          typeInput.disabled = false;
+          
+          // Check if this newly unlocked slot is set to Double
+          if(typeInput.value === 'Double') {
+              if (currentVirtualDay === 15) {
+                  lbl.innerHTML = `DAY 15 <span style="color:var(--status-red); font-size:10px; margin-left:5px;">(PM session exceeds 15 days)</span>`;
+                  currentVirtualDay++;
+              } else {
+                  lbl.innerHTML = `DAY ${currentVirtualDay} & ${currentVirtualDay + 1} <span style="color:var(--army-primary); font-size:10px; margin-left:5px;">(Full Day Session)</span>`;
+                  skipNext = true; // Tell the loop to lock the next slot
+                  currentVirtualDay += 2;
+              }
+          } else {
+              lbl.innerHTML = `DAY ${currentVirtualDay}`;
+              currentVirtualDay++;
+          }
+      }
   }
 
   function loadTrainingSchedule(arr) {
       for(let i=1; i<=15; i++) {
-          document.getElementById(`sched-date-${i}`).value = '';
-          document.getElementById(`sched-type-${i}`).value = 'Single';
+          if(document.getElementById(`sched-date-${i}`)) {
+              document.getElementById(`sched-date-${i}`).value = '';
+              document.getElementById(`sched-type-${i}`).value = 'Single';
+          }
       }
+      
       if(arr && arr.length) {
-          arr.forEach((item, index) => {
-              let i = index + 1;
-              if(i <= 15) {
+          let uiSlot = 1;
+          arr.forEach((item) => {
+              if(uiSlot <= 15) {
                   if(item.date) {
                       let parts = item.date.split('/');
                       if(parts.length === 3) {
                           let yyyy = parts[2];
                           let mm = parts[0].padStart(2, '0');
                           let dd = parts[1].padStart(2, '0');
-                          document.getElementById(`sched-date-${i}`).value = `${yyyy}-${mm}-${dd}`;
+                          document.getElementById(`sched-date-${uiSlot}`).value = `${yyyy}-${mm}-${dd}`;
                       }
                   }
-                  document.getElementById(`sched-type-${i}`).value = item.type || 'Single';
+                  document.getElementById(`sched-type-${uiSlot}`).value = item.type || 'Single';
+                  
+                  // Jump over the locked slot so the next date loads correctly
+                  if(item.type === 'Double') {
+                      uiSlot += 2; 
+                  } else {
+                      uiSlot += 1;
+                  }
               }
           });
       }
+      updateScheduleLocks(); // Trigger the visual locks after loading data
   }
 
   window.saveTrainingSchedule = function() {
       let schedule = [];
       for(let i=1; i<=15; i++) {
-          let dateVal = document.getElementById(`sched-date-${i}`).value;
-          let typeVal = document.getElementById(`sched-type-${i}`).value;
-          if(dateVal) {
-              let parts = dateVal.split('-');
+          let dateInput = document.getElementById(`sched-date-${i}`);
+          let typeInput = document.getElementById(`sched-type-${i}`);
+          
+          // Only save the slot if it is active (not locked by a previous Double session)
+          if(dateInput && !dateInput.disabled && dateInput.value) {
+              let parts = dateInput.value.split('-');
               let formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
-              schedule.push({ date: formattedDate, type: typeVal });
+              schedule.push({ date: formattedDate, type: typeInput.value });
           }
       }
+      
       const btn = document.getElementById('btn-save-schedule');
       const oldHtml = btn.innerHTML;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SAVING...';
@@ -1862,12 +1928,12 @@
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
           btn.innerHTML = oldHtml;
           btn.disabled = false;
+          silentRefresh('getAdminDashboardData'); // Instantly updates the 15-day widgets
       }, (err) => {
           btn.innerHTML = oldHtml;
           btn.disabled = false;
       });
   }
-
   function loadUserProfile() { 
       apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { 
           document.getElementById('prof-name').value=res.name||""; 
