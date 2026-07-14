@@ -672,8 +672,8 @@
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-history"></i> SYSTEM AUDIT LOG</h2>
         <div class="header-actions"><button id="btn-ref-aud" class="btn-outline" onclick="silentRefresh('getAuditLogs', 'btn-ref-aud')"><i class="fas fa-sync"></i> SYNC</button></div>
       </div>
-      <div class="tamper-warning" id="audit-tamper-warning"><i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom:10px; display:block;"></i> CRITICAL WARNING: CRYPTOGRAPHIC BLOCKCHAIN BROKEN.<br><span style="font-size: 13px; font-weight: normal;">The system detected unauthorized tampering or deletion in the raw database. Integrity is compromised.</span></div>
-      <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Date & Time</th><th>User / Operator</th><th>Action Taken</th><th>Activity Details</th></tr></thead><tbody id="audit-table"></tbody></table></div></div>
+      <div class="tamper-warning" id="audit-tamper-warning" style="display:none; color:var(--status-red); background:rgba(211,47,47,0.1); padding:15px; border-radius:6px; border:1px dashed var(--status-red); margin-bottom:15px;"></div>
+      <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Date & Time</th><th>User / Operator</th><th>Action Taken</th><th>Activity Details</th><th>Cryptographic Hash</th></tr></thead><tbody id="audit-table"></tbody></table></div></div>
     </div>
 
     <!-- SETTINGS -->
@@ -710,7 +710,7 @@
   // =========================================================================
   // 🔥 CRITICAL: PASTE YOUR NEW DEPLOYMENT URL HERE 🔥
   // =========================================================================
-  const GAS_API_URL = "https://script.google.com/macros/s/AKfycby_stp2rmmdpX4E1kBtgA9BM6IrHwmV9kpKWhwevU1HjP34fTcGDlb7rzdrvon_2pW6xQ/exec";
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzyyhaUnb23upiEhyG-5Zfw7XZ-aJ64YNUSDlxRxtfvDWiysHnpMWOawta1YT_xy7QLEQ/exec";
 
   let session = {};
   let isDarkMode = false;
@@ -1512,7 +1512,22 @@
   }
   
   function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Generate preview before printing.', showConfirmButton:false, timer:2000}); window.print(); }
-  function processAuditLogs(res) { document.getElementById('audit-tamper-warning').style.display='none'; if(res.tampered) document.getElementById('audit-tamper-warning').style.display='block'; let h=''; res.logs.forEach(l => { h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${l.user}</b></td><td><span class="badge badge-action">${l.action}</span></td><td style="color:var(--text-muted); font-size:13px;">${l.details}</td></tr>`; }); document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="4" style="text-align:center;">No records.</td></tr>'; }
+  function processAuditLogs(res) { 
+      const warningBox = document.getElementById('audit-tamper-warning');
+      warningBox.style.display = 'none';
+      
+      if(res.tampered) { 
+          warningBox.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom:10px; display:block;"></i> <b>CRITICAL WARNING: CRYPTOGRAPHIC BLOCKCHAIN BROKEN.</b><br><span style="font-size: 13px; font-weight: normal; color:var(--text);">The system detected unauthorized tampering or deletion in the raw database. Integrity is compromised.<br><br><strong style="color:var(--army-gold);">INVESTIGATION REPORT:</strong> ${res.tamperDetails}</span>`;
+          warningBox.style.display = 'block'; 
+      } 
+      
+      let h=''; 
+      res.logs.forEach(l => { 
+          let shortHash = l.hash ? l.hash.substring(0, 12) + '...' : 'INVALID';
+          h+=`<tr><td style="font-size:12px; white-space:nowrap;">${l.timestamp}</td><td><b>${l.user}</b></td><td><span class="badge badge-action">${l.action}</span></td><td style="color:var(--text-muted); font-size:13px;">${l.details}</td><td style="font-family:monospace; color:var(--army-gold); font-size:11px;">${shortHash}</td></tr>`; 
+      }); 
+      document.getElementById('audit-table').innerHTML=h||'<tr><td colspan="5" style="text-align:center;">No records.</td></tr>'; 
+  }
   function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${c.name} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
   
   function submitLegacyClass() { 
