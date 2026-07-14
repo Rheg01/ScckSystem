@@ -2552,6 +2552,108 @@ function onCadetRegistration(e) {
   }
 
   try { if (localStorage.getItem('sccks_dark') === '1') applyTheme(true); } catch(e) {}
+
+  // =========================================================================
+  // LOGINS, AUTHENTICATION & BOOTSTRAP
+  // =========================================================================
+
+  function performLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    const btn = document.getElementById('btn-login');
+    const err = document.getElementById('login-err');
+    
+    if (!u || !p) { 
+        err.innerText = 'Identification required.'; 
+        return; 
+    }
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; 
+    btn.disabled = true; 
+    err.innerText = '';
+
+    apiCall('systemLogin', { user: u, pass: p }, 
+      (res) => {
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; 
+        btn.disabled = false;
+        
+        session = { user: u, pass: p, role: res.role };
+        localStorage.setItem('scck_session', JSON.stringify({ user: u, pass: p, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
+        
+        document.getElementById('login-user').value = ''; 
+        document.getElementById('login-pass').value = '';
+        
+        document.getElementById('view-login').style.display = 'none'; 
+        document.getElementById('app-container').style.display = 'flex';
+        
+        loadUserProfile(); 
+        setupRoleUI(res.role); 
+        updateOfflineSyncUI();
+      }, 
+      (e) => { 
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; 
+        btn.disabled = false; 
+        err.innerText = e.message; 
+      }
+    );
+  }
+
+  function logout() { 
+      session = {}; 
+      localStorage.removeItem('scck_session'); 
+      stopScanner(false); 
+      document.getElementById('app-container').style.display = 'none'; 
+      document.getElementById('view-login').style.display = 'flex'; 
+  }
+
+  window.performLogin = performLogin; 
+  window.logout = logout;
+
+  // This block runs immediately when the page opens to fetch the logo and check for saved sessions
+  window.onload = () => {
+    if (typeof initCropperInputs === "function") initCropperInputs();
+    
+    const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
+    if (cachedBranding) {
+      if(cachedBranding.logoUrl) { 
+          const logoImg = document.getElementById('system-logo-login'); 
+          logoImg.src = cachedBranding.logoUrl; 
+          logoImg.style.display = 'block'; 
+      }
+      if(cachedBranding.bgUrl) {
+          document.getElementById('view-login').style.backgroundImage = `url('${cachedBranding.bgUrl}')`;
+      }
+    }
+    
+    apiCall('getSettings', {}, (res) => {
+      localStorage.setItem('scck_branding', JSON.stringify(res));
+      if(res.logoUrl) { 
+          const logoImg = document.getElementById('system-logo-login'); 
+          logoImg.src = res.logoUrl; 
+          logoImg.style.display = 'block'; 
+      }
+      if(res.bgUrl) {
+          document.getElementById('view-login').style.backgroundImage = `url('${res.bgUrl}')`;
+      }
+    });
+
+    const savedSession = localStorage.getItem('scck_session');
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession);
+        if (parsed.expiry > Date.now()) {
+          session = { user: parsed.user, pass: parsed.pass, role: parsed.role };
+          document.getElementById('view-login').style.display = 'none'; 
+          document.getElementById('app-container').style.display = 'flex';
+          loadUserProfile(); 
+          if (typeof setupRoleUI === "function") setupRoleUI(parsed.role); 
+          if (typeof updateOfflineSyncUI === "function") updateOfflineSyncUI();
+        } else { 
+            localStorage.removeItem('scck_session'); 
+        }
+      } catch(e) {}
+    }
+  };
 </script>
 </body>
 </html>
