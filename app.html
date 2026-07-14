@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SCCK Command Center</title>
+  
   <script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -173,6 +173,7 @@
 
 <div id="mobile-overlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
 
+<!-- CROPPER MODAL -->
 <div class="cropper-modal" id="cropper-modal" style="display:none; position:fixed; inset:0; background:#000; z-index:99999; align-items:center; justify-content:center;">
   <div class="cropper-content" style="background:var(--card-bg); width:95%; max-width:700px; padding:25px; border-radius:12px; border:3px solid var(--army-gold);">
     <h2 style="color:var(--army-gold); margin-bottom:15px;"><i class="fas fa-crop-alt"></i> ADJUST IMAGE</h2>
@@ -188,6 +189,7 @@
 
 <div class="post-preview-overlay" id="post-preview-modal" onclick="closePostPreview(event)"><div class="post-preview-content" onclick="event.stopPropagation()"><i class="fas fa-times close-preview-btn" onclick="closePostPreview(true)"></i><div id="preview-dynamic-content"></div></div></div>
 
+<!-- BATCH DISCIPLINE MODAL -->
 <div class="post-preview-overlay" id="bulk-discipline-modal" onclick="closeBulkDisciplineModal(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()">
     <i class="fas fa-times close-preview-btn" onclick="closeBulkDisciplineModal(true)"></i>
@@ -226,6 +228,7 @@
   </div>
 </div>
 
+<!-- INDIVIDUAL DISCIPLINE MODAL -->
 <div class="post-preview-overlay" id="discipline-modal" onclick="closeDisciplineModal(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()">
     <i class="fas fa-times close-preview-btn" onclick="closeDisciplineModal(true)"></i>
@@ -266,6 +269,7 @@
   </div>
 </div>
 
+<!-- EDIT OFFICER MODAL -->
 <div class="post-preview-overlay" id="edit-officer-modal" onclick="closeEditOfficerModal(event)">
   <div class="post-preview-content" onclick="event.stopPropagation()">
     <i class="fas fa-times close-preview-btn" onclick="closeEditOfficerModal(true)"></i>
@@ -285,6 +289,7 @@
   </div>
 </div>
 
+<!-- LOGIN SCREEN -->
 <div id="view-login">
   <div class="login-box">
     <div class="login-logo-container"><img src="" class="app-logo" id="system-logo-login" alt="Logo"></div>
@@ -311,6 +316,7 @@
   </div>
 </div>
 
+<!-- APP WRAPPER -->
 <div id="app-container" class="app-container" style="display:none;">
   
   <div class="sidebar">
@@ -320,6 +326,7 @@
       <div id="sidebar-profile-role" style="font-size: 11px; color:#9aa08f;">System Active</div>
     </div>
 
+    <!-- ADMIN MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-admin" style="display:none;">
       <li><button onclick="switchTab('panel-dashboard',this)"><i class="fas fa-chart-pie"></i> <span>DASHBOARD</span></button></li>
       <li class="admin-only"><button onclick="switchTab('panel-gradebook',this)"><i class="fas fa-graduation-cap"></i> <span>GRADEBOOK</span></button></li>
@@ -331,15 +338,17 @@
       <li><button onclick="switchTab('panel-posts',this)"><i class="fas fa-images"></i> <span>PUBLIC POSTS</span> <span id="badge-posts" class="nav-badge" style="display:none;">0</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-accounts',this)"><i class="fas fa-user-shield"></i> <span>ACCESS CONTROL</span></button></li>
       <li class="super-admin-only"><button onclick="switchTab('panel-audit',this)"><i class="fas fa-history"></i> <span>AUDIT LOG</span></button></li>
-      <li class="super-admin-only"><button onclick="switchTab('panel-settings',this)"><i class="fas fa-cog"></i> <span>SYSTEM BRANDING</span></button></li>
+      <li class="super-admin-only"><button onclick="switchTab('panel-settings',this)"><i class="fas fa-cog"></i> <span>SYSTEM SETTINGS</span></button></li>
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
     </ul>
 
+    <!-- SCANNER MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-scanner" style="display:none;">
       <li><button onclick="switchTab('panel-scanner',this)" class="active"><i class="fas fa-qrcode"></i> <span>QR SCANNER TERMINAL</span></button></li>
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
     </ul>
 
+    <!-- CADET MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-cadet" style="display:none;">
       <li><button onclick="switchTab('panel-cadet-dashboard',this)" class="active"><i class="fas fa-id-badge"></i> <span>MY DASHBOARD</span></button></li>
       <li><button onclick="switchTab('panel-cadet-leaves',this)"><i class="fas fa-envelope"></i> <span>MY LEAVE REQUESTS</span></button></li>
@@ -354,6 +363,7 @@
 
   <div class="main-content">
 
+    <!-- CADET DOSSIER WITH LIVE 15-DAY TRACKER -->
     <div id="panel-cadet-dashboard" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-id-badge"></i> MY DASHBOARD</h2>
@@ -388,6 +398,7 @@
       </div>
     </div>
 
+    <!-- CADET LEAVES -->
     <div id="panel-cadet-leaves" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-envelope"></i> MY LEAVE REQUESTS</h2>
@@ -403,6 +414,7 @@
       <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Date Submitted</th><th>Leave Range</th><th>Reason</th><th>Status</th></tr></thead><tbody id="cadet-leaves-table"></tbody></table></div></div>
     </div>
 
+    <!-- SCANNER -->
     <div id="panel-scanner" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-qrcode"></i> QR SCANNER TERMINAL</h2>
@@ -420,6 +432,7 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Personnel</th><th>Time Logged</th><th>Action</th></tr></thead><tbody id="recent-scans"></tbody></table></div></div>
     </div>
 
+    <!-- GRADEBOOK PANEL -->
     <div id="panel-gradebook" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-graduation-cap"></i> UNIT GRADEBOOK</h2>
@@ -461,6 +474,7 @@
       </div>
     </div>
 
+    <!-- COMMAND DASHBOARD -->
     <div id="panel-dashboard" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-chart-pie"></i> COMMAND DASHBOARD</h2>
@@ -481,6 +495,7 @@
       </div>
     </div>
 
+    <!-- ATTENDANCE -->
     <div id="panel-attendance" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-clipboard-list"></i> ATTENDANCE LOG</h2>
@@ -489,6 +504,7 @@
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead><tbody id="attendance-table"></tbody></table></div></div>
     </div>
 
+    <!-- UNIT ROSTER -->
     <div id="panel-masterlist" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-users"></i> UNIT ROSTER & DISCIPLINE</h2>
@@ -502,6 +518,7 @@
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Cadet ID</th><th>Full Name</th><th>Company</th><th>Score</th><th>Contact</th><th>Actions</th></tr></thead><tbody id="masterlist-table"></tbody></table></div></div>
     </div>
 
+    <!-- LEAVE REQUESTS -->
     <div id="panel-leaves" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2>
@@ -521,6 +538,7 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date Range</th><th>Cadet ID</th><th>Name</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaves-table"></tbody></table></div></div>
     </div>
 
+    <!-- ID GENERATOR -->
     <div id="panel-idcards" class="view-panel">
       <div class="header-bar anim-1">
           <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-id-card"></i> ID GENERATOR</h2>
@@ -534,6 +552,7 @@
       <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0;">Select a target and generate preview to render Identification Cards.</p></div>
     </div>
 
+    <!-- LEGACY -->
     <div id="panel-legacy" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-landmark"></i> LEGACY MANAGEMENT</h2>
@@ -579,6 +598,7 @@
       <div class="table-card anim-4 super-admin-only"><div class="table-wrapper"><table id="table-legacy-officers"><thead><tr><th>Class ID</th><th>Rank & Name</th><th>Designation</th><th>Action</th></tr></thead><tbody id="legacy-officers-tbody"></tbody></table></div></div>
     </div>
 
+    <!-- POSTS -->
     <div id="panel-posts" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-images"></i> PUBLIC POSTS</h2>
@@ -604,6 +624,7 @@
       <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date</th><th>Media</th><th>Post Details</th><th>Status</th><th>Action</th></tr></thead><tbody id="posts-table"></tbody></table></div></div>
     </div>
 
+    <!-- ACCESS CONTROL -->
     <div id="panel-accounts" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-user-shield"></i> PERSONNEL ACCESS CONTROL</h2>
@@ -625,6 +646,7 @@
       <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Username</th><th>Clearance Level</th><th>Legacy DB</th><th>Status</th><th>Action</th></tr></thead><tbody id="accounts-table"></tbody></table></div></div>
     </div>
 
+    <!-- AUDIT LOG -->
     <div id="panel-audit" class="view-panel">
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-history"></i> SYSTEM AUDIT LOG</h2>
@@ -651,16 +673,34 @@
       </div>
     </div>
 
+    <!-- SETTINGS & SCHEDULE CONFIGURATION -->
     <div id="panel-settings" class="view-panel">
-      <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-cog"></i> SYSTEM BRANDING</h2></div>
-      <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 600px;">
+      <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-cog"></i> SYSTEM SETTINGS</h2></div>
+      
+      <!-- BRANDING SECTION -->
+      <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 800px; margin-bottom: 25px;">
+        <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-paint-brush"></i> SYSTEM BRANDING</h3>
         <div class="input-group" style="margin-bottom:15px;"><label>LOGIN SHIELD LOGO</label><input type="file" id="set-logo-file" accept="image/*"><p id="set-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
         <div class="input-group" style="margin-bottom:15px;"><label>HEADER / NAVBAR LOGO</label><input type="file" id="set-nav-logo-file" accept="image/*"><p id="set-nav-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
         <div class="input-group" style="margin-bottom:20px;"><label>BACKGROUND IMAGE</label><input type="file" id="set-bg-file" accept="image/*"><p id="set-bg-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
         <div style="display:flex; gap:10px;"><button id="btn-save-settings" class="btn-success" style="flex:2;" onclick="saveSystemSettings()"><i class="fas fa-save"></i> SAVE BRANDING</button><button class="btn-outline" style="flex:1;" onclick="resetBackground()"><i class="fas fa-eraser"></i> RESET BG</button></div>
       </div>
+      
+      <!-- TRAINING SCHEDULE CONFIGURATION (NEW) -->
+      <div class="anim-3" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 800px;">
+        <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-calendar-alt"></i> TRAINING SCHEDULE (15 DAYS)</h3>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Set official dates and session types. 'Double' allows AM/PM scans (4 per day).</p>
+        
+        <div id="schedule-config-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom:20px;">
+          <!-- Populated by JavaScript -->
+        </div>
+        
+        <button id="btn-save-schedule" class="btn-success" onclick="saveTrainingSchedule()"><i class="fas fa-save"></i> UPDATE SCHEDULE</button>
+      </div>
+      
     </div>
 
+    <!-- PROFILE -->
     <div id="panel-profile" class="view-panel">
       <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-user-circle"></i> MY PROFILE</h2></div>
       <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 600px;">
@@ -679,989 +719,6 @@
 
   </div>
 </div>
-
-// ─── CADET PORTAL (FIXED DISCIPLINE & LEAVE LOGS) ─────────
-function getCadetData(user, pass) {
-  try {
-    checkAuth(user, pass, "Any");
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const userId = user.toString().trim();
-    
-    const attSheet = ss.getSheetByName(S_ATTENDANCE);
-    const discSheet = ss.getSheetByName(S_DISCIPLINE);
-    const lvSheet = ss.getSheetByName(S_LEAVES);
-
-    let score = 100;
-    let attList = [], discList = [], lvList = [];
-    
-    // Resilient Discipline Fetcher
-    if (discSheet) {
-      const discData = discSheet.getDataRange().getDisplayValues();
-      for (let i = 1; i < discData.length; i++) {
-        let col0 = discData[i][0].toString().trim();
-        let col1 = discData[i][1].toString().trim();
-        let isMatch = false;
-        let pts, typeVal, reasonVal, dateVal, adminVal;
-
-        if (col1 === userId) {
-          isMatch = true; typeVal = discData[i][2]; pts = parseInt(discData[i][3], 10) || 0;
-          reasonVal = discData[i][4]; dateVal = discData[i][5]; adminVal = discData[i][6];
-        } else if (col0 === userId) {
-          isMatch = true; dateVal = discData[i][1]; typeVal = discData[i][2]; pts = parseInt(discData[i][3], 10) || 0;
-          reasonVal = discData[i][4]; adminVal = discData[i][5];
-        }
-
-        if (isMatch) {
-          score += pts;
-          discList.push({ date: dateVal, type: typeVal, reason: reasonVal, points: pts, admin: adminVal });
-        }
-      }
-    }
-    score = Math.max(0, Math.min(100, score));
-
-    // Leave Requests Fetcher
-    if (lvSheet) {
-      const lvData = lvSheet.getDataRange().getDisplayValues();
-      for (let i = 1; i < lvData.length; i++) {
-        if (lvData[i][1].toString().trim() === userId) {
-          lvList.push({ 
-             id: lvData[i][0], from: lvData[i][3], to: lvData[i][4], 
-             reason: lvData[i][5], status: lvData[i][6], date: lvData[i][7], 
-             admin: lvData[i][8] || "Pending Review" 
-          });
-        }
-      }
-    }
-
-    let uniqueDates = new Set();
-    let dayTrackerArr = [], p = 0, a = 0;
-    
-    let attData = [];
-    if (attSheet) {
-      attData = attSheet.getDataRange().getDisplayValues();
-      for(let i=1; i<attData.length; i++) if(attData[i][2]) uniqueDates.add(attData[i][2].toString());
-    }
-    
-    let sortedDates = Array.from(uniqueDates).sort((dateA,dateB) => new Date(dateA) - new Date(dateB));
-
-    for(let i=0; i<sortedDates.length; i++) {
-      let dayStatus = 'Absent';
-      for (let j = 1; j < attData.length; j++) {
-        if (attData[j][0].replace(/'/g, "").trim() === userId && attData[j][2].toString() === sortedDates[i]) {
-          dayStatus = attData[j][5]; break;
-        }
-      }
-      dayTrackerArr.push(dayStatus);
-      if (['Present', 'Late', 'Very Late'].includes(dayStatus)) p++; else a++;
-    }
-
-    for (let i = 1; i < attData.length; i++) {
-      if (attData[i][0].replace(/'/g, "").trim() === userId) {
-        attList.push({ date: attData[i][2], in: attData[i][3], out: attData[i][4], status: attData[i][5] });
-      }
-    }
-    let attPct = Math.min(100, Math.round((p / Math.max(1, sortedDates.length)) * 100));
-
-    let finalGrade = "0.00", examAvg = "0";
-    let gradeData = processAndGetGradebook(user, pass);
-    if (gradeData.success) {
-      for(let g=0; g<gradeData.gradebook.length; g++) {
-          if(gradeData.gradebook[g].id === userId) {
-              finalGrade = gradeData.gradebook[g].finalGrade; examAvg = gradeData.gradebook[g].examAvg; break;
-          }
-      }
-    }
-
-    logAction(user, "Cadet Portal Accessed", `Cadet ID ${user} viewed their personal dossier.`);
-    return { score: score, presentDays: p, absentDays: a, attendance: attList.reverse().slice(0,15), discipline: discList.reverse(), leaves: lvList.reverse(), tracker: dayTrackerArr, attendancePct: attPct, finalGrade: finalGrade, examAvg: examAvg };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-// ─── BATCH DISCIPLINE ENGINE ──────────────────────────────
-function bulkAddDiscipline(targetCompany, type, points, reason, user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const masterSheet = ss.getSheetByName(S_MASTERLIST) || ss.getSheetByName("MasterList");
-    if (!masterSheet) throw new Error("Masterlist not found.");
-    
-    const mData = masterSheet.getDataRange().getDisplayValues();
-    const mHeaders = mData[0];
-    const idCol = getColIdx(mHeaders, ["studentnumber", "idnumber", "studentid"]);
-    const coyCol = getColIdx(mHeaders, ["company", "coy"]);
-    
-    let targetIds = [];
-    
-    for (let i = 1; i < mData.length; i++) {
-      let sId = idCol >= 0 ? mData[i][idCol].toString().trim() : (mData[i][1] ? mData[i][1].toString().trim() : "");
-      let coy = coyCol >= 0 ? mData[i][coyCol].toString().trim() : (mData[i][5] ? mData[i][5].toString().trim() : "");
-      
-      if (sId) {
-        if (targetCompany === "ALL" || coy.toUpperCase() === targetCompany.toUpperCase()) {
-          targetIds.push(sId);
-        }
-      }
-    }
-
-    if (targetIds.length === 0) return { error: true, message: "No cadets found in that target group." };
-
-    let discSheet = ss.getSheetByName(S_DISCIPLINE);
-    if (!discSheet) {
-      discSheet = ss.insertSheet(S_DISCIPLINE);
-      discSheet.appendRow(["Log ID", "Cadet ID", "Type", "Points", "Reason", "Date", "Admin"]);
-    }
-
-    const tz = Session.getScriptTimeZone();
-    const today = Utilities.formatDate(new Date(), tz, "MM/dd/yyyy");
-    let rowsToAdd = [];
-    
-    targetIds.forEach((id, idx) => {
-      const logId = "DSC_" + new Date().getTime() + "_" + idx;
-      rowsToAdd.push([logId, id, type, points, reason, today, user]);
-    });
-
-    discSheet.getRange(discSheet.getLastRow() + 1, 1, rowsToAdd.length, 7).setValues(rowsToAdd);
-    logAction(user, "Batch Discipline", `Issued ${type} (${points} pts) to ${targetCompany}. Target count: ${targetIds.length}. Reason: ${reason}`);
-    
-    return { success: true, message: `Successfully issued ${type} to ${targetIds.length} cadets.` };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function addDiscipline(studentId, type, points, reason, user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    let sheet = ss.getSheetByName(S_DISCIPLINE);
-    if (!sheet) {
-      sheet = ss.insertSheet(S_DISCIPLINE);
-      sheet.appendRow(["Log ID", "Cadet ID", "Type", "Points", "Reason", "Date", "Admin"]);
-    }
-    const logId = "DSC_" + new Date().getTime();
-    const tz = Session.getScriptTimeZone();
-    const today = Utilities.formatDate(new Date(), tz, "MM/dd/yyyy");
-    
-    sheet.appendRow([logId, studentId, type, points, reason, today, user]);
-    logAction(user, "Discipline Logged", `Issued ${type} (${points} pts) to Cadet ID: ${studentId}. Reason: ${reason}`);
-    return { success: true, message: "Discipline record updated." };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function getDiscipline(studentId, user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_DISCIPLINE);
-    if (!sheet) return { records: [] };
-    const data = sheet.getDataRange().getDisplayValues();
-    const records = [];
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][1].toString().trim() === studentId.toString().trim()) {
-        records.push({ id: data[i][0], type: data[i][2], points: data[i][3], reason: data[i][4], date: data[i][5], admin: data[i][6] });
-      }
-    }
-    return { records: records.reverse() };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-// ─── MASTERLIST & ACCOUNTS ────────────────────────────────
-function updateStudentInfo(id, company, contact, user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_MASTERLIST) || SpreadsheetApp.getActiveSpreadsheet().getSheetByName("MasterList");
-    const data  = sheet.getDataRange().getValues();
-    const headers = data[0];
-    
-    let idCol = getColIdx(headers, ["studentnumber", "idnumber", "studentid"]);
-    if(idCol === -1) idCol = 1; 
-    
-    let coyCol = getColIdx(headers, ["company", "coy"]);
-    if(coyCol === -1) {
-      coyCol = headers.length; 
-      sheet.getRange(1, coyCol + 1).setValue("Company");
-      for(let j=1; j<data.length; j++) data[j].push(""); 
-    }
-    
-    let conCol = getColIdx(headers, ["emergencycontact", "emergencycontactnumber", "guardianscontactnumber", "contact"]);
-    if(conCol === -1) conCol = 10; 
-    
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][idCol].toString().trim() === id.toString().trim()) {
-        sheet.getRange(i + 1, coyCol + 1).setValue(company);
-        sheet.getRange(i + 1, conCol + 1).setValue(contact); 
-        logAction(user, "Cadet Dossier Updated", `Updated Unit Roster data for Cadet ID: ${id}. New Company: ${company} | Contact: ${contact}`);
-        return { success: true };
-      }
-    }
-    return { error: "Student not found." };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function deleteStudentData(id, user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_MASTERLIST) || SpreadsheetApp.getActiveSpreadsheet().getSheetByName("MasterList");
-    const data  = sheet.getDataRange().getValues();
-    const idCol = getColIdx(data[0], ["studentnumber", "idnumber", "studentid"]) >= 0 ? getColIdx(data[0], ["studentnumber", "idnumber", "studentid"]) : 1;
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][idCol].toString().trim() === id.toString().trim()) {
-        sheet.deleteRow(i + 1);
-        logAction(user, "Cadet Discharged", `WARNING: Permanently discharged and deleted Cadet ID: ${id} from the Unit Masterlist.`);
-        return { success: true };
-      }
-    }
-    return { error: "Student not found." };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function createAccount(newUser, newPass, role, user, pass) {
-  checkAuth(user, pass, "Super Admin");
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_ACCOUNTS);
-  const data  = sheet.getDataRange().getDisplayValues();
-  for (let i = 1; i < data.length; i++) { if (data[i][0] === newUser) return "Username already exists."; }
-  let legAccess = (role === "Super Admin") ? "Granted" : "Denied";
-  sheet.appendRow([newUser, hashData(newPass), role, "Active", legAccess]);
-  logAction(user, "Account Created", `Provisioned new ${role} account for username: ${newUser}`);
-  return "Account created successfully.";
-}
-
-function updateAccountStatus(targetUser, newStatus, user, pass) {
-  checkAuth(user, pass, "Super Admin"); 
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_ACCOUNTS);
-  const data  = sheet.getDataRange().getValues();
-  for (let i = 1; i < data.length; i++) {
-    if (data[i][0] === targetUser) { 
-      sheet.getRange(i + 1, 4).setValue(newStatus);
-      logAction(user, "Account Status Update", `Changed clearance status of ${targetUser} to ${newStatus}`);
-      return "Status updated.";
-  }
-  }
-  return "User not found.";
-}
-
-function toggleLegacyAccess(targetUser, user, pass) {
-  checkAuth(user, pass, "Super Admin"); 
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_ACCOUNTS);
-  const data  = sheet.getDataRange().getValues();
-  for (let i = 1; i < data.length; i++) {
-    if (data[i][0] === targetUser) { 
-      let current = data[i][4];
-      let newStatus = (current === "Granted") ? "Denied" : "Granted";
-      sheet.getRange(i + 1, 5).setValue(newStatus);
-      logAction(user, "Legacy Clearance Toggle", `Changed Legacy DB clearance for ${targetUser} to ${newStatus}`);
-      return "Legacy access updated.";
-    }
-  }
-  return "User not found.";
-}
-
-// ─── ATTENDANCE LOGIC ─────────────────────────────────────
-function bulkMarkAttendance(scans, user, pass) {
-  try {
-    checkAuth(user, pass, "Any");
-    let results = [];
-    for (let i = 0; i < scans.length; i++) {
-      let res = markAttendance(scans[i].scannedData, user, pass, scans[i].offlineDate, scans[i].offlineTime);
-      results.push(res);
-    }
-    logAction(user, "Bulk Offline Sync", `Successfully synced ${scans.length} cached offline scans to the central database.`);
-    return { success: true, results: results };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function markAttendance(scannedData, user, pass, offlineDate, offlineTime) {
-  try {
-    checkAuth(user, pass, "Any");
-    const cleanId = scannedData.toString().replace(/^[=+\-@\t\r]/, "").trim();
-    if (!cleanId) return { status: "warn", msg: "Invalid QR code format." };
-    const ss = SpreadsheetApp.getActiveSpreadsheet(), attSheet = ss.getSheetByName(S_ATTENDANCE), masterSheet = ss.getSheetByName(S_MASTERLIST) || ss.getSheetByName("MasterList");
-    const tz = Session.getScriptTimeZone();
-    let studentName = "", studentFound = false, matchedId = cleanId, studentImage = "";
-    
-    if (masterSheet) {
-      const mData = masterSheet.getDataRange().getDisplayValues();
-      const mHeaders = mData[0];
-      
-      let imgColIdx = getColIdx(mHeaders, ["2x2formalphoto", "formalphoto", "photo", "image", "picture"]);
-      if (imgColIdx === -1) imgColIdx = findImageColumnIndex(mHeaders);
-
-      const idCol = getColIdx(mHeaders, ["studentnumber", "idnumber", "studentid"]);
-      const fnCol = getColIdx(mHeaders, ["firstname", "givenname"]);
-      const mnCol = getColIdx(mHeaders, ["middlename", "m.i.", "middleinitial"]);
-      const lnCol = getColIdx(mHeaders, ["lastname", "surname"]);
-      
-      for (let i = 1; i < mData.length; i++) {
-        const sheetId = idCol >= 0 ? mData[i][idCol].toString().trim() : mData[i][1].toString().trim();
-        if (sheetId === cleanId || parseInt(sheetId, 10) === parseInt(cleanId, 10)) {
-          const fName = fnCol >= 0 ? mData[i][fnCol] : mData[i][2];
-          let mName = mnCol >= 0 ? mData[i][mnCol] : mData[i][3];
-          const lName = lnCol >= 0 ? mData[i][lnCol] : mData[i][4];
-          if (mName.toUpperCase() === "N/A" || mName.toUpperCase() === "NONE" || mName === "-" || mName === "") mName = "";
-          studentName = [fName, mName, lName].filter(Boolean).join(" ");
-          
-          studentFound = true; matchedId = sheetId;
-          
-          let rawImage = imgColIdx >= 0 ? mData[i][imgColIdx] : "";
-          studentImage = convertDriveLink(rawImage);
-          break; 
-        }
-      }
-    }
-
-    if (!studentFound) {
-       logAction(user, "Scan Rejected", `Unauthorized QR scan attempt. Scanned Data: ${cleanId}`);
-       return { status: "warn", msg: "UNAUTHORIZED QR: Cadet not found in the Masterlist." };
-    }
-
-    const todayDate = offlineDate ? offlineDate : Utilities.formatDate(new Date(), tz, "MM/dd/yyyy");
-    const timestamp = offlineTime ? offlineTime : Utilities.formatDate(new Date(), tz, "hh:mm:ss a");
-    
-    const currentHour = parseInt(Utilities.formatDate(new Date(), tz, "H"), 10);
-    const currentMin = parseInt(Utilities.formatDate(new Date(), tz, "m"), 10);
-    
-    let arrivalStatus = "Present";
-    if (currentHour === 13 && currentMin <= 15) {
-        arrivalStatus = "Late";
-    } else if (currentHour > 13 || (currentHour === 13 && currentMin > 15)) {
-        arrivalStatus = "Very Late";
-    }
-    
-    const attData = attSheet.getDataRange().getDisplayValues();
-    for (let i = 1; i < attData.length; i++) {
-      const rowId = attData[i][0].replace(/'/g, "").trim();
-      if (rowId === matchedId && attData[i][2] === todayDate) {
-        if (attData[i][3] && attData[i][3] !== "---" && (!attData[i][4] || attData[i][4] === "---")) {
-          attSheet.getRange(i + 1, 5).setValue(timestamp);
-          logAction(user, "Time Out Logged", `Recorded TIME OUT for Cadet ID: ${matchedId} (${studentName})`);
-          return { msg: "TIME OUT Recorded!", status: "ok", id: matchedId, name: studentName, image: studentImage, timeIn: attData[i][3], timeOut: timestamp, date: todayDate, action: "TIME OUT" };
-        } else if (attData[i][3] !== "---" && attData[i][4] !== "---") return { msg: "Already completed Time In & Out today!", status: "warn", name: studentName, image: studentImage };
-      }
-    }
-
-    attSheet.appendRow(["'" + matchedId, studentName, todayDate, timestamp, "---", arrivalStatus]);
-    logAction(user, "Time In Logged", `Recorded ${arrivalStatus.toUpperCase()} TIME IN for Cadet ID: ${matchedId} (${studentName})`);
-    return { msg: "TIME IN Recorded!", status: "ok", id: matchedId, name: studentName, image: studentImage, timeIn: timestamp, timeOut: "---", date: todayDate, action: arrivalStatus.toUpperCase() };
-  } catch(e) { return { status: "warn", msg: e.message }; }
-}
-
-// ─── LEAVE REQUESTS & UTILS ───────────────────────────────
-function submitLeaveRequest(studentId, fromDate, toDate, reason, user, pass) {
-  try {
-    checkAuth(user, pass, "Any"); 
-    const ss = SpreadsheetApp.getActiveSpreadsheet(), mData = (ss.getSheetByName(S_MASTERLIST) || ss.getSheetByName("MasterList")).getDataRange().getDisplayValues();
-    
-    const idCol = getColIdx(mData[0], ["studentnumber", "idnumber", "studentid"]);
-    const fnCol = getColIdx(mData[0], ["firstname", "givenname"]);
-    const mnCol = getColIdx(mData[0], ["middlename", "m.i.", "middleinitial"]);
-    const lnCol = getColIdx(mData[0], ["lastname", "surname"]);
-    
-    let studentName = "Unknown";
-    for (let i = 1; i < mData.length; i++) { 
-      const sId = idCol >= 0 ? mData[i][idCol].toString().trim() : mData[i][1].toString().trim();
-      if (sId === studentId.toString().trim()) { 
-        const fName = fnCol >= 0 ? mData[i][fnCol] : mData[i][2];
-        let mName = mnCol >= 0 ? mData[i][mnCol] : mData[i][3];
-        const lName = lnCol >= 0 ? mData[i][lnCol] : mData[i][4];
-        if (mName.toUpperCase() === "N/A" || mName.toUpperCase() === "NONE" || mName === "-" || mName === "") mName = "";
-        studentName = [fName, mName, lName].filter(Boolean).join(" "); break;
-      } 
-    }
-    const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "MM/dd/yyyy"), leaveId = "LV" + new Date().getTime();
-    ss.getSheetByName(S_LEAVES).appendRow([leaveId, studentId, studentName, fromDate, toDate, reason, "Pending", today, ""]);
-    logAction(user, "Leave Submitted", `Submitted leave request for Cadet ID: ${studentId} (${fromDate} to ${toDate})`);
-    return { success: true, message: "Leave request submitted successfully." };
-  } catch(e) { return { success: false, message: e.message }; }
-}
-
-function getLeaveRequests(user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEAVES);
-    if (!sheet) return { leaves: [] }; 
-    const data = sheet.getDataRange().getDisplayValues(), leaves = [];
-    for (let i = 1; i < data.length; i++) leaves.push({ id: data[i][0], studentId: data[i][1], name: data[i][2], from: data[i][3], to: data[i][4], reason: data[i][5], status: data[i][6] });
-    return { leaves: leaves.reverse() };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-// 🔥 FIXED: Logs who approved/rejected the leave request
-function updateLeaveStatus(leaveId, status, user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEAVES);
-    const data = sheet.getDataRange().getDisplayValues();
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][0] === leaveId) { 
-        sheet.getRange(i + 1, 7).setValue(status);
-        sheet.getRange(i + 1, 9).setValue(user); // Records Admin Name in Col I
-        logAction(user, "Leave Processed", `Changed leave request ${leaveId} status to ${status}`);
-        return { success: true };
-      }
-    }
-    return { success: false, message: "Leave record not found." };
-  } catch(e) { return { success: false, message: e.message }; }
-}
-
-function getStudentsForIDCards(user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_MASTERLIST) || SpreadsheetApp.getActiveSpreadsheet().getSheetByName("MasterList");
-    if (!sheet) return { students: [] };
-    const data = sheet.getDataRange().getDisplayValues(), students = [];
-    const headers = data[0];
-    
-    let imgColIdx = getColIdx(headers, ["2x2formalphoto", "formalphoto", "photo", "image", "picture"]);
-    if (imgColIdx === -1) imgColIdx = findImageColumnIndex(headers);
-    
-    const idCol = getColIdx(headers, ["studentnumber", "idnumber", "studentid"]);
-    const fnCol = getColIdx(headers, ["firstname", "givenname"]);
-    const mnCol = getColIdx(headers, ["middlename", "m.i.", "middleinitial"]);
-    const lnCol = getColIdx(headers, ["lastname", "surname"]);
-    const coyCol = getColIdx(headers, ["company", "coy"]);
-    const courseCol = getColIdx(headers, ["course", "program"]); 
-    
-    for (let i = 1; i < data.length; i++) {
-      const sId = idCol >= 0 ? data[i][idCol] : data[i][1];
-      if (sId) {
-        const fName = fnCol >= 0 ? data[i][fnCol] : data[i][2];
-        let mName = mnCol >= 0 ? data[i][mnCol] : data[i][3];
-        const lName = lnCol >= 0 ? data[i][lnCol] : data[i][4];
-        if (mName.toUpperCase() === "N/A" || mName.toUpperCase() === "NONE" || mName === "-" || mName === "") mName = "";
-        
-        let rawImage = imgColIdx >= 0 ? data[i][imgColIdx] : "";
-        let courseVal = courseCol >= 0 ? data[i][courseCol].toString().trim() : (data[i][7] ? data[i][7].toString().trim() : "");
-        let compVal = coyCol >= 0 ? data[i][coyCol].toString().trim() : (data[i][5] ? data[i][5].toString().trim() : "");
-        
-        students.push({ id: sId, name: [fName, mName, lName].filter(Boolean).join(" "), course: courseVal, company: compVal, image: convertDriveLink(rawImage) });
-      }
-    }
-    return { students: students };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function uploadImageToDrive(base64Data, fileNamePrefix) {
-  const props = PropertiesService.getScriptProperties();
-  let folderId = props.getProperty("UPLOADS_FOLDER_ID");
-  const cleanBase64 = base64Data.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, "");
-  const blob = Utilities.newBlob(Utilities.base64Decode(cleanBase64), "image/png", fileNamePrefix + "_" + new Date().getTime() + ".png");
-  const file = DriveApp.getFolderById(folderId).createFile(blob);
-  return "https://lh3.googleusercontent.com/d/" + file.getId();
-}
-
-function convertDriveLink(url) {
-  if (!url) return "";
-  let finalUrl = url.toString().split(',')[0].trim();
-  if (finalUrl.includes("drive.google.com")) {
-    let match = finalUrl.match(/id=([a-zA-Z0-9_-]+)/);
-    if (!match) match = finalUrl.match(/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) return "https://lh3.googleusercontent.com/d/" + match[1];
-  }
-  return finalUrl;
-}
-
-function findImageColumnIndex(headers) {
-  for (let i = headers.length - 1; i >= 0; i--) { 
-    let h = headers[i].toString().toLowerCase().replace(/\s/g, '');
-    if ((h.includes("image") && !h.includes("qr")) || h.includes("photo") || h.includes("formal")) return i;
-  }
-  return 18;
-}
-
-function getColIdx(headers, possibleNames) {
-  for (let i = 0; i < headers.length; i++) {
-    let h = headers[i].toString().toLowerCase().replace(/\s/g, '');
-    for (let name of possibleNames) {
-      if (h === name.toLowerCase().replace(/\s/g, '')) return i;
-    }
-  }
-  return -1;
-}
-
-// ─── POST / NEWSFEED MANAGEMENT ───────────────────────────
-function submitPost(title, description, imageArray, videoUrl, user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
-    if(!sheet) throw new Error("Public_Posts tab missing in database.");
-    const postId = "PST_" + new Date().getTime();
-    let imgUrls = [];
-    if (imageArray && imageArray.length > 0) {
-      for (let i = 0; i < imageArray.length; i++) imgUrls.push(uploadImageToDrive(imageArray[i], "POST_" + new Date().getTime() + "_" + i));
-    }
-    const finalImgString = imgUrls.join(","); 
-    const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "MM/dd/yyyy");
-    sheet.appendRow([postId, title, description, finalImgString, "Pending", today, "", false, videoUrl || ""]);
-    logAction(user, "Post Drafted", `Drafted public post: ${title}`);
-    return { success: true, message: "Post drafted and pending approval." };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function resubmitPost(postId, title, description, imageArray, videoUrl, user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
-    const data = sheet.getDataRange().getValues();
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][0] === postId) {
-        sheet.getRange(i + 1, 2).setValue(title);
-        sheet.getRange(i + 1, 3).setValue(description);
-        if (imageArray && imageArray.length > 0) {
-          let imgUrls = [];
-          for (let j = 0; j < imageArray.length; j++) imgUrls.push(uploadImageToDrive(imageArray[j], "POST_" + new Date().getTime() + "_" + j));
-          sheet.getRange(i + 1, 4).setValue(imgUrls.join(","));
-        }
-        sheet.getRange(i + 1, 5).setValue("Pending"); 
-        sheet.getRange(i + 1, 7).setValue("");
-        sheet.getRange(i + 1, 9).setValue(videoUrl || ""); 
-        logAction(user, "Post Revised", `Admin revised and resubmitted post: ${title}`);
-        return { success: true, message: "Post revised and sent to Commander for review." };
-      }
-    }
-    return { success: false, message: "Original post not found." };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function getPostsAdmin(user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
-    if (!sheet) return { posts: [] }; 
-    const data = sheet.getDataRange().getDisplayValues();
-    const posts = [];
-    for (let i = 1; i < data.length; i++) {
-      posts.push({ id: data[i][0], title: data[i][1], description: data[i][2], image: data[i][3], status: data[i][4], date: data[i][5], feedback: data[i][6] || "", pinned: (data[i][7] === "TRUE" || data[i][7] === "true" || data[i][7] === true), videoUrl: data[i][8] || "" });
-    }
-    return { success: true, posts: posts.reverse() };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function updatePostStatus(postId, status, feedback, user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
-    const data = sheet.getDataRange().getValues();
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][0] === postId) {
-        sheet.getRange(i + 1, 5).setValue(status);
-        sheet.getRange(i + 1, 7).setValue(feedback || "");
-        logAction(user, "Post Reviewed", `Changed post ${postId} status to ${status}`);
-        return { success: true };
-      }
-    }
-    return { success: false, message: "Post not found." };
-  } catch(e) { return { success: false, message: e.message }; }
-}
-
-function deletePost(postId, user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
-    const data = sheet.getDataRange().getDisplayValues();
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][0] === postId) { 
-        sheet.deleteRow(i + 1);
-        logAction(user, "Post Deleted", `Permanently deleted public post ID: ${postId}`);
-        return { success: true, message: "Post permanently annihilated." };
-      }
-    }
-    return { success: false, message: "Post not found." };
-  } catch(e) { return { success: false, message: e.message }; }
-}
-
-function togglePinPost(postId, user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
-    const data = sheet.getDataRange().getValues();
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][0] === postId) { 
-        let currentStatus = data[i][7];
-        let newStatus = (currentStatus === true || currentStatus === "TRUE" || currentStatus === "true") ? false : true;
-        sheet.getRange(i + 1, 8).setValue(newStatus);
-        logAction(user, "Post Pin Toggled", `Toggled pin status for post ${postId} to ${newStatus}`);
-        return { success: true, pinned: newStatus };
-      }
-    }
-    return { success: false, message: "Post not found." };
-  } catch(e) { return { success: false, message: e.message }; }
-}
-
-function getApprovedPosts() {
-  try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_POSTS);
-    if(!sheet) return { success: true, posts: [] }; 
-    const data = sheet.getDataRange().getDisplayValues();
-    const posts = [];
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][4] === "Approved") {
-        let isPinned = (data[i][7] === "TRUE" || data[i][7] === "true" || data[i][7] === true);
-        posts.push({ id: data[i][0], title: data[i][1], description: data[i][2], image: data[i][3], date: data[i][5], pinned: isPinned, videoUrl: data[i][8] || "" });
-      }
-    }
-    return { success: true, posts: posts.reverse() };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-// ─── BRANDING & PROFILE ───────────────────────────────────
-function getSettings() {
-  try {
-    const props = PropertiesService.getScriptProperties().getProperties();
-    return { logoUrl: props.logoUrl || "https://cdn-icons-png.flaticon.com/512/1055/1055664.png", navLogoUrl: props.navLogoUrl || props.logoUrl || "https://cdn-icons-png.flaticon.com/512/1055/1055664.png", bgUrl: props.bgUrl || "" };
-  } catch(e) { return {}; }
-}
-
-function saveSettings(logoData, bgData, navLogoData, clearBg, user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const props = PropertiesService.getScriptProperties();
-    let updates = {};
-    if (logoData) updates.logoUrl = uploadImageToDrive(logoData, "SYS_LOGO");
-    if (bgData) updates.bgUrl = uploadImageToDrive(bgData, "SYS_BG");
-    if (navLogoData) updates.navLogoUrl = uploadImageToDrive(navLogoData, "SYS_NAV_LOGO");
-    if (clearBg) updates.bgUrl = ""; 
-    if (Object.keys(updates).length > 0) props.setProperties(updates);
-    logAction(user, "Settings Updated", "Updated system branding interface.");
-    return { success: true, message: "System interface updated!" };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function getProfile(targetUser, user, pass) {
-  try {
-    checkAuth(user, pass, "Any");
-    const data = PropertiesService.getScriptProperties().getProperty('profile_' + targetUser);
-    return data ? JSON.parse(data) : {};
-  } catch(e) { return {}; }
-}
-
-function saveProfile(profileData, user, pass) {
-  try {
-    checkAuth(user, pass, "Any");
-    const props = PropertiesService.getScriptProperties();
-    const existing = JSON.parse(props.getProperty('profile_' + user) || "{}");
-    if (profileData.imageData) {
-      profileData.image = uploadImageToDrive(profileData.imageData, "PROF_" + user);
-      delete profileData.imageData; 
-    } else profileData.image = existing.image || "";
-    props.setProperty('profile_' + user, JSON.stringify(profileData));
-    logAction(user, "Profile Updated", "Updated personal account profile details.");
-    return { success: true, message: "Profile saved successfully!" };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-// ─── LEGACY DATABASE ──────────────────────────────────────
-function addLegacyClass(year, name, logoData, user, pass) {
-  try {
-    let role = checkLegacyAuth(user, pass); 
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    let sheet = ss.getSheetByName(S_LEG_CLASS);
-    if (!sheet) {
-      sheet = ss.insertSheet(S_LEG_CLASS);
-      sheet.appendRow(["Class ID", "Year", "Class Name", "Logo URL", "Status"]);
-    }
-    const classId = "CLS_" + new Date().getTime();
-    let logoUrl = logoData ? uploadImageToDrive(logoData, "CLASS_" + year) : "";
-    let status = (role === "Super Admin") ? "Approved" : "Pending";
-    sheet.appendRow([classId, year, name, logoUrl, status]);
-    logAction(user, "Legacy Class Drafted", `Requested Class: ${name} (${year})`);
-    return { success: true, message: (role === "Super Admin" ? "Class officially added to archives." : "Class submitted for Commander approval!") };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function updateLegacyClassStatus(classId, status, user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEG_CLASS);
-    const data = sheet.getDataRange().getValues();
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][0] === classId) { 
-        sheet.getRange(i + 1, 5).setValue(status);
-        logAction(user, "Legacy Class Reviewed", `Changed Class ${classId} status to ${status}`);
-        return { success: true };
-      }
-    }
-    return { success: false, message: "Class not found." };
-  } catch(e) { return { success: false, message: e.message }; }
-}
-
-function deleteLegacyClass(classId, user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEG_CLASS);
-    const data = sheet.getDataRange().getValues();
-    for(let i=1; i<data.length; i++) {
-       if(data[i][0] === classId) {
-          sheet.deleteRow(i+1);
-          logAction(user, "Legacy Class Deleted", `Permanently Deleted Class ID: ${classId}`);
-          return {success:true};
-       }
-    }
-    return {success:false, message:"Not found."};
-  } catch(e) { return {success:false, message:e.message}; }
-}
-
-function deleteLegacyOfficer(offId, user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEG_OFF);
-    const data = sheet.getDataRange().getValues();
-    for(let i=1; i<data.length; i++) {
-       if(data[i][0] === offId) {
-          sheet.deleteRow(i+1);
-          logAction(user, "Legacy Officer Deleted", `Permanently Deleted Officer ID: ${offId}`);
-          return {success:true};
-       }
-    }
-    return {success:false, message:"Not found."};
-  } catch(e) { return {success:false, message:e.message}; }
-}
-
-function getLegacyClasses(user, pass) {
-  try {
-    checkAuth(user, pass, "Admin"); 
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEG_CLASS);
-    if (!sheet) return { classes: [] };
-    const data = sheet.getDataRange().getDisplayValues();
-    const classes = [];
-    for (let i = 1; i < data.length; i++) {
-      let status = data[i][4] || "Approved";
-      if (status === "Approved") classes.push({ id: data[i][0], year: data[i][1], name: data[i][2] });
-    }
-    return { classes: classes };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function getAdminLegacyData(user, pass) {
-  try {
-    checkAuth(user, pass, "Admin");
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const cSheet = ss.getSheetByName(S_LEG_CLASS);
-    const oSheet = ss.getSheetByName(S_LEG_OFF);
-    let classes = [];
-    if(cSheet && cSheet.getLastRow() > 1) {
-      const cData = cSheet.getDataRange().getDisplayValues();
-      for(let i=1; i<cData.length; i++) {
-        let status = cData[i][4] || "Approved"; 
-        classes.push({ id: cData[i][0], year: cData[i][1], name: cData[i][2], logo: cData[i][3], status: status });
-      }
-    }
-    let officers = [];
-    if(oSheet && oSheet.getLastRow() > 1) {
-      const oData = oSheet.getDataRange().getDisplayValues();
-      for(let i=1; i<oData.length; i++) {
-        officers.push({ id: oData[i][0], classId: oData[i][1], rank: oData[i][2], name: oData[i][3], designation: oData[i][4], image: oData[i][5], course: oData[i][6] || "", bio: oData[i][7] || "" });
-      }
-    }
-    return { success: true, classes: classes.reverse(), officers: officers.reverse() };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function addLegacyOfficer(classId, rank, name, designation, course, bio, imageData, user, pass) {
-  try {
-    checkLegacyAuth(user, pass);
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    let sheet = ss.getSheetByName(S_LEG_OFF);
-    if (!sheet) {
-      sheet = ss.insertSheet(S_LEG_OFF);
-      sheet.appendRow(["Officer ID", "Class ID", "Rank", "Name", "Designation", "Image URL", "Course", "Bio"]);
-    }
-    const offId = "OFF_" + new Date().getTime();
-    let imgUrl = imageData ? uploadImageToDrive(imageData, "OFFICER_" + name.replace(/\s+/g,"_")) : "";
-    sheet.appendRow([offId, classId, rank, name, designation, imgUrl, course, bio]);
-    logAction(user, "Legacy Officer Added", `Added ${rank} ${name} to Class ID: ${classId}`);
-    return { success: true, message: "Officer permanently added to archives." };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function requestEditOTP(user, pass) {
-  try {
-    checkAuth(user, pass, "Super Admin");
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    PropertiesService.getScriptProperties().setProperty("EDIT_OTP", otp);
-    
-    MailApp.sendEmail({
-      to: SYSTEM_OWNER_EMAIL,
-      subject: "SCCK ROTC - Legacy DB Edit Verification Code",
-      body: `A Super Admin (${user}) is attempting to edit a Legacy Officer record.\n\nYour OTP is: ${otp}\n\nDo not share this code. If you did not authorize this, please check the system logs immediately.`
-    });
-    logAction(user, "OTP Requested", "Requested OTP to edit legacy officer.");
-    return { success: true, message: "OTP sent to database owner." };
-  } catch(e) { return { error: true, message: e.message }; }
-}
-
-function submitOfficerEdit(offId, rank, name, desig, course, bio, otp, user, pass) {
-   try {
-     checkAuth(user, pass, "Super Admin");
-     const savedOtp = PropertiesService.getScriptProperties().getProperty("EDIT_OTP");
-     if (!savedOtp || savedOtp !== otp) {
-         return { error: true, message: "Invalid or expired OTP." };
-     }
-     PropertiesService.getScriptProperties().deleteProperty("EDIT_OTP");
-     
-     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S_LEG_OFF);
-     if (!sheet) throw new Error("Legacy Officer tab missing.");
-     const data = sheet.getDataRange().getValues();
-     for (let i = 1; i < data.length; i++) {
-       if (data[i][0] === offId) {
-         sheet.getRange(i + 1, 3).setValue(rank);
-         sheet.getRange(i + 1, 4).setValue(name);
-         sheet.getRange(i + 1, 5).setValue(desig);
-         sheet.getRange(i + 1, 7).setValue(course);
-         sheet.getRange(i + 1, 8).setValue(bio);
-         logAction(user, "Legacy Officer Edited", `Updated officer ID: ${offId} via OTP verification.`);
-         return { success: true, message: "Officer record updated securely." };
-       }
-     }
-     return { error: true, message: "Officer not found in database." };
-   } catch(e) { return { error: true, message: e.message }; }
-}
-
-function getLegacyData() {
-  try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const cSheet = ss.getSheetByName(S_LEG_CLASS);
-    const oSheet = ss.getSheetByName(S_LEG_OFF);
-    
-    let classes = [];
-    if (cSheet && cSheet.getLastRow() > 0) {
-      const cData = cSheet.getDataRange().getDisplayValues();
-      for(let i=1; i<cData.length; i++) {
-         let status = cData[i][4] || "Approved"; 
-         if (cData[i][0] && status === "Approved") {
-             classes.push({ id: cData[i][0], year: cData[i][1], name: cData[i][2], logo: cData[i][3], officers: [] });
-         }
-      }
-    }
-    
-    if (oSheet && oSheet.getLastRow() > 0) {
-      const oData = oSheet.getDataRange().getDisplayValues();
-      for(let i=1; i<oData.length; i++) {
-        if (oData[i][0]) {
-            const off = { id: oData[i][0], classId: oData[i][1], rank: oData[i][2], name: oData[i][3], designation: oData[i][4], image: oData[i][5], course: oData[i][6] || "", bio: oData[i][7] || "" };
-            const targetClass = classes.find(c => c.id === off.classId);
-            if (targetClass) targetClass.officers.push(off);
-        }
-      }
-    }
-    return { success: true, classes: classes, branding: getSettings() };
-  } catch(e) { 
-    return { success: false, error: true, message: e.message, classes: [], branding: getSettings() };
-  }
-}
-
-// ─── CADET REGISTRATION ENGINE (GOOGLE FORMS TRIGGER) ─────────────
-function getFormField(responses, possibleKeys) {
-  for (let key in responses) {
-    let cleanKey = key.trim().toLowerCase();
-    for (let name of possibleKeys) {
-      if (cleanKey === name.toLowerCase()) { return responses[key][0] ? responses[key][0].trim() : ""; }
-    }
-  }
-  return "";
-}
-
-function onCadetRegistration(e) {
-  try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const responses = e.namedValues;
-    
-    const masterSheet = ss.getSheetByName("Masterlist") || ss.getSheetByName("MasterList");
-    if (!masterSheet) return;
-    
-    const headers = masterSheet.getRange(1, 1, 1, masterSheet.getLastColumn()).getValues()[0];
-    let newRow = new Array(headers.length).fill("");
-    
-    function mapToRow(headerAliases, value) {
-        let idx = getColIdx(headers, headerAliases);
-        if (idx !== -1) newRow[idx] = value;
-    }
-
-    const studentNo = getFormField(responses, ["Student Number", "ID Number", "ID No."]);
-    const sex = getFormField(responses, ["Sex", "Gender"]);
-    if (!studentNo) return; 
-
-    mapToRow(["Timestamp", "Time"], responses["Timestamp"] ? responses["Timestamp"][0] : "");
-    mapToRow(["Email Address", "Email"], getFormField(responses, ["Email Address", "Email"]));
-    mapToRow(["Student Number", "ID Number", "StudentID"], studentNo);
-    mapToRow(["First Name", "Firstname", "Given Name", "First name "], getFormField(responses, ["First Name", "Firstname", "Given Name", "First name "]));
-    mapToRow(["Middle Name", "Middle Initial", "M.I."], getFormField(responses, ["Middle Name", "Middle name", "M.I.", "Middle Initial"]));
-    mapToRow(["Last Name", "Surname"], getFormField(responses, ["Last Name", "Last name", "Surname"]));
-    mapToRow(["Course", "Program"], getFormField(responses, ["Course", "Program"]));
-    mapToRow(["Sex", "Gender"], sex);
-    mapToRow(["Date of Birth", "Birthdate", "DOB"], getFormField(responses, ["Date of Birth", "Birthdate", "DOB"]));
-    mapToRow(["Emergency Contact Name", "Emergency Contact", "Guardian's Full Name", "Guardian Name"], getFormField(responses, ["Emergency Contact Name", "Emergency Contact", "Guardian's Full Name", "Guardian Name"]));
-    mapToRow(["Emergency Contact Relationship", "Relationship"], getFormField(responses, ["Emergency Contact Relationship", "Relationship"]));
-    mapToRow(["Emergency Contact Address", "Guardian Address"], getFormField(responses, ["Emergency Contact Address", "Guardian Address"]));
-    mapToRow(["Emergency Contact Number", "Guardians Contact Number"], getFormField(responses, ["Emergency Contact Number", "Guardians Contact Number", "Guardians Contact Number "]));
-    mapToRow(["Gmail Address", "Gmail"], getFormField(responses, ["Gmail Address", "Gmail"]));
-    mapToRow(["Full Address", "Address"], getFormField(responses, ["Full Address", "Address"]));
-    
-    let rawImageUpload = getFormField(responses, ["2x2 Formal Photo", "Formal Photo", "Please send your formal image for your ID", "Photo", "Image"]);
-    let imageUrl = rawImageUpload ? rawImageUpload.split(",")[0].trim() : "";
-    mapToRow(["2x2 Formal Photo", "Image", "Photo", "Image URL", "Formal Photo"], imageUrl);
-    
-    const qrUrl = "https://quickchart.io/qr?size=300&margin=2&text=" + encodeURIComponent(studentNo);
-    mapToRow(["QR", "QR Code", "QR Link"], qrUrl);
-
-    masterSheet.appendRow(newRow);
-    
-    const genderRow = [
-      responses["Timestamp"] ? responses["Timestamp"][0] : Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "MM/dd/yyyy HH:mm:ss"),
-      getFormField(responses, ["Email Address", "Email"]),
-      studentNo,
-      getFormField(responses, ["First Name", "Firstname", "Given Name", "First name "]),
-      getFormField(responses, ["Middle Name", "Middle name", "M.I.", "Middle Initial"]),
-      getFormField(responses, ["Last Name", "Last name", "Surname"]),
-      getFormField(responses, ["Course", "Program"]),
-      imageUrl,
-      getFormField(responses, ["Date of Birth", "Birthdate", "DOB"]),
-      sex,
-      getFormField(responses, ["Emergency Contact Name", "Guardian Name", "Guardian's Full Name"]),
-      getFormField(responses, ["Emergency Contact Relationship", "Relationship"]),
-      getFormField(responses, ["Emergency Contact Address", "Guardian Address"]),
-      getFormField(responses, ["Emergency Contact Number", "Guardians Contact Number", "Guardians Contact Number "])
-    ];
-
-    if (sex.toLowerCase() === "male" && ss.getSheetByName("Male")) {
-        ss.getSheetByName("Male").appendRow(genderRow);
-    } else if (sex.toLowerCase() === "female" && ss.getSheetByName("Female")) {
-        ss.getSheetByName("Female").appendRow(genderRow);
-    }
-
-    const accSheet = ss.getSheetByName(S_ACCOUNTS);
-    if (accSheet) {
-        const accData = accSheet.getDataRange().getValues();
-        let accExists = false;
-        for (let k = 1; k < accData.length; k++) {
-            if (accData[k][0].toString() === studentNo.toString()) { accExists = true; break; }
-        }
-        if (!accExists) {
-            accSheet.appendRow([studentNo, hashData(studentNo.toString()), "Cadet", "Active", "Denied"]);
-        }
-    }
-
-    const email = getFormField(responses, ["Email Address", "Email"]);
-    if (email) {
-      const fName = getFormField(responses, ["First Name", "Firstname", "Given Name", "First name "]);
-      const lName = getFormField(responses, ["Last Name", "Last name", "Surname"]);
-      const fullName = [fName, lName].filter(Boolean).join(" ");
-      const htmlBody = `<div style="font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 0 auto; text-align: center; border: 3px solid #1b2015; border-radius: 12px; padding: 30px; background-color: #f4f7f9;">
-        <h2 style="color: #2d3821; margin-bottom: 5px; font-size: 24px;">SCCK ROTC COMMAND CENTER</h2>
-        <p style="color: #d4af37; font-weight: bold; letter-spacing: 1px; margin-top: 0;">VISITOR & ATTENDANCE SYSTEM</p>
-        <p style="font-size: 16px; color: #1a2c45; margin-top: 25px;">Welcome, <strong>${fullName}</strong>.</p>
-        <p style="font-size: 14px; color: #6b7f96;">Your registration was successful. Below is your official assigned QR Code.</p>
-        <div style="margin: 20px 0; background: #ffffff; padding: 20px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"><img src="${qrUrl}" alt="Your QR Code" style="width: 250px; height: 250px; display: block;"></div>
-        <p style="font-size: 22px; font-weight: bold; color: #1b2015; margin: 10px 0;">ID: ${studentNo}</p>
-        <div style="margin-top: 25px; padding: 15px; background: #e8ece1; border-radius: 8px; text-align: left;">
-          <p style="font-size: 13px; color: #2d3821; margin: 0 0 5px 0;"><strong>YOUR CADET PORTAL ACCESS:</strong></p>
-          <p style="font-size: 12px; color: #6b7f96; margin: 0;"><strong>Username:</strong> ${studentNo}</p>
-          <p style="font-size: 12px; color: #6b7f96; margin: 0;"><strong>Password:</strong> ${studentNo}</p>
-          <p style="font-size: 11px; color: #d32f2f; margin-top: 8px;"><em>Log in to track your attendance, discipline score, and submit leaves.</em></p>
-        </div>
-      </div>`;
-      MailApp.sendEmail({ to: email, subject: "SCCK ROTC - Your Official QR ID & Portal Access", htmlBody: htmlBody });
-    }
-    
-    logAction("SYSTEM", "New Cadet Registered", `Auto-segregated Cadet, generated QR, and created portal account for ID: ${studentNo}`);
-  } catch (error) { logAction("SYSTEM", "Registration Automation Failed", `Failed routing data: ${error.message}`); }
-}
 
 <script>
  
@@ -1708,9 +765,11 @@ function onCadetRegistration(e) {
               if(actionName === 'getAuditLogs') processAuditLogs(res);
               if(actionName === 'getGradebookData') processGradebookData(res);
               
-              btn.innerHTML = oldHtml; btn.disabled = false;
+              btn.innerHTML = oldHtml; 
+              btn.disabled = false;
           }, (err) => { 
-              btn.innerHTML = oldHtml; btn.disabled = false; 
+              btn.innerHTML = oldHtml; 
+              btn.disabled = false; 
           });
       } else {
           if(actionName === 'getAdminDashboardData') apiCall(actionName, { user: session.user, pass: session.pass }, processDashboardData);
@@ -1797,7 +856,7 @@ function onCadetRegistration(e) {
   }
 
   // =========================================================================
-  // CADET DATA & 15-DAY TRACKER (WITH CRASH-PROOF ARRAYS & ADMIN LABELS)
+  // CADET DATA & 15-DAY TRACKER
   // =========================================================================
 
   function processCadetData(res) {
@@ -1852,8 +911,66 @@ function onCadetRegistration(e) {
   }
 
   // =========================================================================
-  // ADMIN COMMAND DASHBOARD
+  // ADMIN COMMAND DASHBOARD & CHARTS
   // =========================================================================
+
+  function renderDonut(p, l, a) {
+    const ctx = document.getElementById('chart-donut');
+    if(!ctx) return;
+    if (donutChart) donutChart.destroy();
+    
+    Chart.defaults.color = isDarkMode ? '#9aa08f' : '#6b705c';
+    donutChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Present', 'Late', 'Absent'],
+        datasets: [{
+          data: [p, l, a],
+          backgroundColor: ['#388e3c', '#f57f17', '#d32f2f'],
+          borderWidth: 2,
+          borderColor: isDarkMode ? '#1e2418' : '#ffffff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: "'Inter', sans-serif", size: 12 } } }
+        }
+      }
+    });
+  }
+
+  function renderWeekly(weeklyData) {
+    const ctx = document.getElementById('chart-weekly');
+    if(!ctx) return;
+    if (weeklyChart) weeklyChart.destroy();
+    
+    Chart.defaults.color = isDarkMode ? '#9aa08f' : '#6b705c';
+    weeklyChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: weeklyData.labels,
+        datasets: [
+          { label: 'Present', data: weeklyData.present, backgroundColor: '#388e3c', borderRadius: 4 },
+          { label: 'Late', data: weeklyData.late, backgroundColor: '#f57f17', borderRadius: 4 },
+          { label: 'Absent', data: weeklyData.absent, backgroundColor: '#d32f2f', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { stacked: true, grid: { display: false } },
+          y: { stacked: true, grid: { color: isDarkMode ? '#3a4230' : '#d4d8cc' }, beginAtZero: true }
+        },
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: "'Inter', sans-serif", size: 12 } } }
+        }
+      }
+    });
+  }
 
   function processDashboardData(res) { 
       if (res.alerts) { 
@@ -1921,7 +1038,7 @@ function onCadetRegistration(e) {
   }
 
   // =========================================================================
-  // ACTIONS, ALERTS & MODALS (FIX: Flexbox Layout for Edit Student)
+  // ACTIONS, ALERTS & MODALS (Flexbox Layout)
   // =========================================================================
 
   function editStudent(id, coy, con) { 
@@ -1972,14 +1089,35 @@ function onCadetRegistration(e) {
   }
 
   function openBulkDisciplineModal() {
-      const table = document.getElementById('masterlist-table'); const rows = table.getElementsByTagName('tr'); const companies = new Set();
-      for(let i=1; i<rows.length; i++) { let cols = rows[i].getElementsByTagName('td'); if(cols.length > 2) { let coy = cols[2].innerText.trim(); if(coy && coy !== 'N/A' && coy !== '---') companies.add(coy); } }
-      let dropdown = document.getElementById('bulk-target-group'); dropdown.innerHTML = '<option value="ALL">Entire Unit (All Cadets)</option>'; companies.forEach(c => { dropdown.innerHTML += `<option value="${c}">${c} Company</option>`; });
-      document.getElementById('bulk-custom-company').value = ""; document.getElementById('bulk-action-select').value = "";
-      const modal = document.getElementById('bulk-discipline-modal'); modal.style.display = 'flex'; setTimeout(() => modal.classList.add('show'), 10);
+      const table = document.getElementById('masterlist-table'); 
+      const rows = table.getElementsByTagName('tr'); 
+      const companies = new Set();
+      for(let i=1; i<rows.length; i++) { 
+          let cols = rows[i].getElementsByTagName('td'); 
+          if(cols.length > 2) { 
+              let coy = cols[2].innerText.trim(); 
+              if(coy && coy !== 'N/A' && coy !== '---') companies.add(coy); 
+          } 
+      }
+      let dropdown = document.getElementById('bulk-target-group'); 
+      dropdown.innerHTML = '<option value="ALL">Entire Unit (All Cadets)</option>'; 
+      companies.forEach(c => { dropdown.innerHTML += `<option value="${c}">${c} Company</option>`; });
+      
+      document.getElementById('bulk-custom-company').value = ""; 
+      document.getElementById('bulk-action-select').value = "";
+      
+      const modal = document.getElementById('bulk-discipline-modal'); 
+      modal.style.display = 'flex'; 
+      setTimeout(() => modal.classList.add('show'), 10);
   }
 
-  function closeBulkDisciplineModal(force) { const modal = document.getElementById('bulk-discipline-modal'); if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); } }
+  function closeBulkDisciplineModal(force) { 
+      const modal = document.getElementById('bulk-discipline-modal'); 
+      if (force === true || force.target === modal) { 
+          modal.classList.remove('show'); 
+          setTimeout(() => modal.style.display = 'none', 300); 
+      } 
+  }
 
   function submitBulkDiscipline() {
     let target = document.getElementById('bulk-target-group').value;
@@ -1989,7 +1127,10 @@ function onCadetRegistration(e) {
     const val = document.getElementById('bulk-action-select').value;
     if (!val) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Select a batch action.', showConfirmButton:false, timer:2000}); 
     
-    const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
+    const parts = val.split('|'); 
+    const type = parts[0]; 
+    const points = parseInt(parts[1]); 
+    const reason = parts[2]; 
     closeBulkDisciplineModal(true);
 
     Swal.fire({
@@ -2026,7 +1167,13 @@ function onCadetRegistration(e) {
       setTimeout(() => modal.classList.add('show'), 10); 
   }
   
-  function closeDisciplineModal(force) { const modal = document.getElementById('discipline-modal'); if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); } }
+  function closeDisciplineModal(force) { 
+      const modal = document.getElementById('discipline-modal'); 
+      if (force === true || force.target === modal) { 
+          modal.classList.remove('show'); 
+          setTimeout(() => modal.style.display = 'none', 300); 
+      } 
+  }
   
   function loadDisciplineHistory(id) { 
       document.getElementById('disc-history-table').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:10px;"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>'; 
@@ -2044,18 +1191,38 @@ function onCadetRegistration(e) {
   function submitDiscipline() { 
     const val = document.getElementById('disc-action-select').value; 
     if (!val) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Select an action.', showConfirmButton:false, timer:2000}); 
-    const btn = document.getElementById('btn-submit-discipline'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECORDING...'; btn.disabled = true;
-    const parts = val.split('|'); const type = parts[0]; const points = parseInt(parts[1]); const reason = parts[2]; 
+    const btn = document.getElementById('btn-submit-discipline'); 
+    const oldHtml = btn.innerHTML; 
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RECORDING...'; 
+    btn.disabled = true;
+    
+    const parts = val.split('|'); 
+    const type = parts[0]; 
+    const points = parseInt(parts[1]); 
+    const reason = parts[2]; 
+    
     apiCall('addDiscipline', { studentId: currentDiscStudentId, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => { 
         Swal.fire({toast:true, position:'top-end', icon:'success', title:'Discipline logged.', showConfirmButton:false, timer:2000}); 
-        document.getElementById('disc-action-select').value = ""; btn.innerHTML = oldHtml; btn.disabled = false; silentRefresh('getAdminDashboardData'); loadDisciplineHistory(currentDiscStudentId); 
-        let currScore = parseInt(document.getElementById('disc-cadet-score').innerText); document.getElementById('disc-cadet-score').innerText = currScore + points; 
+        document.getElementById('disc-action-select').value = ""; 
+        btn.innerHTML = oldHtml; 
+        btn.disabled = false; 
+        silentRefresh('getAdminDashboardData'); 
+        loadDisciplineHistory(currentDiscStudentId); 
+        let currScore = parseInt(document.getElementById('disc-cadet-score').innerText); 
+        document.getElementById('disc-cadet-score').innerText = currScore + points; 
     }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
   }
 
   function showQR(id, name) { 
-      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'); let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
-      Swal.fire({ title: name, html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${id}</p><div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;"><div id="swal-qr"></div><img src="${sysLogo}" style="position:absolute; width:45px; height:45px; background:white; padding:4px; border-radius:8px; z-index:10;"></div>`, confirmButtonColor: 'var(--army-primary)', confirmButtonText: 'CLOSE', didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821', correctLevel: QRCode.CorrectLevel.H }) }); 
+      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'); 
+      let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+      Swal.fire({ 
+          title: name, 
+          html: `<p style="margin-bottom:15px; color:var(--text-muted);">Cadet ID: ${id}</p><div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:20px; background:white; padding:15px; border-radius:8px; border:2px solid var(--army-primary); width:max-content; margin: 0 auto 20px auto;"><div id="swal-qr"></div><img src="${sysLogo}" style="position:absolute; width:45px; height:45px; background:white; padding:4px; border-radius:8px; z-index:10;"></div>`, 
+          confirmButtonColor: 'var(--army-primary)', 
+          confirmButtonText: 'CLOSE', 
+          didOpen: () => new QRCode(document.getElementById('swal-qr'), { text: id.toString(), width: 200, height: 200, colorDark: '#2d3821', correctLevel: QRCode.CorrectLevel.H }) 
+      }); 
   }
 
   // =========================================================================
@@ -2074,33 +1241,58 @@ function onCadetRegistration(e) {
           h+=`<tr><td>${lv.from?new Date(lv.from).toLocaleDateString():''} – ${lv.to?new Date(lv.to).toLocaleDateString():''}</td><td><b>${lv.studentId}</b></td><td>${lv.name}</td><td>${lv.reason}</td><td><span class="badge ${bc}">${lv.status}</span></td><td>${ab}</td></tr>`; 
       }); 
       document.getElementById('leaves-table').innerHTML=h||'<tr><td colspan="6" style="text-align:center;">No requests.</td></tr>'; 
-      document.getElementById('lv-stat-pending').innerText=p; document.getElementById('lv-stat-approved').innerText=a; document.getElementById('lv-stat-rejected').innerText=r; 
+      document.getElementById('lv-stat-pending').innerText=p; 
+      document.getElementById('lv-stat-approved').innerText=a; 
+      document.getElementById('lv-stat-rejected').innerText=r; 
   }
   
   function submitCadetLeave() {
     const f = document.getElementById('cadet-lv-from').value, t = document.getElementById('cadet-lv-to').value, x = document.getElementById('cadet-lv-reason').value.trim();
     if(!f || !t || !x) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill all fields.', showConfirmButton:false, timer:2000}); 
-    const btn = document.getElementById('btn-submit-cadet-leave'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
+    const btn = document.getElementById('btn-submit-cadet-leave'); 
+    const oldHtml = btn.innerHTML; 
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; 
+    btn.disabled = true;
+    
     apiCall('submitLeaveRequest', { studentId: session.user, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { 
         Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
-        document.getElementById('cadet-lv-from').value = ''; document.getElementById('cadet-lv-to').value = ''; document.getElementById('cadet-lv-reason').value = ''; btn.innerHTML = oldHtml; btn.disabled = false; silentRefresh('getCadetData'); 
+        document.getElementById('cadet-lv-from').value = ''; 
+        document.getElementById('cadet-lv-to').value = ''; 
+        document.getElementById('cadet-lv-reason').value = ''; 
+        btn.innerHTML = oldHtml; 
+        btn.disabled = false; 
+        silentRefresh('getCadetData'); 
     }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
   }
 
   function submitLeave() { 
     const id=document.getElementById('lv-id').value.trim(), f=document.getElementById('lv-from').value, t=document.getElementById('lv-to').value, x=document.getElementById('lv-reason').value.trim(); 
     if(!id||!f||!t||!x) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill all fields.', showConfirmButton:false, timer:2000}); 
-    const btn = document.getElementById('btn-submit-admin-leave'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
+    const btn = document.getElementById('btn-submit-admin-leave'); 
+    const oldHtml = btn.innerHTML; 
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; 
+    btn.disabled = true;
+    
     apiCall('submitLeaveRequest', { studentId: id, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { 
       Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-      ['id','from','to','reason'].forEach(k => document.getElementById(`lv-${k}`).value=''); btn.innerHTML = oldHtml; btn.disabled = false; silentRefresh('getLeaveRequests'); 
+      ['id','from','to','reason'].forEach(k => document.getElementById(`lv-${k}`).value=''); 
+      btn.innerHTML = oldHtml; 
+      btn.disabled = false; 
+      silentRefresh('getLeaveRequests'); 
     }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
   }
   
   function updateLeave(id, s) { 
       Swal.fire({ title: `Set status to ${s}?`, showCancelButton: true }).then(r => { 
           if(r.isConfirmed) { 
-              if(session.role === 'Super Admin') { let bl = document.getElementById('badge-leaves'); if(bl && bl.style.display !== 'none') { let count = parseInt(bl.innerText || 0) - 1; bl.innerText = count; if(count <= 0) bl.style.display = 'none'; } }
+              if(session.role === 'Super Admin') { 
+                  let bl = document.getElementById('badge-leaves'); 
+                  if(bl && bl.style.display !== 'none') { 
+                      let count = parseInt(bl.innerText || 0) - 1; 
+                      bl.innerText = count; 
+                      if(count <= 0) bl.style.display = 'none'; 
+                  } 
+              }
               apiCall('updateLeaveStatus', { leaveId: id, status: s, user: session.user, pass: session.pass }, () => silentRefresh('getLeaveRequests')); 
           } 
       }); 
@@ -2110,20 +1302,43 @@ function onCadetRegistration(e) {
   // ID CARDS
   // =========================================================================
 
-  function processIDStudents(res) { globalStudentCache = res.students; let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; res.students.forEach(s => { o+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; lo+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; }); document.getElementById('id-target-select').innerHTML=o; document.getElementById('lv-id').innerHTML=lo; }
+  function processIDStudents(res) { 
+      globalStudentCache = res.students; 
+      let o='<option value="ALL">Entire Roster (Bulk)</option>', lo='<option value="">Select Cadet...</option>'; 
+      res.students.forEach(s => { 
+          o+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; 
+          lo+=`<option value="${s.id}">${s.id} – ${s.name}</option>`; 
+      }); 
+      document.getElementById('id-target-select').innerHTML=o; 
+      document.getElementById('lv-id').innerHTML=lo; 
+  }
   
   function generateIDPreview() { 
-      const t=document.getElementById('id-target-select').value, c=document.getElementById('id-grid-container'); c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; 
-      const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; 
-      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'); let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
-      c.innerHTML=f.map(s => { let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; }).join(''); 
+      const t=document.getElementById('id-target-select').value;
+      const c=document.getElementById('id-grid-container'); 
+      c.innerHTML='<p style="text-align:center; width:100%; font-weight:bold; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> RENDERING...</p>'; 
+      const f=t==='ALL'?globalStudentCache:globalStudentCache.filter(s => s.id.toString()===t); 
+      if(!f.length) return c.innerHTML='<p style="text-align:center; width:100%;">No cadets found.</p>'; 
+      
+      let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'); 
+      let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+      
+      c.innerHTML=f.map(s => { 
+          let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; 
+          return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; 
+      }).join(''); 
       setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H })), 300); 
   }
   
-  function printIDCards() { if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Generate preview before printing.', showConfirmButton:false, timer:2000}); window.print(); }
+  function printIDCards() { 
+      if(document.getElementById('id-grid-container').innerHTML.includes('No cadets')||document.getElementById('id-grid-container').innerHTML.includes('RENDERING')) {
+          return Swal.fire({toast:true, position:'top', icon:'warning', title:'Generate preview before printing.', showConfirmButton:false, timer:2000}); 
+      }
+      window.print(); 
+  }
 
   // =========================================================================
-  // AUDIT LOGS (FIX: Cryptographic Hash Warning mapped)
+  // AUDIT LOGS (Cryptographic Hash Map)
   // =========================================================================
 
   function processAuditLogs(res) { 
@@ -2147,106 +1362,281 @@ function onCadetRegistration(e) {
   // LEGACY DB
   // =========================================================================
 
-  function loadLegacyClassesForDropdown() { document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { let o='<option value="">Select a Class...</option>'; res.classes.forEach(c => o+=`<option value="${c.id}">${c.name} (${c.year})</option>`); document.getElementById('leg-off-class').innerHTML=o; }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); }
+  function loadLegacyClassesForDropdown() { 
+      document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; 
+      apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { 
+          let o='<option value="">Select a Class...</option>'; 
+          res.classes.forEach(c => o+=`<option value="${c.id}">${c.name} (${c.year})</option>`); 
+          document.getElementById('leg-off-class').innerHTML=o; 
+      }, () => { document.getElementById('leg-off-class').innerHTML='<option value="">Failed to load.</option>'; }); 
+  }
   
   function processLegacyData(res) {
-      let cHtml = ''; res.classes.forEach(c => { let actionBtn = ''; if (session.role === 'Super Admin') { if (c.status === 'Pending') { actionBtn = `<button class="btn-success" style="padding:4px 8px; font-size:11px; margin-right:5px; height:auto; width:auto; display:inline-block;" onclick="updateLegacyClass('${c.id}','Approved')">APPROVE</button><button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="updateLegacyClass('${c.id}','Rejected')">REJECT</button>`; } else { actionBtn = `<button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="deleteLegacyClass('${c.id}')"><i class="fas fa-trash"></i></button>`; } } let bClass = c.status === 'Approved' ? 'badge-present' : (c.status === 'Pending' ? 'badge-late' : 'badge-absent'); cHtml += `<tr><td>${c.year}</td><td><b>${c.name}</b></td><td><span class="badge ${bClass}">${c.status}</span></td><td>${actionBtn}</td></tr>`; }); document.getElementById('legacy-classes-tbody').innerHTML = cHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
-      let oHtml = ''; res.officers.forEach(o => { let actionBtn = session.role === 'Super Admin' ? `<button class="btn-warning" style="padding:4px 8px; font-size:11px; color:#fff; margin-right:5px; height:auto; width:auto; display:inline-block;" onclick="openEditOfficerModal('${o.id}', '${o.rank}', '${o.name}', '${o.designation}', '${o.course}', \`${o.bio.replace(/`/g, "'").replace(/'/g, "\\'")}\`)"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="deleteLegacyOfficer('${o.id}')"><i class="fas fa-trash"></i></button>` : ''; oHtml += `<tr><td>${o.classId}</td><td><b>${o.rank} ${o.name}</b></td><td>${o.designation}</td><td>${actionBtn}</td></tr>`; }); document.getElementById('legacy-officers-tbody').innerHTML = oHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
+      let cHtml = ''; 
+      res.classes.forEach(c => { 
+          let actionBtn = ''; 
+          if (session.role === 'Super Admin') { 
+              if (c.status === 'Pending') { 
+                  actionBtn = `<button class="btn-success" style="padding:4px 8px; font-size:11px; margin-right:5px; height:auto; width:auto; display:inline-block;" onclick="updateLegacyClass('${c.id}','Approved')">APPROVE</button><button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="updateLegacyClass('${c.id}','Rejected')">REJECT</button>`; 
+              } else { 
+                  actionBtn = `<button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="deleteLegacyClass('${c.id}')"><i class="fas fa-trash"></i></button>`; 
+              } 
+          } 
+          let bClass = c.status === 'Approved' ? 'badge-present' : (c.status === 'Pending' ? 'badge-late' : 'badge-absent'); 
+          cHtml += `<tr><td>${c.year}</td><td><b>${c.name}</b></td><td><span class="badge ${bClass}">${c.status}</span></td><td>${actionBtn}</td></tr>`; 
+      }); 
+      document.getElementById('legacy-classes-tbody').innerHTML = cHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
+      
+      let oHtml = ''; 
+      res.officers.forEach(o => { 
+          let actionBtn = session.role === 'Super Admin' ? `<button class="btn-warning" style="padding:4px 8px; font-size:11px; color:#fff; margin-right:5px; height:auto; width:auto; display:inline-block;" onclick="openEditOfficerModal('${o.id}', '${o.rank}', '${o.name}', '${o.designation}', '${o.course}', \`${o.bio.replace(/`/g, "'").replace(/'/g, "\\'")}\`)"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:4px 8px; font-size:11px; height:auto; width:auto; display:inline-block;" onclick="deleteLegacyOfficer('${o.id}')"><i class="fas fa-trash"></i></button>` : ''; 
+          oHtml += `<tr><td>${o.classId}</td><td><b>${o.rank} ${o.name}</b></td><td>${o.designation}</td><td>${actionBtn}</td></tr>`; 
+      }); 
+      document.getElementById('legacy-officers-tbody').innerHTML = oHtml || '<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>';
   }
 
-  window.openEditOfficerModal = function(id, rank, name, desig, course, bio) { document.getElementById('edit-off-id').value = id; document.getElementById('edit-off-rank').value = rank; document.getElementById('edit-off-name').value = name; document.getElementById('edit-off-desig').value = desig; document.getElementById('edit-off-course').value = course; document.getElementById('edit-off-bio').value = bio; const modal = document.getElementById('edit-officer-modal'); modal.style.display = 'flex'; setTimeout(() => modal.classList.add('show'), 10); }
-  window.closeEditOfficerModal = function(force) { const modal = document.getElementById('edit-officer-modal'); if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); } }
+  window.openEditOfficerModal = function(id, rank, name, desig, course, bio) { 
+      document.getElementById('edit-off-id').value = id; 
+      document.getElementById('edit-off-rank').value = rank; 
+      document.getElementById('edit-off-name').value = name; 
+      document.getElementById('edit-off-desig').value = desig; 
+      document.getElementById('edit-off-course').value = course; 
+      document.getElementById('edit-off-bio').value = bio; 
+      const modal = document.getElementById('edit-officer-modal'); 
+      modal.style.display = 'flex'; 
+      setTimeout(() => modal.classList.add('show'), 10); 
+  }
+  
+  window.closeEditOfficerModal = function(force) { 
+      const modal = document.getElementById('edit-officer-modal'); 
+      if (force === true || force.target === modal) { 
+          modal.classList.remove('show'); 
+          setTimeout(() => modal.style.display = 'none', 300); 
+      } 
+  }
 
   window.requestOfficerEditOTP = function() {
     Swal.fire({ title: 'SECURING CONNECTION...', html: 'Requesting OTP verification...', didOpen: () => Swal.showLoading() });
     apiCall('requestEditOTP', { user: session.user, pass: session.pass }, (res) => {
-        Swal.fire({ title: 'ENTER VERIFICATION CODE', text: 'A 6-digit OTP has been sent to the database owner\'s email.', input: 'text', inputPlaceholder: '6-Digit OTP', showCancelButton: true, confirmButtonText: 'VERIFY & SAVE', preConfirm: (otp) => { if (!otp) Swal.showValidationMessage('OTP is required to proceed'); return otp; } }).then((result) => { if (result.isConfirmed) submitOfficerEditWithOTP(result.value); });
+        Swal.fire({ 
+            title: 'ENTER VERIFICATION CODE', 
+            text: 'A 6-digit OTP has been sent to the database owner\'s email.', 
+            input: 'text', 
+            inputPlaceholder: '6-Digit OTP', 
+            showCancelButton: true, 
+            confirmButtonText: 'VERIFY & SAVE', 
+            preConfirm: (otp) => { if (!otp) Swal.showValidationMessage('OTP is required to proceed'); return otp; } 
+        }).then((result) => { if (result.isConfirmed) submitOfficerEditWithOTP(result.value); });
     });
   }
 
   window.submitOfficerEditWithOTP = function(otp) {
     Swal.fire({ title: 'VERIFYING & SAVING...', didOpen: () => Swal.showLoading() });
-    const payload = { offId: document.getElementById('edit-off-id').value, rank: document.getElementById('edit-off-rank').value, name: document.getElementById('edit-off-name').value, desig: document.getElementById('edit-off-desig').value, course: document.getElementById('edit-off-course').value, bio: document.getElementById('edit-off-bio').value, otp: otp, user: session.user, pass: session.pass };
-    apiCall('submitOfficerEdit', payload, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); closeEditOfficerModal(true); silentRefresh('getAdminLegacyData'); });
+    const payload = { 
+        offId: document.getElementById('edit-off-id').value, 
+        rank: document.getElementById('edit-off-rank').value, 
+        name: document.getElementById('edit-off-name').value, 
+        desig: document.getElementById('edit-off-desig').value, 
+        course: document.getElementById('edit-off-course').value, 
+        bio: document.getElementById('edit-off-bio').value, 
+        otp: otp, 
+        user: session.user, 
+        pass: session.pass 
+    };
+    apiCall('submitOfficerEdit', payload, (res) => { 
+        Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
+        closeEditOfficerModal(true); 
+        silentRefresh('getAdminLegacyData'); 
+    });
   }
 
   function submitLegacyClass() { 
       const n=document.getElementById('leg-class-name').value.trim(), y=document.getElementById('leg-class-year').value.trim(), l=croppedData['leg-class-logo']; 
       if(!n||!y||!l) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fields required.', showConfirmButton:false, timer:2000}); 
-      const btn = document.getElementById('btn-submit-class'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...'; btn.disabled = true;
+      
+      const btn = document.getElementById('btn-submit-class'); 
+      const oldHtml = btn.innerHTML; 
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...'; 
+      btn.disabled = true;
+      
       apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { 
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('leg-class-name').value=''; document.getElementById('leg-class-year').value=''; document.getElementById('leg-class-logo').value=''; delete croppedData['leg-class-logo']; document.getElementById('leg-class-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false; silentRefresh('getAdminLegacyData'); 
+          document.getElementById('leg-class-name').value=''; 
+          document.getElementById('leg-class-year').value=''; 
+          document.getElementById('leg-class-logo').value=''; 
+          delete croppedData['leg-class-logo']; 
+          document.getElementById('leg-class-status').innerHTML='Select an image...'; 
+          btn.innerHTML = oldHtml; 
+          btn.disabled = false; 
+          silentRefresh('getAdminLegacyData'); 
       }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
   }
   
   function submitLegacyOfficer() { 
-      const c=document.getElementById('leg-off-class').value, r=document.getElementById('leg-off-rank').value.trim(), n=document.getElementById('leg-off-name').value.trim(), d=document.getElementById('leg-off-desig').value.trim(), course=document.getElementById('leg-off-course').value.trim(), bio=document.getElementById('leg-off-bio').value.trim(), i=croppedData['leg-off-photo']; 
+      const c=document.getElementById('leg-off-class').value, 
+            r=document.getElementById('leg-off-rank').value.trim(), 
+            n=document.getElementById('leg-off-name').value.trim(), 
+            d=document.getElementById('leg-off-desig').value.trim(), 
+            course=document.getElementById('leg-off-course').value.trim(), 
+            bio=document.getElementById('leg-off-bio').value.trim(), 
+            i=croppedData['leg-off-photo']; 
+            
       if(!c||!r||!n||!d||!i) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Fill fields and upload photo.', showConfirmButton:false, timer:2000}); 
-      const btn = document.getElementById('btn-submit-officer'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; btn.disabled = true;
+      
+      const btn = document.getElementById('btn-submit-officer'); 
+      const oldHtml = btn.innerHTML; 
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; 
+      btn.disabled = true;
+      
       apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { 
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('leg-off-rank').value=''; document.getElementById('leg-off-name').value=''; document.getElementById('leg-off-desig').value=''; document.getElementById('leg-off-course').value=''; document.getElementById('leg-off-bio').value=''; document.getElementById('leg-off-photo').value=''; delete croppedData['leg-off-photo']; document.getElementById('leg-off-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false; silentRefresh('getAdminLegacyData'); 
+          document.getElementById('leg-off-rank').value=''; 
+          document.getElementById('leg-off-name').value=''; 
+          document.getElementById('leg-off-desig').value=''; 
+          document.getElementById('leg-off-course').value=''; 
+          document.getElementById('leg-off-bio').value=''; 
+          document.getElementById('leg-off-photo').value=''; 
+          delete croppedData['leg-off-photo']; 
+          document.getElementById('leg-off-status').innerHTML='Select an image...'; 
+          btn.innerHTML = oldHtml; 
+          btn.disabled = false; 
+          silentRefresh('getAdminLegacyData'); 
       }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
   }
 
-  window.updateLegacyClass = function(id, status) { Swal.fire({ title: `Set class to ${status}?`, showCancelButton: true }).then(r => { if(r.isConfirmed) { if(session.role === 'Super Admin') { let blg = document.getElementById('badge-legacy'); let count = parseInt(blg.innerText || 0) - 1; if(count > 0) { blg.innerText = count; } else { blg.style.display = 'none'; } } apiCall('updateLegacyClassStatus', { classId: id, status: status, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Status updated.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); loadLegacyClassesForDropdown(); }); } }); }
-  window.deleteLegacyClass = function(id) { Swal.fire({ title: 'PERMANENTLY DELETE CLASS?', text: 'All associated data will be wiped.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => { if(r.isConfirmed) { apiCall('deleteLegacyClass', { classId: id, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Class removed.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); loadLegacyClassesForDropdown(); }); } }); }
-  window.deleteLegacyOfficer = function(id) { Swal.fire({ title: 'PERMANENTLY DELETE OFFICER?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => { if(r.isConfirmed) { apiCall('deleteLegacyOfficer', { offId: id, user: session.user, pass: session.pass }, () => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Officer removed.', showConfirmButton:false, timer:2000}); silentRefresh('getAdminLegacyData'); }); } }); }
+  window.updateLegacyClass = function(id, status) { 
+      Swal.fire({ title: `Set class to ${status}?`, showCancelButton: true }).then(r => { 
+          if(r.isConfirmed) { 
+              if(session.role === 'Super Admin') { 
+                  let blg = document.getElementById('badge-legacy'); 
+                  let count = parseInt(blg.innerText || 0) - 1; 
+                  if(count > 0) { blg.innerText = count; } else { blg.style.display = 'none'; } 
+              } 
+              apiCall('updateLegacyClassStatus', { classId: id, status: status, user: session.user, pass: session.pass }, () => { 
+                  Swal.fire({toast:true, position:'top-end', icon:'success', title:'Status updated.', showConfirmButton:false, timer:2000}); 
+                  silentRefresh('getAdminLegacyData'); 
+                  loadLegacyClassesForDropdown(); 
+              }); 
+          } 
+      }); 
+  }
+  
+  window.deleteLegacyClass = function(id) { 
+      Swal.fire({ title: 'PERMANENTLY DELETE CLASS?', text: 'All associated data will be wiped.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => { 
+          if(r.isConfirmed) { 
+              apiCall('deleteLegacyClass', { classId: id, user: session.user, pass: session.pass }, () => { 
+                  Swal.fire({toast:true, position:'top-end', icon:'success', title:'Class removed.', showConfirmButton:false, timer:2000}); 
+                  silentRefresh('getAdminLegacyData'); 
+                  loadLegacyClassesForDropdown(); 
+              }); 
+          } 
+      }); 
+  }
+  
+  window.deleteLegacyOfficer = function(id) { 
+      Swal.fire({ title: 'PERMANENTLY DELETE OFFICER?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => { 
+          if(r.isConfirmed) { 
+              apiCall('deleteLegacyOfficer', { offId: id, user: session.user, pass: session.pass }, () => { 
+                  Swal.fire({toast:true, position:'top-end', icon:'success', title:'Officer removed.', showConfirmButton:false, timer:2000}); 
+                  silentRefresh('getAdminLegacyData'); 
+              }); 
+          } 
+      }); 
+  }
 
   // =========================================================================
   // PUBLIC POSTS
   // =========================================================================
 
   async function submitPublicPost() {
-    const title = document.getElementById('post-title').value.trim(); const desc = document.getElementById('post-desc').value.trim(); const vid = document.getElementById('post-video-url').value.trim();
+    const title = document.getElementById('post-title').value.trim(); 
+    const desc = document.getElementById('post-desc').value.trim(); 
+    const vid = document.getElementById('post-video-url').value.trim();
+    
     if (!title || !desc) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Title & Description required.', showConfirmButton:false, timer:2500});
     if (!editingPostId && stagedImages.length === 0 && !vid) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Media required.', showConfirmButton:false, timer:2500});
     
-    const btn = document.getElementById('btn-submit-post'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; btn.disabled = true;
-    let actionName = editingPostId ? 'resubmitPost' : 'submitPost'; let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, pass: session.pass }; if (editingPostId) payload.postId = editingPostId;
+    const btn = document.getElementById('btn-submit-post'); 
+    const oldHtml = btn.innerHTML; 
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; 
+    btn.disabled = true;
+    
+    let actionName = editingPostId ? 'resubmitPost' : 'submitPost'; 
+    let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, pass: session.pass }; 
+    if (editingPostId) payload.postId = editingPostId;
 
     apiCall(actionName, payload, (res) => {
-      Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); btn.innerHTML = oldHtml; btn.disabled = false; cancelEdit(); silentRefresh('getPostsAdmin');
+      Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
+      btn.innerHTML = oldHtml; 
+      btn.disabled = false; 
+      cancelEdit(); 
+      silentRefresh('getPostsAdmin');
     }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
   }
 
   function editPost(id) {
     const p = globalAdminPostCache.find(x => x.id === id); if (!p) return;
-    editingPostId = id; document.getElementById('post-title').value = p.title; document.getElementById('post-desc').value = p.description; document.getElementById('post-video-url').value = p.videoUrl || ''; document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST'; document.getElementById('btn-cancel-edit').style.display = 'inline-block';
-    stagedImages = []; document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;">Images unchanged. Select new ones below to override.</span>'; document.getElementById('admin-draft-section').scrollIntoView({behavior: 'smooth'});
+    editingPostId = id; 
+    document.getElementById('post-title').value = p.title; 
+    document.getElementById('post-desc').value = p.description; 
+    document.getElementById('post-video-url').value = p.videoUrl || ''; 
+    document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-save"></i> SUBMIT REVISED POST'; 
+    document.getElementById('btn-cancel-edit').style.display = 'inline-block';
+    stagedImages = []; 
+    document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;">Images unchanged. Select new ones below to override.</span>'; 
+    document.getElementById('admin-draft-section').scrollIntoView({behavior: 'smooth'});
   }
 
   function cancelEdit() {
-    editingPostId = null; document.getElementById('post-title').value = ''; document.getElementById('post-desc').value = ''; document.getElementById('post-video-url').value = ''; document.getElementById('post-image-file').value = ''; stagedImages = []; document.getElementById('image-staging-grid').innerHTML = ''; document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL'; document.getElementById('btn-cancel-edit').style.display = 'none';
+    editingPostId = null; 
+    document.getElementById('post-title').value = ''; 
+    document.getElementById('post-desc').value = ''; 
+    document.getElementById('post-video-url').value = ''; 
+    document.getElementById('post-image-file').value = ''; 
+    stagedImages = []; 
+    document.getElementById('image-staging-grid').innerHTML = ''; 
+    document.getElementById('btn-submit-post').innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL'; 
+    document.getElementById('btn-cancel-edit').style.display = 'none';
   }
 
   function renderAdminPostsHTML() {
     let html = '';
     globalAdminPostCache.forEach(p => {
-      let actionBtn = ''; let feedbackHtml = ''; let isPinned = (p.pinned === true || p.pinned === "TRUE");
+      let actionBtn = ''; 
+      let feedbackHtml = ''; 
+      let isPinned = (p.pinned === true || p.pinned === "TRUE");
       let previewBtn = `<button class="btn-info" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; height:auto; color:#fff;" onclick="previewPost('${p.id}')"><i class="fas fa-eye"></i> PREVIEW</button>`;
 
       if (session.role === 'Super Admin') {
-        let pinColor = isPinned ? 'var(--army-gold)' : 'var(--text-muted)'; let pinIcon = isPinned ? 'fas fa-thumbtack' : 'fas fa-thumbtack'; let pinTooltip = isPinned ? 'UNPIN' : 'PIN TO TOP';
+        let pinColor = isPinned ? 'var(--army-gold)' : 'var(--text-muted)'; 
+        let pinIcon = isPinned ? 'fas fa-thumbtack' : 'fas fa-thumbtack'; 
+        let pinTooltip = isPinned ? 'UNPIN' : 'PIN TO TOP';
         let pinBtn = `<button style="background:transparent; color:${pinColor}; border:1px solid ${pinColor}; padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; height:auto;" onclick="togglePin('${p.id}')"><i class="${pinIcon}"></i> ${pinTooltip}</button>`;
         let deleteBtn = `<button class="btn-danger" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; height:auto;" onclick="deletePost('${p.id}')"><i class="fas fa-trash"></i> DELETE</button>`;
 
         if (p.status === 'Pending' || p.status === 'Revise') {
           feedbackHtml = `<textarea id="feedback-${p.id}" placeholder="Type instructions or corrections here..." style="width:100%; height:60px; margin-top:10px; font-size:12px; padding:8px;"></textarea>`;
           actionBtn = `${previewBtn}<button class="btn-success" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; height:auto;" onclick="updatePost('${p.id}','Approved')">APPROVE</button><button class="btn-warning" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; height:auto; color:#fff;" onclick="updatePost('${p.id}','Revise')">REVISE</button><button class="btn-danger" style="padding:6px 10px; font-size:11px; margin-bottom:5px; width:100%; height:auto;" onclick="updatePost('${p.id}','Rejected')">REJECT</button>${deleteBtn}`;
-        } else { actionBtn = `${previewBtn}${pinBtn}${deleteBtn}`; feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px;"><b>Notes:</b> ${p.feedback}</div>` : ''; }
+        } else { 
+            actionBtn = `${previewBtn}${pinBtn}${deleteBtn}`; 
+            feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px;"><b>Notes:</b> ${p.feedback}</div>` : ''; 
+        }
       } else if (session.role === 'Admin') {
         actionBtn = previewBtn;
-        if (p.status === 'Revise') { feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${p.feedback}</div>`; actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; height:auto; margin-top:5px;" onclick="editPost('${p.id}')"><i class="fas fa-edit"></i> EDIT POST</button>`; } 
-        else if (p.status === 'Rejected') { feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${p.feedback}</div>` : ''; }
+        if (p.status === 'Revise') { 
+            feedbackHtml = `<div style="font-size:12px; color:var(--status-red); margin-top:10px; background:rgba(211,47,47,0.1); padding:8px; border-radius:4px; border:1px dashed var(--status-red);"><b>CORRECTIONS REQUIRED:</b><br>${p.feedback}</div>`; 
+            actionBtn += `<br><button class="btn-warning" style="padding:6px 10px; font-size:11px; color:#fff; width:100%; height:auto; margin-top:5px;" onclick="editPost('${p.id}')"><i class="fas fa-edit"></i> EDIT POST</button>`; 
+        } else if (p.status === 'Rejected') { 
+            feedbackHtml = p.feedback ? `<div style="font-size:11px; color:var(--status-red); margin-top:5px;"><b>Reason:</b> ${p.feedback}</div>` : ''; 
+        }
       }
 
       let badgeClass = p.status === 'Approved' ? 'badge-present' : (p.status === 'Rejected' ? 'badge-absent' : (p.status === 'Revise' ? 'badge-late' : 'badge-timeout'));
-      let firstImg = p.image ? p.image.split(',')[0] : ''; let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : '<div style="width:80px; height:60px; background:#111; border-radius:4px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-video" style="color:#555;"></i></div>';
-      let pinnedLabel = isPinned ? `<div style="font-size:10px; color:var(--army-gold); font-weight:bold; margin-bottom:3px;"><i class="fas fa-thumbtack"></i> PINNED</div>` : ''; let vidLabel = p.videoUrl ? `<div style="font-size:10px; color:#0288d1; font-weight:bold; margin-bottom:3px;"><i class="fas fa-video"></i> VIDEO ATTACHED</div>` : ''; let styledDesc = formatHashtags(p.description);
+      let firstImg = p.image ? p.image.split(',')[0] : ''; 
+      let imgHtml = firstImg ? `<img src="${firstImg}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">` : '<div style="width:80px; height:60px; background:#111; border-radius:4px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-video" style="color:#555;"></i></div>';
+      let pinnedLabel = isPinned ? `<div style="font-size:10px; color:var(--army-gold); font-weight:bold; margin-bottom:3px;"><i class="fas fa-thumbtack"></i> PINNED</div>` : ''; 
+      let vidLabel = p.videoUrl ? `<div style="font-size:10px; color:#0288d1; font-weight:bold; margin-bottom:3px;"><i class="fas fa-video"></i> VIDEO ATTACHED</div>` : ''; 
+      let styledDesc = formatHashtags(p.description);
 
       html += `<tr><td style="font-size:12px; width:80px;">${p.date}</td><td style="width:90px;">${imgHtml}</td><td>${pinnedLabel}${vidLabel}<b>${p.title}</b><br><span style="font-size:12px; color:var(--text-muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${styledDesc}</span>${feedbackHtml}</td><td style="width:90px;"><span class="badge ${badgeClass}">${p.status}</span></td><td style="width:100px;">${actionBtn}</td></tr>`;
     });
@@ -2255,7 +1645,9 @@ function onCadetRegistration(e) {
 
   window.togglePin = function(id) {
     const postIndex = globalAdminPostCache.findIndex(x => x.id === id); if(postIndex === -1) return;
-    let currentPinned = globalAdminPostCache[postIndex].pinned; globalAdminPostCache[postIndex].pinned = (currentPinned === true || currentPinned === "TRUE") ? false : true; renderAdminPostsHTML();
+    let currentPinned = globalAdminPostCache[postIndex].pinned; 
+    globalAdminPostCache[postIndex].pinned = (currentPinned === true || currentPinned === "TRUE") ? false : true; 
+    renderAdminPostsHTML();
     apiCall('togglePinPost', { postId: id, user: session.user, pass: session.pass }, () => {}, () => { silentRefresh('getPostsAdmin'); });
   }
 
@@ -2274,7 +1666,14 @@ function onCadetRegistration(e) {
         const postIndex = globalAdminPostCache.findIndex(x => x.id === id);
         if(postIndex !== -1) {
             globalAdminPostCache[postIndex].status = status; globalAdminPostCache[postIndex].feedback = feedback;
-            if (session.role === 'Super Admin') { let bp = document.getElementById('badge-posts'); let currentCount = parseInt(bp.innerText || "0"); if(currentCount > 0) { bp.innerText = currentCount - 1; if(currentCount - 1 <= 0) bp.style.display = 'none'; } }
+            if (session.role === 'Super Admin') { 
+                let bp = document.getElementById('badge-posts'); 
+                let currentCount = parseInt(bp.innerText || "0"); 
+                if(currentCount > 0) { 
+                    bp.innerText = currentCount - 1; 
+                    if(currentCount - 1 <= 0) bp.style.display = 'none'; 
+                } 
+            }
         }
         renderAdminPostsHTML();
         apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, pass: session.pass }, () => { Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000 }); }, () => { silentRefresh('getPostsAdmin'); });
@@ -2291,7 +1690,8 @@ function onCadetRegistration(e) {
 
     if (slidesArr.length > 0) {
         slidesArr[0] = slidesArr[0].replace('preview-carousel-slide"', 'preview-carousel-slide active"');
-        let slides = slidesArr.join(''); let btns = slidesArr.length > 1 ? `<button class="preview-carousel-btn preview-carousel-prev" onclick="changePreviewSlide(-1, ${slidesArr.length})"><i class="fas fa-chevron-left"></i></button><button class="preview-carousel-btn preview-carousel-next" onclick="changePreviewSlide(1, ${slidesArr.length})"><i class="fas fa-chevron-right"></i></button>` : '';
+        let slides = slidesArr.join(''); 
+        let btns = slidesArr.length > 1 ? `<button class="preview-carousel-btn preview-carousel-prev" onclick="changePreviewSlide(-1, ${slidesArr.length})"><i class="fas fa-chevron-left"></i></button><button class="preview-carousel-btn preview-carousel-next" onclick="changePreviewSlide(1, ${slidesArr.length})"><i class="fas fa-chevron-right"></i></button>` : '';
         let dots = slidesArr.length > 1 ? `<div class="preview-carousel-dots">` + slidesArr.map((_, i) => `<span class="preview-dot ${i === 0 ? 'active' : ''}" id="prev-dot-${i}" onclick="setPreviewSlide(${i}, ${slidesArr.length})"></span>`).join('') + `</div>` : '';
         carouselHtml = `<div class="preview-carousel-container">${slides}${btns}${dots}</div>`;
     }
@@ -2311,7 +1711,12 @@ function onCadetRegistration(e) {
 
   function closePostPreview(force) {
     const modal = document.getElementById('post-preview-modal');
-    if (force === true || force.target === modal) { modal.classList.remove('show'); setTimeout(() => modal.style.display = 'none', 300); const iframe = modal.querySelector('iframe'); if (iframe) { let iframeSrc = iframe.src; iframe.src = iframeSrc; } }
+    if (force === true || force.target === modal) { 
+        modal.classList.remove('show'); 
+        setTimeout(() => modal.style.display = 'none', 300); 
+        const iframe = modal.querySelector('iframe'); 
+        if (iframe) { let iframeSrc = iframe.src; iframe.src = iframeSrc; } 
+    }
   }
 
   // =========================================================================
@@ -2390,51 +1795,215 @@ function onCadetRegistration(e) {
   }
 
   // =========================================================================
-  // SETTINGS & PROFILE
+  // SETTINGS, SCHEDULE UI, AND PROFILE
   // =========================================================================
 
-  function loadUserProfile() { apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { document.getElementById('prof-name').value=res.name||""; document.getElementById('prof-rank').value=res.rank||""; document.getElementById('prof-age').value=res.age||""; document.getElementById('prof-course').value=res.course||""; document.getElementById('prof-position').value=res.position||""; document.getElementById('prof-contact').value=res.contact||""; updateSidebarProfile(res); }); }
+  function buildScheduleUI() {
+      const grid = document.getElementById('schedule-config-grid');
+      if(!grid) return;
+      let html = '';
+      for(let i=1; i<=15; i++) {
+          html += `
+          <div style="background:var(--hover-bg); padding:10px; border-radius:6px; border:1px solid var(--border);">
+              <label style="font-size:12px; font-weight:bold; color:var(--army-primary);">DAY ${i}</label>
+              <div style="display:flex; gap:10px; margin-top:5px;">
+                  <input type="date" id="sched-date-${i}" style="flex:2; height:36px; padding:0 10px; border:1px solid var(--border); border-radius:4px; font-size:13px; background:var(--bg); color:var(--text);">
+                  <select id="sched-type-${i}" style="flex:1; height:36px; padding:0 10px; border:1px solid var(--border); border-radius:4px; font-size:13px; background:var(--bg); color:var(--text);">
+                      <option value="Single">Single (AM)</option>
+                      <option value="Double">Double (AM & PM)</option>
+                  </select>
+              </div>
+          </div>`;
+      }
+      grid.innerHTML = html;
+  }
+
+  function loadTrainingSchedule(arr) {
+      for(let i=1; i<=15; i++) {
+          document.getElementById(`sched-date-${i}`).value = '';
+          document.getElementById(`sched-type-${i}`).value = 'Single';
+      }
+      if(arr && arr.length) {
+          arr.forEach((item, index) => {
+              let i = index + 1;
+              if(i <= 15) {
+                  if(item.date) {
+                      let parts = item.date.split('/');
+                      if(parts.length === 3) {
+                          let yyyy = parts[2];
+                          let mm = parts[0].padStart(2, '0');
+                          let dd = parts[1].padStart(2, '0');
+                          document.getElementById(`sched-date-${i}`).value = `${yyyy}-${mm}-${dd}`;
+                      }
+                  }
+                  document.getElementById(`sched-type-${i}`).value = item.type || 'Single';
+              }
+          });
+      }
+  }
+
+  window.saveTrainingSchedule = function() {
+      let schedule = [];
+      for(let i=1; i<=15; i++) {
+          let dateVal = document.getElementById(`sched-date-${i}`).value;
+          let typeVal = document.getElementById(`sched-type-${i}`).value;
+          if(dateVal) {
+              let parts = dateVal.split('-');
+              let formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
+              schedule.push({ date: formattedDate, type: typeVal });
+          }
+      }
+      const btn = document.getElementById('btn-save-schedule');
+      const oldHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SAVING...';
+      btn.disabled = true;
+
+      apiCall('saveTrainingSchedule', { schedule: schedule, user: session.user, pass: session.pass }, (res) => {
+          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
+          btn.innerHTML = oldHtml;
+          btn.disabled = false;
+      }, (err) => {
+          btn.innerHTML = oldHtml;
+          btn.disabled = false;
+      });
+  }
+
+  function loadUserProfile() { 
+      apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { 
+          document.getElementById('prof-name').value=res.name||""; 
+          document.getElementById('prof-rank').value=res.rank||""; 
+          document.getElementById('prof-age').value=res.age||""; 
+          document.getElementById('prof-course').value=res.course||""; 
+          document.getElementById('prof-position').value=res.position||""; 
+          document.getElementById('prof-contact').value=res.contact||""; 
+          updateSidebarProfile(res); 
+      }); 
+  }
   
   function saveUserProfile() { 
       const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; 
       if(croppedData['prof-image-file']) d.imageData=croppedData['prof-image-file']; 
-      const btn = document.getElementById('btn-save-profile'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPDATING...'; btn.disabled = true;
+      
+      const btn = document.getElementById('btn-save-profile'); 
+      const oldHtml = btn.innerHTML; 
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPDATING...'; 
+      btn.disabled = true;
+      
       apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { 
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('prof-image-file').value=""; delete croppedData['prof-image-file']; document.getElementById('prof-image-status').innerHTML='Select an image...'; 
-          btn.innerHTML = oldHtml; btn.disabled = false; loadUserProfile(); 
+          document.getElementById('prof-image-file').value=""; 
+          delete croppedData['prof-image-file']; 
+          document.getElementById('prof-image-status').innerHTML='Select an image...'; 
+          btn.innerHTML = oldHtml; 
+          btn.disabled = false; 
+          loadUserProfile(); 
       }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
   }
   
-  function updateSidebarProfile(d) { document.getElementById('sidebar-profile-name').innerText=(d.name||session.user||"PERSONNEL").toUpperCase(); document.getElementById('sidebar-profile-role').innerText=(d.rank?d.rank+" - ":"")+(d.position||session.role||"SYSTEM ACTIVE"); if(d.image) { document.getElementById('sidebar-profile-img').src=d.image; document.getElementById('sidebar-profile-img').style.display='block'; document.getElementById('sidebar-icon').style.display='none'; } else { document.getElementById('sidebar-profile-img').style.display='none'; document.getElementById('sidebar-icon').style.display='block'; } }
+  function updateSidebarProfile(d) { 
+      document.getElementById('sidebar-profile-name').innerText=(d.name||session.user||"PERSONNEL").toUpperCase(); 
+      document.getElementById('sidebar-profile-role').innerText=(d.rank?d.rank+" - ":"")+(d.position||session.role||"SYSTEM ACTIVE"); 
+      if(d.image) { 
+          document.getElementById('sidebar-profile-img').src=d.image; 
+          document.getElementById('sidebar-profile-img').style.display='block'; 
+          document.getElementById('sidebar-icon').style.display='none'; 
+      } else { 
+          document.getElementById('sidebar-profile-img').style.display='none'; 
+          document.getElementById('sidebar-icon').style.display='block'; 
+      } 
+  }
   
   function saveSystemSettings() { 
       let p={ user: session.user, pass: session.pass, clearBg: false }; 
-      if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; 
-      const btn = document.getElementById('btn-save-settings'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; btn.disabled = true;
+      if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; 
+      if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; 
+      if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; 
+      
+      const btn = document.getElementById('btn-save-settings'); 
+      const oldHtml = btn.innerHTML; 
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; 
+      btn.disabled = true;
+      
       apiCall('saveSettings', p, (res) => { 
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-          document.getElementById('set-logo-file').value=""; delete croppedData['set-logo-file']; document.getElementById('set-logo-status').innerHTML='Select an image...'; document.getElementById('set-bg-file').value=""; delete croppedData['set-bg-file']; document.getElementById('set-bg-status').innerHTML='Select an image...'; document.getElementById('set-nav-logo-file').value=""; delete croppedData['set-nav-logo-file']; document.getElementById('set-nav-logo-status').innerHTML='Select an image...'; 
-          apiCall('getSettings', {}, (n) => { if(n.logoUrl) { document.getElementById('system-logo-login').src=n.logoUrl; document.getElementById('system-logo-login').style.display='block'; } if(n.bgUrl) document.getElementById('view-login').style.backgroundImage=`url('${n.bgUrl}')`; }); 
+          document.getElementById('set-logo-file').value=""; delete croppedData['set-logo-file']; document.getElementById('set-logo-status').innerHTML='Select an image...'; 
+          document.getElementById('set-bg-file').value=""; delete croppedData['set-bg-file']; document.getElementById('set-bg-status').innerHTML='Select an image...'; 
+          document.getElementById('set-nav-logo-file').value=""; delete croppedData['set-nav-logo-file']; document.getElementById('set-nav-logo-status').innerHTML='Select an image...'; 
+          
+          apiCall('getSettings', {}, (n) => { 
+              if(n.logoUrl) { document.getElementById('system-logo-login').src=n.logoUrl; document.getElementById('system-logo-login').style.display='block'; } 
+              if(n.bgUrl) document.getElementById('view-login').style.backgroundImage=`url('${n.bgUrl}')`; 
+          }); 
+          
           btn.innerHTML = oldHtml; btn.disabled = false;
       }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; }); 
   }
   
-  function resetBackground() { Swal.fire({ title: 'RESETTING...', didOpen: () => Swal.showLoading() }); apiCall('saveSettings', { clearBg: true, user: session.user, pass: session.pass }, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Background removed.', showConfirmButton:false, timer:2000}); document.getElementById('view-login').style.backgroundImage=`radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%)`; }); }
+  function resetBackground() { 
+      Swal.fire({ title: 'RESETTING...', didOpen: () => Swal.showLoading() }); 
+      apiCall('saveSettings', { clearBg: true, user: session.user, pass: session.pass }, (res) => { 
+          Swal.fire({toast:true, position:'top-end', icon:'success', title:'Background removed.', showConfirmButton:false, timer:2000}); 
+          document.getElementById('view-login').style.backgroundImage=`radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%)`; 
+      }); 
+  }
 
   // =========================================================================
   // BOOTSTRAP, UI LOGIC, AND UTILS
   // =========================================================================
 
-  window.performLogin = performLogin; window.logout = logout;
+  function performLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    const btn = document.getElementById('btn-login');
+    const err = document.getElementById('login-err');
+    
+    if (!u || !p) { err.innerText = 'Identification required.'; return; }
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; 
+    btn.disabled = true; err.innerText = '';
+
+    apiCall('systemLogin', { user: u, pass: p }, 
+      (res) => {
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; 
+        btn.disabled = false;
+        
+        session = { user: u, pass: p, role: res.role };
+        localStorage.setItem('scck_session', JSON.stringify({ user: u, pass: p, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
+        
+        document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
+        
+        document.getElementById('view-login').style.display = 'none'; 
+        document.getElementById('app-container').style.display = 'flex';
+        
+        loadUserProfile(); 
+        setupRoleUI(res.role); 
+        updateOfflineSyncUI();
+      }, 
+      (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; btn.disabled = false; err.innerText = e.message; }
+    );
+  }
+
+  function logout() { 
+      session = {}; 
+      localStorage.removeItem('scck_session'); 
+      stopScanner(false); 
+      document.getElementById('app-container').style.display = 'none'; 
+      document.getElementById('view-login').style.display = 'flex'; 
+  }
+
+  window.performLogin = performLogin; 
+  window.logout = logout;
 
   window.onload = () => {
+    buildScheduleUI();
     initCropperInputs();
+    
     const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
     if (cachedBranding) {
       if(cachedBranding.logoUrl) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = cachedBranding.logoUrl; logoImg.style.display = 'block'; }
       if(cachedBranding.bgUrl) document.getElementById('view-login').style.backgroundImage = `url('${cachedBranding.bgUrl}')`;
     }
+    
     apiCall('getSettings', {}, (res) => {
       localStorage.setItem('scck_branding', JSON.stringify(res));
       if(res.logoUrl && !cachedBranding) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = res.logoUrl; logoImg.style.display = 'block'; }
@@ -2531,6 +2100,12 @@ function onCadetRegistration(e) {
     if (panelId === 'panel-legacy') { loadLegacyClassesForDropdown(); silentRefresh('getAdminLegacyData'); }
     if (panelId === 'panel-posts') silentRefresh('getPostsAdmin');
     if (panelId === 'panel-cadet-dashboard' || panelId === 'panel-cadet-leaves') { silentRefresh('getCadetData'); }
+    
+    if (panelId === 'panel-settings') {
+        apiCall('getTrainingSchedule', { user: session.user, pass: session.pass }, (res) => {
+            loadTrainingSchedule(res.schedule);
+        });
+    }
   }
 
   function exportTableToExcel(tableId, filename) {
@@ -2552,108 +2127,6 @@ function onCadetRegistration(e) {
   }
 
   try { if (localStorage.getItem('sccks_dark') === '1') applyTheme(true); } catch(e) {}
-
-  // =========================================================================
-  // LOGINS, AUTHENTICATION & BOOTSTRAP
-  // =========================================================================
-
-  function performLogin() {
-    const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-pass').value;
-    const btn = document.getElementById('btn-login');
-    const err = document.getElementById('login-err');
-    
-    if (!u || !p) { 
-        err.innerText = 'Identification required.'; 
-        return; 
-    }
-    
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; 
-    btn.disabled = true; 
-    err.innerText = '';
-
-    apiCall('systemLogin', { user: u, pass: p }, 
-      (res) => {
-        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; 
-        btn.disabled = false;
-        
-        session = { user: u, pass: p, role: res.role };
-        localStorage.setItem('scck_session', JSON.stringify({ user: u, pass: p, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
-        
-        document.getElementById('login-user').value = ''; 
-        document.getElementById('login-pass').value = '';
-        
-        document.getElementById('view-login').style.display = 'none'; 
-        document.getElementById('app-container').style.display = 'flex';
-        
-        loadUserProfile(); 
-        setupRoleUI(res.role); 
-        updateOfflineSyncUI();
-      }, 
-      (e) => { 
-        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; 
-        btn.disabled = false; 
-        err.innerText = e.message; 
-      }
-    );
-  }
-
-  function logout() { 
-      session = {}; 
-      localStorage.removeItem('scck_session'); 
-      stopScanner(false); 
-      document.getElementById('app-container').style.display = 'none'; 
-      document.getElementById('view-login').style.display = 'flex'; 
-  }
-
-  window.performLogin = performLogin; 
-  window.logout = logout;
-
-  // This block runs immediately when the page opens to fetch the logo and check for saved sessions
-  window.onload = () => {
-    if (typeof initCropperInputs === "function") initCropperInputs();
-    
-    const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
-    if (cachedBranding) {
-      if(cachedBranding.logoUrl) { 
-          const logoImg = document.getElementById('system-logo-login'); 
-          logoImg.src = cachedBranding.logoUrl; 
-          logoImg.style.display = 'block'; 
-      }
-      if(cachedBranding.bgUrl) {
-          document.getElementById('view-login').style.backgroundImage = `url('${cachedBranding.bgUrl}')`;
-      }
-    }
-    
-    apiCall('getSettings', {}, (res) => {
-      localStorage.setItem('scck_branding', JSON.stringify(res));
-      if(res.logoUrl) { 
-          const logoImg = document.getElementById('system-logo-login'); 
-          logoImg.src = res.logoUrl; 
-          logoImg.style.display = 'block'; 
-      }
-      if(res.bgUrl) {
-          document.getElementById('view-login').style.backgroundImage = `url('${res.bgUrl}')`;
-      }
-    });
-
-    const savedSession = localStorage.getItem('scck_session');
-    if (savedSession) {
-      try {
-        const parsed = JSON.parse(savedSession);
-        if (parsed.expiry > Date.now()) {
-          session = { user: parsed.user, pass: parsed.pass, role: parsed.role };
-          document.getElementById('view-login').style.display = 'none'; 
-          document.getElementById('app-container').style.display = 'flex';
-          loadUserProfile(); 
-          if (typeof setupRoleUI === "function") setupRoleUI(parsed.role); 
-          if (typeof updateOfflineSyncUI === "function") updateOfflineSyncUI();
-        } else { 
-            localStorage.removeItem('scck_session'); 
-        }
-      } catch(e) {}
-    }
-  };
 </script>
 </body>
 </html>
