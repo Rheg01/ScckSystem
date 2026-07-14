@@ -1,4 +1,685 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCCK Command Center</title>
+  <script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root { 
+      --army-dark: #1b2015; --army-primary: #2d3821; --army-light: #4b5a36; --army-gold: #d4af37; 
+      --bg: #e8ece1; --card-bg: #ffffff; --text: #2c3539; --text-muted: #6b705c; 
+      --border: #d4d8cc; --hover-bg: #f2f5ed; --table-head: #dce0d5; 
+      --status-green: #388e3c; --status-red: #d32f2f; --status-yellow: #f57f17; 
+      --status-gray: #b0bec5;
+    }
+    body.dark-mode { 
+      --bg: #12140e; --card-bg: #1e2418; --text: #e0e0e0; --text-muted: #9aa08f; 
+      --border: #3a4230; --hover-bg: #262e1e; --table-head: #232a1b; --status-gray: #455a64;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, .stat-val, .badge, button { font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; text-transform: uppercase; }
+    body { background: var(--bg); color: var(--text); overflow: hidden; transition: background 0.3s, color 0.3s; }
+    
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .anim-1 { animation: fadeUp 0.4s ease backwards; animation-delay: 0.1s; } 
+    .anim-2 { animation: fadeUp 0.4s ease backwards; animation-delay: 0.2s; } 
+    .anim-3 { animation: fadeUp 0.4s ease backwards; animation-delay: 0.3s; } 
+    .anim-4 { animation: fadeUp 0.4s ease backwards; animation-delay: 0.4s; }
+    
+    #view-login { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-size: cover; background-position: center; background-image: radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%); position: absolute; top: 0; left: 0; width: 100%; z-index: 9999; }
+    .login-box { background: var(--card-bg); padding: 45px 40px; border-radius: 8px; width: 100%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; border-top: 5px solid var(--army-gold); }
+    .login-logo-container { width: 100px; height: 100px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; } 
+    .app-logo { max-width: 100%; max-height: 100%; object-fit: contain; display: none; transition: opacity 0.5s ease; } 
+    .login-box h2 { color: var(--army-primary); font-size: 26px; margin-bottom: 5px; } 
+    .login-box p { color: var(--text-muted); font-size: 13px; margin-bottom: 25px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .input-group { display: flex; flex-direction: column; flex: 1; min-width: 200px; text-align: left; }
+    .input-group label { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .input-group input, .input-group select { width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; background: var(--bg); color: var(--text); outline: none; transition: 0.2s; margin: 0; }
+    .input-group textarea { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; background: var(--bg); color: var(--text); outline: none; resize: vertical; margin: 0; }
+    .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--army-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); }
+    input[type="file"] { width: 100%; padding: 10px; border: 2px dashed var(--border); border-radius: 6px; font-size: 13px; color: var(--text-muted); background: var(--bg); cursor: pointer; }
+    
+    .action-bar { display: flex; gap: 15px; flex-wrap: wrap; background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); align-items: flex-end; margin-bottom: 25px; }
+    .action-bar-header { width: 100%; margin-bottom: 5px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .action-bar-header h3 { color: var(--army-primary); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .action-bar-header p { color: var(--text-muted); font-size: 13px; margin-top: 4px; font-family: 'Inter', sans-serif; text-transform: none; font-weight: normal; letter-spacing: normal;}
+
+    button { background: var(--army-primary); color: white; border: none; height: 46px; padding: 0 20px; border-radius: 6px; font-size: 15px; cursor: pointer; transition: all 0.2s; position: relative; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 600; white-space: nowrap; } 
+    button:hover:not(:disabled) { background: var(--army-light); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); } 
+    button:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
+    button:disabled { opacity: 0.7; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+    
+    .btn-danger { background: var(--status-red); } .btn-danger:hover:not(:disabled) { background: #b71c1c; } 
+    .btn-success { background: var(--status-green); } .btn-success:hover:not(:disabled) { background: #2e7d32; } 
+    .btn-warning { background: var(--status-yellow); color: #fff; } .btn-warning:hover:not(:disabled) { background: #f9a825; } 
+    .btn-secondary { background: #607d8b; color: white; } .btn-secondary:hover:not(:disabled) { background: #455a64; } 
+    .btn-info { background: #0288d1; color: white; } .btn-info:hover:not(:disabled) { background: #01579b; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); } .btn-outline:hover:not(:disabled) { background: var(--hover-bg); border-color: var(--text-muted); }
+    
+    .app-container { display: flex; height: 100vh; } 
+    .sidebar { width: 260px; background: var(--army-dark); color: #e0e0e0; display: flex; flex-direction: column; transition: left 0.3s ease; border-right: 2px solid var(--army-gold); z-index: 10000; } 
+    .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); } 
+    .sidebar-header h3 { color: var(--army-gold); font-size: 18px; margin-top: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;} 
+    .sidebar-logo { width: 70px; height: 70px; margin: 0 auto; border-radius: 50%; overflow: hidden; background: var(--army-primary); display: flex; align-items: center; justify-content: center; border: 2px solid var(--army-gold); } 
+    .sidebar-logo img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .sidebar-menu { list-style: none; padding: 15px; flex: 1; overflow-y: auto; } 
+    .sidebar-menu button { background: transparent; color: #b0bec5; text-align: left; padding: 14px 15px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; font-size: 15px; margin-bottom: 4px; border-radius: 6px; height: auto; width: 100%; } 
+    .sidebar-menu button:hover { background: rgba(255,255,255,0.05); color: white; transform: none; box-shadow: none; } 
+    .sidebar-menu button.active { background: var(--army-primary); color: var(--army-gold); border-left: 4px solid var(--army-gold); border-radius: 0 6px 6px 0; }
+    
+    .nav-badge { background: #d32f2f; color: white; padding: 2px 6px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-left: auto; box-shadow: 0 0 5px rgba(211,47,47,0.5); font-family: 'Inter', sans-serif;}
+
+    .main-content { flex: 1; background: var(--bg); overflow-y: auto; padding: 30px; transition: 0.3s; } 
+    .view-panel { display: none; background: transparent; } 
+    .active-panel { display: block; animation: fadeUp 0.4s ease; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--border); flex-wrap: wrap; gap: 15px; } 
+    .header-bar h2 { color: var(--army-primary); font-size: 24px; display: flex; align-items: center; gap: 10px; margin: 0; } 
+    .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    
+    .mobile-menu-btn { display: none; background: transparent; color: var(--army-primary); font-size: 24px; border: none; cursor: pointer; margin-right: 15px; width: auto; height: auto; padding: 0; box-shadow: none; } 
+    .mobile-menu-btn:hover { background: transparent; box-shadow: none; transform: none; color: var(--army-gold); }
+    
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; } 
+    .stat-card { background: var(--card-bg); padding: 25px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border-radius: 8px; border-bottom: 4px solid var(--army-primary); display: flex; align-items: center; gap: 15px; border-top: 1px solid var(--border); border-left: 1px solid var(--border); border-right: 1px solid var(--border); transition: transform 0.2s; } 
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); } 
+    .stat-icon { width: 55px; height: 55px; background: var(--bg); color: var(--army-primary); display: flex; justify-content: center; align-items: center; font-size: 24px; border-radius: 8px; } 
+    .stat-val { font-size: 32px; font-weight: bold; color: var(--text); line-height: 1; margin-bottom: 4px; } 
+    .stat-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; } 
+    .stat-sub { font-size: 12px; color: var(--text-muted); font-family: 'Inter', sans-serif; font-weight: 500; }
+    
+    /* 15-DAY TRACKER CSS */
+    .tracker-container { background: var(--card-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 30px; }
+    .tracker-header { font-size: 15px; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; text-transform: uppercase;}
+    .tracker-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tracker-box { flex: 1; min-width: 45px; height: 50px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; font-weight: bold; font-size: 14px; border: 2px solid transparent; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .tracker-box span { font-size: 10px; font-family: 'Inter', sans-serif; font-weight: 600; opacity: 0.9; margin-top: 2px;}
+    .box-present { background: var(--status-green); }
+    .box-late { background: var(--status-yellow); }
+    .box-absent { background: var(--status-red); }
+    .box-upcoming { background: var(--status-gray); color: rgba(255,255,255,0.7); box-shadow: none; border-color: var(--border); }
+
+    .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px; } 
+    .chart-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); } 
+    .chart-card h4 { font-size: 15px; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px; } 
+    .chart-container { position: relative; height: 250px; }
+    
+    .table-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); padding: 1px; } 
+    .table-wrapper { overflow-x: auto; max-height: 550px; border-radius: 7px; } 
+    table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; font-family: 'Inter', sans-serif; } 
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text); } 
+    th { background: var(--table-head); position: sticky; top: 0; font-weight: 600; color: var(--text-muted); z-index: 1; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; } 
+    tr:hover { background: var(--hover-bg); }
+    
+    .badge { padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-block; text-align: center; } 
+    .badge-present { background: rgba(56,142,60,0.15); color: var(--status-green); border: 1px solid rgba(56,142,60,0.3); } 
+    .badge-late { background: rgba(245,127,23,0.15); color: var(--status-yellow); border: 1px solid rgba(245,127,23,0.3); } 
+    .badge-verylate { background: rgba(183, 28, 28, 0.15); color: #b71c1c; border: 1px solid rgba(183, 28, 28, 0.3); } 
+    .badge-absent { background: rgba(211,47,47,0.15); color: var(--status-red); border: 1px solid rgba(211,47,47,0.3); } 
+    .badge-timeout { background: rgba(96,125,139,0.15); color: #455a64; border: 1px solid rgba(96,125,139,0.3); } 
+    .badge-action { background: rgba(2, 136, 209, 0.15); color: #0288d1; border: 1px solid rgba(2, 136, 209, 0.3); }
+    
+    .btn-icon { width: 34px; height: 34px; padding: 0; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; margin-right: 4px; font-size: 14px; }
+    
+    .id-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 30px; margin-top: 20px; justify-items: center; } 
+    .id-card-modern { width: 225px; height: 360px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; }
+    .id-card-top { height: 55px; background: var(--army-dark); border-bottom: 4px solid var(--army-gold); position: absolute; top:0; left:0; width: 100%; z-index: 1; }
+    .id-header-modern { position: relative; z-index: 2; color: var(--army-gold); display: flex; flex-direction: column; align-items: center; padding-top: 12px; }
+    .id-header-modern span { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: bold; letter-spacing: 1px; }
+    .id-photo-container { position: relative; z-index: 2; margin: 15px auto 10px auto; width: 95px; height: 95px; border-radius: 8px; border: 3px solid var(--card-bg); box-shadow: 0 4px 10px rgba(0,0,0,0.2); overflow: hidden; background: var(--bg); display: flex; align-items: center; justify-content: center; }
+    .id-photo { width: 100%; height: 100%; object-fit: cover; }
+    .id-photo-placeholder { font-size: 40px; color: var(--text-muted); }
+    .id-name-modern { text-align: center; font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: bold; color: var(--text); line-height: 1.1; padding: 0 10px; text-transform: uppercase; }
+    .id-course-modern { text-align: center; font-size: 11px; color: var(--army-primary); font-weight: 700; text-transform: uppercase; margin-top: 5px; letter-spacing: 0.5px;}
+    .qr-container-modern { margin: auto auto 15px auto; width: 85px; height: 85px; background: white; padding: 4px; border-radius: 6px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; }
+    .id-footer-modern { background: var(--army-dark); color: #fff; text-align: center; font-size: 9px; padding: 8px; font-weight: bold; letter-spacing: 1px; }
+
+    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; } .mobile-overlay.show { display: block; }
+    .post-preview-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 50000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+    .post-preview-overlay.show { display: flex; opacity: 1; }
+    .post-preview-content { background: var(--card-bg); width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; border-radius: 8px; padding: 35px; border: 1px solid var(--border); position: relative; transform: scale(0.95) translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); color: var(--text); }
+    body.dark-mode .post-preview-content { border-color: var(--border);}
+    .post-preview-overlay.show .post-preview-content { transform: scale(1) translateY(0); }
+    .close-preview-btn { position: absolute; top: 20px; right: 25px; font-size: 24px; color: var(--text-muted); cursor: pointer; transition: 0.2s; z-index: 10;}
+    .close-preview-btn:hover { color: var(--status-red); transform: rotate(90deg); }
+    
+    .scanner-dashboard { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; } 
+    .scanner-left, .scanner-right { flex: 1; min-width: 320px; background: var(--card-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .detail-card { display: flex; flex-direction: column; align-items: center; } 
+    .detail-avatar { width: 100px; height: 100px; background: var(--bg); border: 2px dashed var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--text-muted); margin-bottom: 15px; overflow: hidden; } 
+    .detail-avatar img { width: 100%; height: 100%; object-fit: cover; display: none; } 
+    .detail-row { width: 100%; display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; font-family: 'Inter', sans-serif; } 
+    .detail-label { color: var(--text-muted); font-weight: 600; font-size: 13px; text-transform: uppercase; } 
+    .detail-value { font-weight: 700; color: var(--text); text-align: right; }
+
+    @media print { body * { visibility: hidden; } #id-grid-container, #id-grid-container * { visibility: visible; } #id-grid-container { position: absolute; left: 0; top: 0; width: 100%; display: grid; grid-template-columns: repeat(3, 240px); gap: 20px; justify-content: center; margin: 0; padding: 0; } .id-card-modern { page-break-inside: avoid; border: 1px solid #000; box-shadow: none; } .id-card-top { background: #1b2015 !important; border-bottom: 4px solid #d4af37 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} .id-footer-modern { background: #1b2015 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;} }
+    @media (max-width: 768px) { .sidebar { position: fixed; top: 0; left: -260px; height: 100vh; z-index: 10000; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } .sidebar.open { left: 0; } .mobile-menu-btn { display: block; } .main-content { padding: 15px; width: 100%; } .header-actions { width: 100%; justify-content: flex-start;} }
+  </style>
+</head>
+<body>
+
+<div id="mobile-overlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
+
+<div class="cropper-modal" id="cropper-modal" style="display:none; position:fixed; inset:0; background:#000; z-index:99999; align-items:center; justify-content:center;">
+  <div class="cropper-content" style="background:var(--card-bg); width:95%; max-width:700px; padding:25px; border-radius:12px; border:3px solid var(--army-gold);">
+    <h2 style="color:var(--army-gold); margin-bottom:15px;"><i class="fas fa-crop-alt"></i> ADJUST IMAGE</h2>
+    <div class="cropper-area" style="width:100%; height:450px; background:#111; margin-bottom:20px; overflow:hidden; border-radius:6px; border:1px solid var(--border);">
+      <img id="cropper-image" src="" style="max-width:100%; max-height:100%; display:block;">
+    </div>
+    <div style="display:flex; gap:15px;">
+      <button class="btn-success" id="btn-crop-apply" style="flex:1;"><i class="fas fa-check"></i> APPLY CROP</button>
+      <button class="btn-danger" onclick="closeCropper()" style="flex:1;"><i class="fas fa-times"></i> CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<div class="post-preview-overlay" id="post-preview-modal" onclick="closePostPreview(event)"><div class="post-preview-content" onclick="event.stopPropagation()"><i class="fas fa-times close-preview-btn" onclick="closePostPreview(true)"></i><div id="preview-dynamic-content"></div></div></div>
+
+<div class="post-preview-overlay" id="bulk-discipline-modal" onclick="closeBulkDisciplineModal(event)">
+  <div class="post-preview-content" onclick="event.stopPropagation()">
+    <i class="fas fa-times close-preview-btn" onclick="closeBulkDisciplineModal(true)"></i>
+    <h3 style="color:var(--army-primary); margin-bottom:5px; border-bottom:1px solid var(--border); padding-bottom:10px;"><i class="fas fa-layer-group"></i> BATCH DISCIPLINE</h3>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Issue a mass action to a Company.</p>
+    
+    <div class="input-group">
+      <label>SELECT TARGET GROUP</label>
+      <select id="bulk-target-group"><option value="ALL">Entire Unit (All Cadets)</option></select>
+    </div>
+    
+    <div class="input-group" style="margin-top: 15px;">
+      <label>OR TYPE EXACT COMPANY NAME</label>
+      <input type="text" id="bulk-custom-company" placeholder="e.g. Alpha, Bravo...">
+    </div>
+    
+    <div class="input-group" style="margin-top: 15px;">
+      <label>ISSUE BATCH MERIT / DEMERIT</label>
+      <select id="bulk-action-select">
+          <option value="">-- Select Infraction or Achievement --</option>
+          <optgroup label="🔴 DEMERITS (Deductions)">
+             <option value="Demerit|-10|Batch: Unexcused Absence">Unexcused Absence (-10 pts)</option>
+             <option value="Demerit|-5|Batch: Improper Uniform">Improper Uniform (-5 pts)</option>
+          </optgroup>
+          <optgroup label="🟢 MERITS (Additions)">
+             <option value="Merit|10|Batch: Outstanding Unit Performance">Outstanding Unit Performance (+10 pts)</option>
+             <option value="Merit|5|Batch: Excellence in Drills">Excellence in Drills (+5 pts)</option>
+          </optgroup>
+      </select>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 25px;">
+      <button id="btn-submit-bulk" class="btn-success" onclick="submitBulkDiscipline()" style="flex:2;"><i class="fas fa-gavel"></i> ISSUE TO ALL</button>
+      <button class="btn-outline" onclick="closeBulkDisciplineModal(true)" style="flex:1;">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<div class="post-preview-overlay" id="discipline-modal" onclick="closeDisciplineModal(event)">
+  <div class="post-preview-content" onclick="event.stopPropagation()">
+    <i class="fas fa-times close-preview-btn" onclick="closeDisciplineModal(true)"></i>
+    <h2 style="color: var(--army-primary); margin-bottom: 5px;"><i class="fas fa-balance-scale"></i> DISCIPLINE LEDGER</h2>
+    <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">Cadet: <strong id="disc-cadet-name" style="color:var(--text);">---</strong> | ID: <span id="disc-cadet-id">---</span></div>
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; background: var(--hover-bg); padding: 15px 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px;">
+       <span style="font-weight: bold; font-size: 14px;">MILITARY BEARING SCORE:</span>
+       <span id="disc-cadet-score" style="font-size: 32px; font-weight: bold; font-family:'Oswald',sans-serif;">100</span>
+    </div>
+
+    <div class="input-group" style="margin-bottom: 20px;">
+       <label>ISSUE MERIT / DEMERIT</label>
+       <select id="disc-action-select">
+          <option value="">-- Select Infraction or Achievement --</option>
+          <optgroup label="🔴 DEMERITS (Deductions)">
+             <option value="Demerit|-10|Unexcused Absence">Unexcused Absence (-10 pts)</option>
+             <option value="Demerit|-5|Improper Haircut / Unshaven">Improper Haircut / Unshaven (-5 pts)</option>
+             <option value="Demerit|-5|Incomplete Uniform">Incomplete Uniform (-5 pts)</option>
+             <option value="Demerit|-3|Tardiness (Late)">Tardiness (Late) (-3 pts)</option>
+          </optgroup>
+          <optgroup label="🟢 MERITS (Additions)">
+             <option value="Merit|10|Outstanding Leadership">Outstanding Leadership (+10 pts)</option>
+             <option value="Merit|5|Volunteering for Special Duty">Volunteering for Special Duty (+5 pts)</option>
+             <option value="Merit|5|Perfect Attendance">Perfect Attendance (+5 pts)</option>
+          </optgroup>
+       </select>
+    </div>
+    <button id="btn-submit-discipline" class="btn-success" style="margin-bottom: 25px;" onclick="submitDiscipline()"><i class="fas fa-gavel"></i> RECORD ACTION</button>
+
+    <h4 style="font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; color:var(--text-muted);"><i class="fas fa-history"></i> ACTION HISTORY</h4>
+    <div style="max-height: 200px; overflow-y: auto;">
+       <table style="width:100%; font-size: 12px; text-align: left;">
+         <thead><tr><th style="padding:8px; border-bottom:1px solid var(--border);">Date</th><th style="padding:8px; border-bottom:1px solid var(--border);">Type</th><th style="padding:8px; border-bottom:1px solid var(--border);">Reason</th><th style="padding:8px; border-bottom:1px solid var(--border);">Pts</th></tr></thead>
+         <tbody id="disc-history-table"><tr><td colspan="4" style="text-align:center; padding: 10px;">Loading history...</td></tr></tbody>
+       </table>
+    </div>
+  </div>
+</div>
+
+<div class="post-preview-overlay" id="edit-officer-modal" onclick="closeEditOfficerModal(event)">
+  <div class="post-preview-content" onclick="event.stopPropagation()">
+    <i class="fas fa-times close-preview-btn" onclick="closeEditOfficerModal(true)"></i>
+    <h3 style="color:var(--army-primary); margin-bottom:15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;"><i class="fas fa-user-edit"></i> EDIT LEGACY OFFICER</h3>
+    <input type="hidden" id="edit-off-id">
+    
+    <div class="input-group"><label>RANK</label><input type="text" id="edit-off-rank"></div>
+    <div class="input-group" style="margin-top:10px;"><label>FULL NAME</label><input type="text" id="edit-off-name"></div>
+    <div class="input-group" style="margin-top:10px;"><label>DESIGNATION</label><input type="text" id="edit-off-desig"></div>
+    <div class="input-group" style="margin-top:10px;"><label>COURSE</label><input type="text" id="edit-off-course"></div>
+    <div class="input-group" style="margin-top:10px;"><label>OFFICER BIOGRAPHY</label><textarea id="edit-off-bio" rows="4"></textarea></div>
+    
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn-warning" onclick="requestOfficerEditOTP()" style="flex:2;"><i class="fas fa-key"></i> REQUEST OTP & SAVE</button>
+      <button class="btn-outline" onclick="closeEditOfficerModal(true)" style="flex:1;">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<div id="view-login">
+  <div class="login-box">
+    <div class="login-logo-container"><img src="" class="app-logo" id="system-logo-login" alt="Logo"></div>
+    <h2>SCCK ROTC UNIT</h2>
+    <p>Command Center & Attendance</p>
+    
+    <div class="input-group" style="margin-bottom: 15px;">
+      <label>IDENTIFICATION</label>
+      <input type="text" id="login-user" placeholder="Enter Username (Cadets: ID)" onkeydown="if(event.key==='Enter')performLogin()">
+    </div>
+    
+    <div class="input-group" style="margin-bottom: 25px;">
+      <label>PASSPHRASE</label>
+      <div style="position: relative;">
+        <input type="password" id="login-pass" placeholder="Enter Password" onkeydown="if(event.key==='Enter')performLogin()" style="width: 100%; padding-right: 45px;">
+        <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility('login-pass', 'toggle-pass-icon')" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 15px; transition: color 0.2s;" onmouseover="this.style.color='var(--army-gold)'" onmouseout="this.style.color='var(--text-muted)'"></i>
+      </div>
+    </div>
+    
+    <button onclick="performLogin()" id="btn-login" style="width: 100%;"><i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS</button>
+    
+    <div id="login-err" style="color: var(--status-red); margin-top: 15px; font-size: 14px; font-weight: bold; font-family: 'Inter', sans-serif;"></div>
+    <div style="margin-top:20px;"><a href="index.html" style="font-size:12px; color:var(--text-muted); text-decoration:none; font-family:'Inter',sans-serif; border-bottom:1px dashed var(--text-muted);">Return to Public Landing Page</a></div>
+  </div>
+</div>
+
+<div id="app-container" class="app-container" style="display:none;">
+  
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i class="fas fa-user" id="sidebar-icon" style="font-size:30px; color:var(--army-gold);"></i><img id="sidebar-profile-img" style="display:none;"></div>
+      <h3 id="sidebar-profile-name">PERSONNEL</h3>
+      <div id="sidebar-profile-role" style="font-size: 11px; color:#9aa08f;">System Active</div>
+    </div>
+
+    <ul class="sidebar-menu" id="sidebar-menu-admin" style="display:none;">
+      <li><button onclick="switchTab('panel-dashboard',this)"><i class="fas fa-chart-pie"></i> <span>DASHBOARD</span></button></li>
+      <li class="admin-only"><button onclick="switchTab('panel-gradebook',this)"><i class="fas fa-graduation-cap"></i> <span>GRADEBOOK</span></button></li>
+      <li><button onclick="switchTab('panel-attendance',this)"><i class="fas fa-clipboard-list"></i> <span>ATTENDANCE LOG</span></button></li>
+      <li><button onclick="switchTab('panel-masterlist',this)"><i class="fas fa-users"></i> <span>UNIT ROSTER</span></button></li>
+      <li><button onclick="switchTab('panel-leaves',this)"><i class="fas fa-calendar-alt"></i> <span>LEAVE REQUESTS</span> <span id="badge-leaves" class="nav-badge" style="display:none;">0</span></button></li>
+      <li class="admin-only"><button onclick="switchTab('panel-idcards',this)"><i class="fas fa-id-card"></i> <span>ID GENERATOR</span></button></li>
+      <li><button onclick="switchTab('panel-legacy',this)"><i class="fas fa-landmark"></i> <span>LEGACY DB</span> <span id="badge-legacy" class="nav-badge" style="display:none;">0</span></button></li>
+      <li><button onclick="switchTab('panel-posts',this)"><i class="fas fa-images"></i> <span>PUBLIC POSTS</span> <span id="badge-posts" class="nav-badge" style="display:none;">0</span></button></li>
+      <li class="super-admin-only"><button onclick="switchTab('panel-accounts',this)"><i class="fas fa-user-shield"></i> <span>ACCESS CONTROL</span></button></li>
+      <li class="super-admin-only"><button onclick="switchTab('panel-audit',this)"><i class="fas fa-history"></i> <span>AUDIT LOG</span></button></li>
+      <li class="super-admin-only"><button onclick="switchTab('panel-settings',this)"><i class="fas fa-cog"></i> <span>SYSTEM BRANDING</span></button></li>
+      <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
+    </ul>
+
+    <ul class="sidebar-menu" id="sidebar-menu-scanner" style="display:none;">
+      <li><button onclick="switchTab('panel-scanner',this)" class="active"><i class="fas fa-qrcode"></i> <span>QR SCANNER TERMINAL</span></button></li>
+      <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
+    </ul>
+
+    <ul class="sidebar-menu" id="sidebar-menu-cadet" style="display:none;">
+      <li><button onclick="switchTab('panel-cadet-dashboard',this)" class="active"><i class="fas fa-id-badge"></i> <span>MY DASHBOARD</span></button></li>
+      <li><button onclick="switchTab('panel-cadet-leaves',this)"><i class="fas fa-envelope"></i> <span>MY LEAVE REQUESTS</span></button></li>
+      <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
+    </ul>
+
+    <ul class="sidebar-menu" style="flex:none; padding-top:0; border-top: 1px solid rgba(255,255,255,0.05);">
+      <li><button onclick="toggleTheme()"><i class="fas fa-moon" id="theme-icon"></i> <span id="theme-text">DARK MODE</span></button></li>
+      <li><button onclick="logout()" style="color:#ef5350;"><i class="fas fa-sign-out-alt"></i> <span>LOGOUT</span></button></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+
+    <div id="panel-cadet-dashboard" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-id-badge"></i> MY DASHBOARD</h2>
+        <div class="header-actions"><button id="btn-ref-cadet1" class="btn-outline" onclick="silentRefresh('getCadetData', 'btn-ref-cadet1')"><i class="fas fa-sync"></i> SYNC</button></div>
+      </div>
+      
+      <div class="dashboard-grid anim-2">
+        <div class="stat-card" style="border-bottom-color:var(--army-gold);">
+          <div class="stat-icon" style="color:var(--army-gold);"><i class="fas fa-star"></i></div>
+          <div><div class="stat-label">Final Grade (Live)</div><div class="stat-val" id="cadet-stat-final">--</div></div>
+        </div>
+        <div class="stat-card" style="border-bottom-color:var(--status-green);">
+          <div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-file-alt"></i></div>
+          <div><div class="stat-label">Exam Average</div><div class="stat-val" id="cadet-stat-exam">--</div><div class="stat-sub">Prelim / Mid / Final</div></div>
+        </div>
+        <div class="stat-card" style="border-bottom-color:var(--status-yellow);">
+          <div class="stat-icon" style="color:var(--status-yellow);"><i class="fas fa-balance-scale"></i></div>
+          <div><div class="stat-label">Aptitude Score</div><div class="stat-val" id="cadet-stat-score">100</div><div class="stat-sub">Merits & Demerits</div></div>
+        </div>
+      </div>
+
+      <div class="tracker-container anim-3">
+        <h4 class="tracker-header"><i class="fas fa-calendar-check"></i> 15-DAY TRAINING PROGRESSION (<span id="cadet-stat-att-pct">0%</span>)</h4>
+        <div class="tracker-grid" id="cadet-15day-tracker">
+          <p style="color:var(--text-muted); font-size:12px; width:100%; text-align:center;">Loading tracker...</p>
+        </div>
+      </div>
+
+      <div class="charts-row anim-4">
+        <div class="table-card"><div style="padding: 15px; border-bottom: 1px solid var(--border);"><h4 style="margin:0; font-size:14px; color:var(--text-muted);"><i class="fas fa-gavel"></i> RECENT DISCIPLINE RECORDS</h4></div><div class="table-wrapper" style="max-height: 250px;"><table><thead><tr><th>Date</th><th>Type</th><th>Reason</th><th>Pts</th></tr></thead><tbody id="cadet-discipline-table"></tbody></table></div></div>
+        <div class="table-card"><div style="padding: 15px; border-bottom: 1px solid var(--border);"><h4 style="margin:0; font-size:14px; color:var(--text-muted);"><i class="fas fa-clock"></i> RECENT ATTENDANCE</h4></div><div class="table-wrapper" style="max-height: 250px;"><table><thead><tr><th>Date</th><th>In</th><th>Out</th><th>Status</th></tr></thead><tbody id="cadet-attendance-table"></tbody></table></div></div>
+      </div>
+    </div>
+
+    <div id="panel-cadet-leaves" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-envelope"></i> MY LEAVE REQUESTS</h2>
+        <div class="header-actions"><button id="btn-ref-cadet2" class="btn-outline" onclick="silentRefresh('getCadetData', 'btn-ref-cadet2')"><i class="fas fa-sync"></i> SYNC</button></div>
+      </div>
+      <div class="action-bar anim-2">
+        <div class="action-bar-header"><h3><i class="fas fa-paper-plane"></i> SUBMIT NEW LEAVE REQUEST</h3><p>Submit a formal excuse letter to the Command Admin.</p></div>
+        <div class="input-group"><label>FROM DATE</label><input type="date" id="cadet-lv-from"></div>
+        <div class="input-group"><label>TO DATE</label><input type="date" id="cadet-lv-to"></div>
+        <div class="input-group" style="flex:2; min-width:300px;"><label>REASON FOR LEAVE</label><input type="text" id="cadet-lv-reason" placeholder="State your exact reason for requesting leave..."></div>
+        <button id="btn-submit-cadet-leave" class="btn-success" onclick="submitCadetLeave()"><i class="fas fa-paper-plane"></i> SUBMIT</button>
+      </div>
+      <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Date Submitted</th><th>Leave Range</th><th>Reason</th><th>Status</th></tr></thead><tbody id="cadet-leaves-table"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-scanner" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-qrcode"></i> QR SCANNER TERMINAL</h2>
+        <div class="header-actions">
+          <button id="btn-torch" class="btn-info" style="display:none;" onclick="toggleFlashlight()"><i class="fas fa-bolt"></i> LIGHT</button>
+          <button id="btn-sync-offline" class="btn-warning" style="display:none;" onclick="syncOfflineScans()"><i class="fas fa-wifi"></i> SYNC OFFLINE (0)</button>
+          <button class="btn-outline" onclick="clearRecentScans()"><i class="fas fa-trash"></i> CLEAR LOG</button>
+        </div>
+      </div>
+      <div class="scanner-dashboard">
+        <div class="scanner-left anim-2"><h4 style="margin-bottom:15px; color:var(--text-muted);"><i class="fas fa-camera"></i> OPTICAL INPUT</h4><div class="camera-wrap" style="position: relative; border: 4px solid var(--army-dark); border-radius: 6px; overflow: hidden; background: #000; min-height: 250px;"><video id="qr-video" autoplay playsinline muted style="width: 100%; display: block; object-fit: cover; max-height: 400px;"></video><div class="camera-overlay" id="msg" style="position: absolute; bottom: 10px; left: 10px; right: 10px; text-align: center; background: rgba(232, 240, 254, 0.9); padding: 8px; border-radius: 4px; font-weight: bold; color: var(--army-primary);">CAMERA OFFLINE</div></div><div id="camera-error" style="display:none; text-align:center; padding:25px; color:var(--status-red); background:rgba(211,47,47,0.1); border-radius:6px; margin-top:15px; border:1px dashed var(--status-red);"><i class="fas fa-video-slash" style="font-size:36px; display:block; margin-bottom:10px;"></i><strong id="camera-error-title" style="font-family:'Oswald',sans-serif; font-size:18px;">CAMERA UNAVAILABLE</strong><p id="camera-error-detail" style="margin-top:8px; font-size:13px; font-family:'Inter',sans-serif; color:var(--text);"></p></div><div style="display:flex; gap:10px; margin-top:12px;"><button id="btn-start-cam" class="btn-success" style="flex:1;" onclick="startScanner()">📷 ACTIVATE CAMERA</button><button id="btn-stop-cam" class="btn-danger" style="flex:1; display:none;" onclick="stopScanner(true)">⏹ DEACTIVATE</button></div><div style="margin-top: 10px;"><input type="file" id="qr-file-input" accept="image/*" capture="environment" style="display:none;" onchange="handleQRImageUpload(event)"><button class="btn-warning" style="width:100%;" onclick="document.getElementById('qr-file-input').click()"><i class="fas fa-upload"></i> UPLOAD / CAPTURE QR</button></div></div>
+        <div class="scanner-right anim-3"><h4 style="margin-bottom:15px; color:var(--text-muted);"><i class="fas fa-id-badge"></i> PERSONNEL DATA</h4><div class="detail-card"><div class="detail-avatar"><i class="fas fa-user" id="scan-avatar-icon"></i><img id="scan-avatar" src="" alt="Cadet Photo"></div><h3 id="scan-name" style="color:var(--army-primary); margin-bottom:20px; font-size:22px; text-align:center;">AWAITING SCAN...</h3><div class="detail-row"><span class="detail-label">Cadet ID</span><span class="detail-value" id="scan-id">--</span></div><div class="detail-row"><span class="detail-label">Date</span><span class="detail-value" id="scan-date">--</span></div><div class="detail-row"><span class="detail-label">Time In</span><span class="detail-value" id="scan-in" style="color:var(--status-green);">--</span></div><div class="detail-row"><span class="detail-label">Time Out</span><span class="detail-value" id="scan-out" style="color:var(--army-primary);">--</span></div><div class="detail-row"><span class="detail-label">Status</span><span class="detail-value" id="scan-status">--</span></div></div></div>
+      </div>
+      <div class="anim-4" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; margin-bottom:10px;"><h4 style="color:var(--text-muted);"><i class="fas fa-list"></i> RECENT LOGS <span id="scan-count" style="font-size:12px; background:var(--army-dark); color:var(--army-gold); padding:2px 8px; border-radius:4px; margin-left:6px; font-family:'Inter',sans-serif;">0</span></h4></div>
+      <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Personnel</th><th>Time Logged</th><th>Action</th></tr></thead><tbody id="recent-scans"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-gradebook" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-graduation-cap"></i> UNIT GRADEBOOK</h2>
+        <div class="header-actions">
+          <button class="btn-info" onclick="exportTableToExcel('gradebook-table', 'ROTC_Gradebook')"><i class="fas fa-file-excel"></i> EXPORT</button>
+          <button id="btn-ref-grade" class="btn-outline" onclick="silentRefresh('getGradebookData', 'btn-ref-grade')"><i class="fas fa-sync"></i> SYNC</button>
+        </div>
+      </div>
+      <div class="action-bar anim-2">
+         <div class="input-group" style="flex:2;">
+            <label>FILTER BY COMPANY</label>
+            <select id="gradebook-filter" onchange="filterGradebook()">
+               <option value="ALL">Entire Unit</option>
+            </select>
+         </div>
+      </div>
+      <div class="table-card anim-3">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Cadet ID</th>
+                <th>Full Name</th>
+                <th>Days<br>(/15)</th>
+                <th>Prelim</th>
+                <th>Midterm</th>
+                <th>Finals</th>
+                <th>Exam<br>(40%)</th>
+                <th>Apt.<br>(30%)</th>
+                <th>Att.<br>(30%)</th>
+                <th style="color:var(--army-primary);">FINAL GRADE</th>
+              </tr>
+            </thead>
+            <tbody id="gradebook-table">
+               <tr><td colspan="10" style="text-align:center;">Syncing academic engine...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-dashboard" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-chart-pie"></i> COMMAND DASHBOARD</h2>
+        <div class="header-actions"><span style="font-size:13px; color:var(--text-muted); font-weight:600; margin-right:10px;">DATE: <strong id="admin-active-day" style="color:var(--text);">--</strong></span><button id="btn-ref-dash" class="btn-outline" onclick="silentRefresh('getAdminDashboardData', 'btn-ref-dash')"><i class="fas fa-sync"></i> SYNC</button></div>
+      </div>
+      <div class="dashboard-grid anim-2">
+        <div class="stat-card" style="border-bottom-color:var(--army-gold);">
+          <div class="stat-icon" style="color:var(--army-gold);"><i class="fas fa-calendar-check"></i></div>
+          <div><div class="stat-label">Training Days</div><div class="stat-val" id="stat-training-days">0/15</div><div class="stat-sub">Semester Progression</div></div>
+        </div>
+        <div class="stat-card" style="border-bottom-color:var(--status-green);"><div class="stat-icon" style="color:var(--status-green);"><i class="fas fa-user-check"></i></div><div><div class="stat-label">Present Today</div><div class="stat-val" id="stat-present">--</div><div class="stat-sub" id="stat-present-pct"></div></div></div>
+        <div class="stat-card" style="border-bottom-color:var(--status-yellow);"><div class="stat-icon" style="color:var(--status-yellow);"><i class="fas fa-clock"></i></div><div><div class="stat-label">Late / Very Late</div><div class="stat-val" id="stat-late">--</div><div class="stat-sub" id="stat-late-pct"></div></div></div>
+        <div class="stat-card" style="border-bottom-color:var(--status-red);"><div class="stat-icon" style="color:var(--status-red);"><i class="fas fa-user-times"></i></div><div><div class="stat-label">Absent Today</div><div class="stat-val" id="stat-absent">--</div><div class="stat-sub" id="stat-absent-pct"></div></div></div>
+      </div>
+      <div class="charts-row anim-3">
+        <div class="chart-card"><h4><i class="fas fa-chart-bar"></i> 15-DAY ATTENDANCE PROGRESSION</h4><div class="chart-container"><canvas id="chart-weekly"></canvas></div></div>
+        <div class="chart-card"><h4><i class="fas fa-chart-pie"></i> DAILY BREAKDOWN</h4><div class="chart-container"><canvas id="chart-donut"></canvas></div></div>
+      </div>
+    </div>
+
+    <div id="panel-attendance" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-clipboard-list"></i> ATTENDANCE LOG</h2>
+        <div class="header-actions"><button class="btn-info" onclick="exportTableToExcel('attendance-table', 'Attendance_Report')"><i class="fas fa-file-excel"></i> EXPORT</button><button id="btn-ref-att" class="btn-outline" onclick="silentRefresh('getAdminDashboardData', 'btn-ref-att')"><i class="fas fa-sync"></i> SYNC</button></div>
+      </div>
+      <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead><tbody id="attendance-table"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-masterlist" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-users"></i> UNIT ROSTER & DISCIPLINE</h2>
+        <div class="header-actions">
+          <div class="input-group" style="min-width: 250px;"><input type="text" id="search-masterlist" placeholder="Search cadet name or ID..." oninput="filterMasterlist()"></div>
+          <button class="btn-warning" onclick="openBulkDisciplineModal()"><i class="fas fa-layer-group"></i> BATCH ACTION</button>
+          <button class="btn-info" onclick="exportTableToExcel('masterlist-table', 'Unit_Roster')"><i class="fas fa-file-excel"></i> EXPORT</button>
+          <button id="btn-ref-mast" class="btn-outline" onclick="silentRefresh('getAdminDashboardData', 'btn-ref-mast')"><i class="fas fa-sync"></i> SYNC</button>
+        </div>
+      </div>
+      <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Cadet ID</th><th>Full Name</th><th>Company</th><th>Score</th><th>Contact</th><th>Actions</th></tr></thead><tbody id="masterlist-table"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-leaves" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2>
+        <div class="header-actions"><button class="btn-info" onclick="exportTableToExcel('leaves-table', 'Leave_Requests')"><i class="fas fa-file-excel"></i> EXPORT</button><button id="btn-ref-lv" class="btn-outline" onclick="silentRefresh('getLeaveRequests', 'btn-ref-lv')"><i class="fas fa-sync"></i> SYNC</button></div>
+      </div>
+      <div class="dashboard-grid anim-2" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;"><div class="stat-card" style="border-bottom-color:var(--status-yellow); padding: 15px;"><div><div class="stat-val" id="lv-stat-pending" style="color:var(--status-yellow);">0</div><div class="stat-label">Pending</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green); padding: 15px;"><div><div class="stat-val" id="lv-stat-approved" style="color:var(--status-green);">0</div><div class="stat-label">Approved</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red); padding: 15px;"><div><div class="stat-val" id="lv-stat-rejected" style="color:var(--status-red);">0</div><div class="stat-label">Rejected</div></div></div></div>
+      
+      <div id="admin-leave-submit-section" class="action-bar anim-3" style="display:none;">
+        <div class="action-bar-header"><h3><i class="fas fa-plus"></i> FILE NEW LEAVE</h3></div>
+        <div class="input-group"><label>SELECT CADET</label><select id="lv-id"><option value="">Loading...</option></select></div>
+        <div class="input-group"><label>FROM</label><input type="date" id="lv-from"></div>
+        <div class="input-group"><label>TO</label><input type="date" id="lv-to"></div>
+        <div class="input-group" style="flex:2;"><label>REASON</label><input type="text" id="lv-reason" placeholder="State reason..."></div>
+        <button id="btn-submit-admin-leave" class="btn-success" onclick="submitLeave()"><i class="fas fa-paper-plane"></i> SUBMIT</button>
+      </div>
+      
+      <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date Range</th><th>Cadet ID</th><th>Name</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaves-table"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-idcards" class="view-panel">
+      <div class="header-bar anim-1">
+          <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-id-card"></i> ID GENERATOR</h2>
+          <div class="header-actions"><button id="btn-ref-id" class="btn-outline" onclick="silentRefresh('getStudentsForIDCards', 'btn-ref-id')"><i class="fas fa-sync"></i> SYNC</button></div>
+      </div>
+      <div class="action-bar anim-2">
+          <div class="input-group" style="flex:2;"><label>SELECT TARGET TO GENERATE:</label><select id="id-target-select"><option value="ALL">Entire Roster (Bulk)</option></select></div>
+          <button class="btn-success" onclick="generateIDPreview()"><i class="fas fa-magic"></i> GENERATE PREVIEW</button>
+          <button class="btn-secondary" onclick="printIDCards()"><i class="fas fa-print"></i> PRINT BATCH</button>
+      </div>
+      <div class="id-grid anim-3" id="id-grid-container"><p style="color:var(--text-muted); text-align:center; width:100%; padding:50px 0;">Select a target and generate preview to render Identification Cards.</p></div>
+    </div>
+
+    <div id="panel-legacy" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-landmark"></i> LEGACY MANAGEMENT</h2>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+        <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+          <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-users"></i> 1. REQUEST NEW CLASS</h3>
+          <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Submit a new overarching group for Commander approval.</p>
+          <div class="input-group"><label>CLASS NAME</label><input type="text" id="leg-class-name" placeholder="E.g. Mandirigma Class"></div>
+          <div class="input-group"><label>CLASS YEAR</label><input type="number" id="leg-class-year" placeholder="E.g. 2024"></div>
+          <div class="input-group"><label>CLASS CREST / LOGO</label><input type="file" id="leg-class-logo" accept="image/*"></div>
+          <p id="leg-class-status" style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Select an image to crop.</p>
+          <button id="btn-submit-class" class="btn-warning" onclick="submitLegacyClass()"><i class="fas fa-plus-circle"></i> SUBMIT REQUEST</button>
+        </div>
+        <div class="anim-3" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+          <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-user-plus"></i> 2. ADD OFFICER TO CLASS</h3>
+          <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Add individual leaders to approved classes.</p>
+          <div class="input-group"><label>APPROVED CLASS</label><select id="leg-off-class"><option value="">Loading...</option></select></div>
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <div class="input-group"><label>RANK</label><input type="text" id="leg-off-rank" placeholder="E.g. C/COL"></div>
+            <div class="input-group" style="flex:2;"><label>FULL NAME</label><input type="text" id="leg-off-name" placeholder="E.g. Juan Dela Cruz"></div>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <div class="input-group"><label>DESIGNATION</label><input type="text" id="leg-off-desig" placeholder="E.g. Corps Commander"></div>
+            <div class="input-group"><label>COURSE</label><input type="text" id="leg-off-course" placeholder="E.g. BS Criminology"></div>
+          </div>
+          <div class="input-group" style="margin-top:10px;"><label>OFFICER BIOGRAPHY</label><textarea id="leg-off-bio" rows="3" placeholder="Leadership history..."></textarea></div>
+          <div class="input-group"><label>OFFICER PHOTO</label><input type="file" id="leg-off-photo" accept="image/*"></div>
+          <p id="leg-off-status" style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Select an image to crop.</p>
+          <button id="btn-submit-officer" class="btn-success" onclick="submitLegacyOfficer()"><i class="fas fa-user-check"></i> UPLOAD OFFICER</button>
+        </div>
+      </div>
+      
+      <div class="anim-4 header-bar" style="border:none; margin-top:30px; margin-bottom:10px; padding-bottom:0;">
+        <h3 style="color:var(--army-primary);"><i class="fas fa-database"></i> LEGACY ARCHIVE</h3>
+        <button id="btn-ref-leg" class="btn-outline" onclick="silentRefresh('getAdminLegacyData', 'btn-ref-leg')"><i class="fas fa-sync"></i> SYNC</button>
+      </div>
+      <div class="table-card anim-4" style="margin-bottom: 30px;"><div class="table-wrapper"><table id="table-legacy-classes"><thead><tr><th>Year</th><th>Class Name</th><th>Status</th><th>Action</th></tr></thead><tbody id="legacy-classes-tbody"></tbody></table></div></div>
+
+      <div class="anim-4 header-bar super-admin-only" style="border:none; margin-top:30px; margin-bottom:10px; padding-bottom:0;">
+        <h3 style="color:var(--army-primary);"><i class="fas fa-user-shield"></i> OFFICER DATABASE</h3>
+      </div>
+      <div class="table-card anim-4 super-admin-only"><div class="table-wrapper"><table id="table-legacy-officers"><thead><tr><th>Class ID</th><th>Rank & Name</th><th>Designation</th><th>Action</th></tr></thead><tbody id="legacy-officers-tbody"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-posts" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-images"></i> PUBLIC POSTS</h2>
+      </div>
+      
+      <div id="admin-draft-section" class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); margin-bottom: 25px; display:none;">
+        <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-pen"></i> DRAFT NEW POST</h3>
+        <div class="input-group"><label>POST TITLE</label><input type="text" id="post-title" placeholder="E.g. Tactical Training Alpha"></div>
+        <div class="input-group"><label>POST DESCRIPTION</label><textarea id="post-desc" rows="3" placeholder="Write the details..."></textarea></div>
+        <div class="input-group"><label><i class="fas fa-video"></i> VIDEO URL (Optional)</label><input type="text" id="post-video-url" placeholder="Paste YouTube or Drive link..."></div>
+        <div class="input-group"><label><i class="fas fa-images"></i> FEATURED IMAGE(S)</label><input type="file" id="post-image-file" accept="image/*" multiple></div>
+        <div id="image-staging-grid" style="display:flex; gap:10px; flex-wrap:wrap; margin:15px 0;"></div>
+        <div style="display:flex; gap:10px;">
+          <button id="btn-submit-post" class="btn-success" onclick="submitPublicPost()" style="flex:2;"><i class="fas fa-paper-plane"></i> SUBMIT DRAFT FOR APPROVAL</button>
+          <button id="btn-cancel-edit" class="btn-outline" onclick="cancelEdit()" style="flex:1; display:none;"><i class="fas fa-times"></i> CANCEL</button>
+        </div>
+      </div>
+
+      <div class="anim-3 header-bar" style="border:none; margin-bottom:10px; padding-bottom:0;">
+        <h3 style="color:var(--army-primary);"><i class="fas fa-list"></i> POST REVIEW QUEUE</h3>
+        <button id="btn-ref-post" class="btn-outline" onclick="silentRefresh('getPostsAdmin', 'btn-ref-post')"><i class="fas fa-sync"></i> SYNC</button>
+      </div>
+      <div class="table-card anim-4"><div class="table-wrapper"><table><thead><tr><th>Date</th><th>Media</th><th>Post Details</th><th>Status</th><th>Action</th></tr></thead><tbody id="posts-table"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-accounts" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-user-shield"></i> PERSONNEL ACCESS CONTROL</h2>
+        <div class="header-actions"><button id="btn-ref-acc" class="btn-outline" onclick="silentRefresh('getAdminDashboardData', 'btn-ref-acc')"><i class="fas fa-sync"></i> SYNC</button></div>
+      </div>
+      <div class="action-bar anim-2">
+        <div class="action-bar-header"><h3><i class="fas fa-user-plus"></i> PROVISION ACCOUNT</h3></div>
+        <div class="input-group"><label>USERNAME</label><input type="text" id="new-user" placeholder="Assign Username"></div>
+        <div class="input-group">
+          <label>PASSPHRASE</label>
+          <div style="position: relative;">
+            <input type="password" id="new-pass" placeholder="Assign Password" style="padding-right:40px;">
+            <i class="fas fa-eye" id="toggle-new-pass" onclick="togglePasswordVisibility('new-pass', 'toggle-new-pass')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--text-muted);"></i>
+          </div>
+        </div>
+        <div class="input-group"><label>CLEARANCE</label><select id="new-role"><option value="Scanner">Scanner Terminal</option><option value="Admin">Command Admin</option><option value="Super Admin">Super Admin (Commander)</option></select></div>
+        <button id="btn-create-acc" class="btn-success" style="width:auto; padding:0 25px;" onclick="createAcc()"><i class="fas fa-check"></i> PROVISION</button>
+      </div>
+      <div class="table-card anim-3"><div class="table-wrapper"><table><thead><tr><th>Username</th><th>Clearance Level</th><th>Legacy DB</th><th>Status</th><th>Action</th></tr></thead><tbody id="accounts-table"></tbody></table></div></div>
+    </div>
+
+    <div id="panel-audit" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-history"></i> SYSTEM AUDIT LOG</h2>
+        <div class="header-actions"><button id="btn-ref-aud" class="btn-outline" onclick="silentRefresh('getAuditLogs', 'btn-ref-aud')"><i class="fas fa-sync"></i> SYNC</button></div>
+      </div>
+      
+      <div class="tamper-warning" id="audit-tamper-warning" style="display:none; color:var(--status-red); background:rgba(211,47,47,0.1); padding:15px; border-radius:6px; border:1px dashed var(--status-red); margin-bottom:15px;"></div>
+      
+      <div class="table-card anim-2">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>User / Operator</th>
+                <th>Action Taken</th>
+                <th>Activity Details</th>
+                <th>Cryptographic Hash</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-settings" class="view-panel">
+      <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-cog"></i> SYSTEM BRANDING</h2></div>
+      <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 600px;">
+        <div class="input-group" style="margin-bottom:15px;"><label>LOGIN SHIELD LOGO</label><input type="file" id="set-logo-file" accept="image/*"><p id="set-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
+        <div class="input-group" style="margin-bottom:15px;"><label>HEADER / NAVBAR LOGO</label><input type="file" id="set-nav-logo-file" accept="image/*"><p id="set-nav-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
+        <div class="input-group" style="margin-bottom:20px;"><label>BACKGROUND IMAGE</label><input type="file" id="set-bg-file" accept="image/*"><p id="set-bg-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
+        <div style="display:flex; gap:10px;"><button id="btn-save-settings" class="btn-success" style="flex:2;" onclick="saveSystemSettings()"><i class="fas fa-save"></i> SAVE BRANDING</button><button class="btn-outline" style="flex:1;" onclick="resetBackground()"><i class="fas fa-eraser"></i> RESET BG</button></div>
+      </div>
+    </div>
+
+    <div id="panel-profile" class="view-panel">
+      <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-user-circle"></i> MY PROFILE</h2></div>
+      <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 600px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom:15px;">
+          <div class="input-group"><label>FULL NAME</label><input type="text" id="prof-name"></div>
+          <div class="input-group"><label>RANK</label><input type="text" id="prof-rank"></div>
+          <div class="input-group"><label>AGE</label><input type="number" id="prof-age"></div>
+          <div class="input-group"><label>COURSE</label><input type="text" id="prof-course"></div>
+          <div class="input-group"><label>DESIGNATION</label><input type="text" id="prof-position"></div>
+          <div class="input-group"><label>CONTACT</label><input type="text" id="prof-contact"></div>
+        </div>
+        <div class="input-group" style="margin-bottom:20px;"><label>PROFILE IMAGE</label><input type="file" id="prof-image-file" accept="image/*"><p id="prof-image-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
+        <button id="btn-save-profile" class="btn-success" onclick="saveUserProfile()"><i class="fas fa-save"></i> UPDATE PROFILE</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 // ─── CADET PORTAL (FIXED DISCIPLINE & LEAVE LOGS) ─────────
 function getCadetData(user, pass) {
   try {
