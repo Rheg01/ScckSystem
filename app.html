@@ -935,15 +935,11 @@
     });
   }
 
-  // =========================================================================
-  // COMMAND LINEAGE LOGIC
-  // =========================================================================
-
   function loadCommandTable() {
       const tbody = document.getElementById('cmd-table-body');
       const dropdown = document.getElementById('cc-parent');
       
-      if(tbody) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Fetching archives...</td></tr>'; }
+      if(tbody) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Fetching archives...</td></tr>'; }
       if(dropdown) { dropdown.innerHTML = '<option value="">Fetching...</option>'; }
       
       apiCall('getCommandHistory', {}, function(res) {
@@ -959,40 +955,44 @@
           globalAdminCommandData.forEach(function(cmd) {
               opts += `<option value="${cmd.id}">${cmd.rank} ${cmd.name}</option>`;
               
+              // Determine Status Badge Color
+              let statusBadge = cmd.status === 'Current' ? 'badge-present' : (cmd.status === 'Past' ? 'badge-timeout' : 'badge-absent');
+              
               html += `
-              <tr style="border-bottom:1px solid var(--border);">
-                  <td style="padding:10px;"><b>Commandant</b></td>
-                  <td style="padding:10px;">${cmd.rank} ${cmd.name}</td>
-                  <td style="padding:10px;">${cmd.tenure}</td>
-                  <td style="padding:10px;">${cmd.status}</td>
-                  <td style="padding:10px; text-align:right;">
-                      <button onclick="openCmdEdit('${cmd.id}')" style="margin-right:5px; color:#1976d2; background:none; border:none; cursor:pointer;"><i class="fas fa-edit"></i></button>
-                      <button onclick="deleteCmdRecord('${cmd.id}')" style="color:#d32f2f; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
+              <tr style="border-bottom:1px solid var(--border); transition: 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.05)'" onmouseout="this.style.background='transparent'">
+                  <td style="padding:15px 10px; color:var(--army-gold); font-size: 14px;"><b><i class="fas fa-star" style="margin-right:5px;"></i> Commandant</b></td>
+                  <td style="padding:15px 10px; font-weight:bold; color:var(--text);">${cmd.rank} ${cmd.name}</td>
+                  <td style="padding:15px 10px; color:var(--text-muted);">${cmd.tenure}</td>
+                  <td style="padding:15px 10px;"><span class="badge ${statusBadge}">${cmd.status}</span></td>
+                  <td style="padding:15px 10px; text-align:right; white-space:nowrap;">
+                      <button class="btn-icon btn-info" onclick="openCmdEdit('${cmd.id}')" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon btn-danger" onclick="deleteCmdRecord('${cmd.id}')" title="Delete"><i class="fas fa-trash"></i></button>
                   </td>
               </tr>`;
               
               if (cmd.corpsCommanders) {
                   cmd.corpsCommanders.forEach(function(cc) {
+                      let ccBadge = cc.status === 'Current' ? 'badge-present' : (cc.status === 'Past' ? 'badge-timeout' : 'badge-absent');
+                      
                       html += `
-                      <tr style="border-bottom:1px solid var(--border); background:rgba(0,0,0,0.02);">
-                          <td style="padding:10px; padding-left:20px; font-size:12px;">↳ Corps Commander</td>
-                          <td style="padding:10px;">${cc.rank} ${cc.name}</td>
-                          <td style="padding:10px;">${cc.tenure}</td>
-                          <td style="padding:10px;">${cc.status}</td>
-                          <td style="padding:10px; text-align:right;">
-                              <button onclick="openCmdEdit('${cc.id}', true, '${cmd.id}')" style="margin-right:5px; color:#1976d2; background:none; border:none; cursor:pointer;"><i class="fas fa-edit"></i></button>
-                              <button onclick="deleteCmdRecord('${cc.id}')" style="color:#d32f2f; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                      <tr style="border-bottom:1px solid var(--border); background:rgba(0,0,0,0.02); transition: 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.08)'" onmouseout="this.style.background='rgba(0,0,0,0.02)'">
+                          <td style="padding:12px 10px; padding-left:35px; font-size:12px; color:var(--text-muted);"><i class="fas fa-level-up-alt fa-rotate-90" style="margin-right:5px;"></i> Corps Commander</td>
+                          <td style="padding:12px 10px; font-weight:600; color:var(--text);">${cc.rank} ${cc.name}</td>
+                          <td style="padding:12px 10px; color:var(--text-muted);">${cc.tenure}</td>
+                          <td style="padding:12px 10px;"><span class="badge ${ccBadge}">${cc.status}</span></td>
+                          <td style="padding:12px 10px; text-align:right; white-space:nowrap;">
+                              <button class="btn-icon btn-info" onclick="openCmdEdit('${cc.id}', true, '${cmd.id}')" title="Edit"><i class="fas fa-edit"></i></button>
+                              <button class="btn-icon btn-danger" onclick="deleteCmdRecord('${cc.id}')" title="Delete"><i class="fas fa-trash"></i></button>
                           </td>
                       </tr>`;
                   });
               }
           });
           
-          if(tbody) { tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No records found.</td></tr>'; }
+          if(tbody) { tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center; padding: 20px;">No records found.</td></tr>'; }
           if(dropdown) { dropdown.innerHTML = opts; }
       });
   }
-
   function submitCommandRecord(role) {
       let parentId = (role === 'Corps Commander') ? document.getElementById('cc-parent').value : '';
       let prefix = (role === 'Commandant') ? 'cmd' : 'cc';
