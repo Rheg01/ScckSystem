@@ -56,11 +56,11 @@
     
     body.light-mode .post-card, body.light-mode .officer-card, body.light-mode .modal-content, body.light-mode .dossier-content { background: var(--card-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.2); border: none; }
     body.light-mode .post-title, body.light-mode .officer-name, body.light-mode .full-post-title, body.light-mode .dossier-name { color: #1b2015; }
-    body.light-mode .post-desc, body.light-mode .officer-desig, body.light-mode .full-post-desc, body.light-mode .dossier-meta, body.light-mode .dossier-bio, body.light-mode .dossier-back-btn, body.light-mode .hof-title, body.light-mode .hof-hero-role, body.light-mode .hof-cc-name { color: #4a5568; }
+    body.light-mode .post-desc, body.light-mode .officer-desig, body.light-mode .full-post-desc, body.light-mode .dossier-meta, body.light-mode .dossier-bio, body.light-mode .dossier-back-btn, body.light-mode .hof-name, body.light-mode .hof-cc-name { color: #1b2015; }
+    body.light-mode .hof-name, body.light-mode .hof-cc-name { text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
     body.light-mode .read-more-btn { color: #4b5a36; border-color: #4b5a36; }
     body.light-mode .read-more-btn:hover { background: #4b5a36; color: #ffffff; }
     body.light-mode .class-name { text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-    body.light-mode .hof-cc-card { border-top: 4px solid var(--army-primary); }
 
     .post-img-container { overflow: hidden; height: 220px; border-bottom: 2px solid var(--army-gold); position: relative; }
     .post-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
@@ -73,6 +73,76 @@
     .read-more-btn { background: transparent; color: var(--army-gold); border: 1px solid var(--army-gold); padding: 10px 15px; border-radius: 4px; font-size: 13px; font-family: 'Oswald', sans-serif; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-weight: bold; width: 100%; }
     .read-more-btn:hover { background: var(--army-gold); color: #1b2015; }
 
+    /* ========================================================================= */
+    /* HALL OF FAME: FLOATING LAYOUT (NO CARDS)                                  */
+    /* ========================================================================= */
+    .hof-section { padding: 60px 20px; position: relative; z-index: 1; border-bottom: 1px solid var(--border-color); }
+    .hof-era-block { max-width: 1000px; margin: 0 auto 60px auto; text-align: center; }
+    
+    /* Commandant Floating Element */
+    .hof-floating-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); margin-bottom: 30px; padding: 20px; }
+    .hof-floating-container:hover { transform: translateY(-10px) scale(1.05); }
+    .hof-portrait { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid var(--army-gold); box-shadow: 0 15px 35px rgba(0,0,0,0.5); background: #000; transition: box-shadow 0.4s ease; }
+    .hof-floating-container:hover .hof-portrait { box-shadow: 0 20px 45px rgba(212, 175, 55, 0.4); }
+    .hof-role { font-size: 14px; color: var(--army-gold); font-weight: bold; letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase; }
+    .hof-name { font-size: 34px; color: var(--text-main); font-family: 'Oswald', sans-serif; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.8); line-height: 1.1; }
+    
+    /* Corps Commander Floating Elements */
+    .hof-cc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; margin-top: 20px; }
+    .hof-cc-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.3s; padding: 15px; }
+    .hof-cc-container:hover { transform: translateY(-8px) scale(1.03); }
+    .hof-cc-portrait { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 2px solid var(--army-gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5); background: #000; transition: box-shadow 0.3s ease; }
+    .hof-cc-container:hover .hof-cc-portrait { box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3); }
+    .hof-cc-role { font-size: 12px; color: var(--army-gold); font-weight: bold; letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase; }
+    .hof-cc-name { font-size: 22px; color: var(--text-main); font-family: 'Oswald', sans-serif; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.8); line-height: 1.1; text-align: center; }
+
+    .hof-divider { text-align: center; margin: 60px 0 40px 0; position: relative; }
+    .hof-divider::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; border-top: 2px dashed var(--border-color); z-index: 1; }
+    .hof-divider span { background: var(--army-dark); padding: 0 20px; position: relative; z-index: 2; color: var(--text-muted); font-family: 'Oswald', sans-serif; font-size: 18px; letter-spacing: 2px; transition: background 0.5s; }
+    body.light-mode .hof-divider span { background: #fdfdfd; }
+
+    /* ========================================================================= */
+    /* HALL OF FAME: CINEMATIC MODAL (PEAKY BLINDERS STYLE)                      */
+    /* ========================================================================= */
+    .cinematic-overlay { position: fixed; inset: 0; background: rgba(10, 12, 8, 0.95); z-index: 60000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s ease; backdrop-filter: blur(10px); }
+    .cinematic-overlay.show { display: flex; opacity: 1; }
+    /* This modal forces a dark theme regardless of Light Mode to keep the cinematic effect */
+    .cinematic-content { width: 100vw; height: 100vh; background: #0a0c08; position: relative; overflow: hidden; display: flex; transform: scale(1.05); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    .cinematic-overlay.show .cinematic-content { transform: scale(1); }
+    
+    .cinematic-bg-split { position: absolute; top: 0; right: 0; bottom: 0; width: 55%; background: #12140e; clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%); z-index: 1; border-left: 2px solid rgba(212, 175, 55, 0.2); }
+    
+    .cinematic-close { position: absolute; top: 30px; right: 40px; font-size: 30px; color: var(--army-gold); cursor: pointer; z-index: 10; transition: 0.3s; }
+    .cinematic-close:hover { transform: rotate(90deg) scale(1.2); color: #fff; }
+    
+    .cinematic-left { flex: 1.2; padding: 100px 80px; z-index: 2; display: flex; flex-direction: column; justify-content: center; }
+    .cinematic-rank { color: var(--army-gold); font-family: 'Inter', sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 4px; margin-bottom: 10px; text-transform: uppercase; }
+    .cinematic-name { color: #ffffff; font-family: 'Oswald', sans-serif; font-size: 80px; line-height: 1; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .cinematic-quote { font-family: 'Inter', sans-serif; font-size: 18px; color: #dce0d5; font-style: italic; border-left: 4px solid var(--army-gold); padding-left: 20px; line-height: 1.6; margin-bottom: 30px; max-width: 600px; }
+    .cinematic-bio { font-family: 'Inter', sans-serif; font-size: 15px; color: #b0bec5; line-height: 1.8; max-width: 600px; max-height: 30vh; overflow-y: auto; padding-right: 15px; }
+    
+    .cinematic-right { flex: 0.8; position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: center; }
+    .cinematic-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%); mix-blend-mode: luminosity; opacity: 0.8; transition: 0.5s ease; }
+    .cinematic-content:hover .cinematic-hero-img { mix-blend-mode: normal; opacity: 1; }
+
+    .cinematic-bio::-webkit-scrollbar { width: 4px; }
+    .cinematic-bio::-webkit-scrollbar-thumb { background: var(--army-gold); }
+
+    @media (max-width: 900px) {
+        .cinematic-content { flex-direction: column; overflow-y: auto; }
+        .cinematic-bg-split { width: 100%; height: 60%; top: auto; bottom: 0; clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%); border-left: none; border-top: 2px solid rgba(212, 175, 55, 0.2); }
+        .cinematic-left { padding: 60px 20px; text-align: center; justify-content: flex-start; z-index: 3; }
+        .cinematic-name { font-size: 50px; }
+        .cinematic-quote { border-left: none; border-bottom: 2px solid var(--army-gold); padding-left: 0; padding-bottom: 20px; margin: 0 auto 30px auto; }
+        .cinematic-bio { margin: 0 auto; max-height: none; }
+        .cinematic-right { height: 50vh; width: 100%; position: absolute; bottom: 0; z-index: 1; opacity: 0.3; pointer-events: none; }
+        .cinematic-close { top: 15px; right: 20px; }
+    }
+
+
+    /* ========================================================================= */
+    /* LEGACY CLASSES & MISC CSS                                                 */
+    /* ========================================================================= */
     .landing-legacy { position: relative; z-index: 1; padding: 60px 20px; border-bottom: 1px solid var(--border-color); }
     .legacy-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
     .class-card { background: transparent; border: none; padding: 20px; text-align: center; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; align-items: center; }
@@ -89,28 +159,6 @@
     .officer-rank { font-size: 12px; color: var(--army-gold); font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; }
     .officer-name { font-size: 16px; color: var(--text-main); font-weight: bold; margin-bottom: 5px; font-family: 'Oswald', sans-serif;}
     .officer-desig { font-size: 12px; color: var(--text-muted); }
-
-    /* HALL OF FAME CSS */
-    .hof-section { padding: 60px 20px; position: relative; z-index: 1; }
-    .hof-era-block { max-width: 1000px; margin: 0 auto 60px auto; }
-    .hof-hero-card { background: var(--card-bg); border: 3px solid var(--army-gold); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; margin-bottom: 30px; }
-    .hof-hero-photo { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--army-gold); object-fit: cover; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); background: #000; }
-    .hof-hero-rank { color: var(--army-gold); font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: bold; letter-spacing: 1px; }
-    .hof-hero-name { color: var(--text-main); font-family: 'Oswald', sans-serif; font-size: 32px; text-transform: uppercase; margin: 5px 0; line-height: 1.1; }
-    .hof-hero-role { font-size: 14px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px; }
-    .hof-hero-quote { font-style: italic; color: var(--text-muted); font-size: 15px; max-width: 600px; margin: 0 auto 20px auto; border-left: 3px solid var(--army-gold); border-right: 3px solid var(--army-gold); padding: 0 15px; }
-    .hof-cc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .hof-cc-card { background: var(--card-bg); border: 1px solid var(--border-color); border-top: 4px solid var(--army-gold); border-radius: 8px; padding: 25px 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s; position: relative; }
-    .hof-cc-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-    .hof-cc-photo { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--army-gold); object-fit: cover; margin-bottom: 15px; background: #000; }
-    .hof-cc-name { color: var(--text-main); font-family: 'Oswald', sans-serif; font-size: 22px; text-transform: uppercase; margin: 5px 0; line-height: 1.1; }
-    .hof-posthumous-badge { position: absolute; top: 15px; right: 15px; background: #000; color: #fff; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; }
-    .hof-btn-dossier { background: transparent; color: var(--army-gold); border: 1px solid var(--army-gold); padding: 10px 20px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; font-family: 'Oswald', sans-serif; margin-top: 15px; text-transform: uppercase; }
-    .hof-btn-dossier:hover { background: var(--army-gold); color: #1b2015; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .hof-divider { text-align: center; margin: 60px 0 40px 0; position: relative; }
-    .hof-divider::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; border-top: 2px dashed var(--border-color); z-index: 1; }
-    .hof-divider span { background: var(--army-dark); padding: 0 20px; position: relative; z-index: 2; color: var(--text-muted); font-family: 'Oswald', sans-serif; font-size: 18px; letter-spacing: 2px; transition: background 0.5s; }
-    body.light-mode .hof-divider span { background: #fdfdfd; }
 
     .carousel-container { position: relative; width: 100%; max-height: 450px; background: #000; border-radius: 8px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .carousel-slide { display: none; width: 100%; height: 100%; text-align: center; }
@@ -194,6 +242,7 @@
       <nav class="nav-links">
         <button onclick="toggleTheme()" class="theme-btn" title="Toggle Light/Dark Mode"><i class="fas fa-sun" id="theme-icon" style="font-size: 18px;"></i></button>
         <a href="#showcase-section" class="hide-mobile">Activities</a>
+        <a href="#hall-of-fame-section" class="hide-mobile">Command</a>
         <a href="#legacy-section" class="hide-mobile">Legacy</a>
         <a href="app.html" class="nav-btn"><i class="fas fa-lock"></i> Portal</a>
       </nav>
@@ -204,6 +253,7 @@
       <div id="post-grid-container"><p style="text-align:center; width:100%; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Retrieving intelligence reports...</p></div>
     </div>
 
+    <!-- COMMAND ERA: HALL OF FAME (FLOATING LAYOUT) -->
     <section class="hof-section" id="hall-of-fame-section">
       <h2 class="section-title"><i class="fas fa-star"></i> HALL OF FAME: COMMAND ERA</h2>
       <div id="hof-container">
@@ -217,10 +267,30 @@
     </div>
   </div>
 
+  <!-- Shared Universal Modal (For Posts, Legacy Classes, and Corps Commanders) -->
   <div class="modal-overlay" id="public-modal" onclick="closeModal(event)">
     <div class="modal-content" id="modal-container-inner" onclick="event.stopPropagation()">
         <i class="fas fa-times close-btn" onclick="closeModal(true)"></i>
         <div id="modal-dynamic-content"></div>
+    </div>
+  </div>
+
+  <!-- Cinematic Modal (Exclusively for Commandants) -->
+  <div class="cinematic-overlay" id="cinematic-modal" onclick="closeCinematicDossier(event)">
+    <div class="cinematic-content" onclick="event.stopPropagation()">
+        <div class="cinematic-bg-split"></div>
+        <i class="fas fa-times cinematic-close" onclick="closeCinematicDossier(true)"></i>
+        
+        <div class="cinematic-left">
+            <div id="cine-rank" class="cinematic-rank"></div>
+            <div id="cine-name" class="cinematic-name"></div>
+            <div id="cine-quote" class="cinematic-quote"></div>
+            <div id="cine-bio" class="cinematic-bio"></div>
+        </div>
+        
+        <div class="cinematic-right" id="cine-img-container">
+            <!-- Hero Image Injected Here -->
+        </div>
     </div>
   </div>
 
@@ -311,7 +381,6 @@
     }
 
     window.onload = () => {
-      // 1. Fetch Branding and Class Legacy
       apiCall('getLegacyData', {}, (data) => {
         if (data.branding) {
           localStorage.setItem('scck_branding', JSON.stringify(data.branding));
@@ -324,7 +393,6 @@
         }
       });
 
-      // 2. Fetch Public Posts
       apiCall('getApprovedPosts', {}, (data) => {
         if (data.success && data.posts && data.posts.length > 0) { 
           localStorage.setItem('scck_posts', JSON.stringify(data.posts)); 
@@ -333,7 +401,6 @@
         }
       });
 
-      // 3. Fetch Command Hall of Fame
       apiCall('getCommandHistory', {}, (data) => {
           if (data.success) {
               globalCommandData = data.eras;
@@ -437,6 +504,7 @@
         document.getElementById('showcase-section').scrollIntoView({ behavior: 'smooth' });
     }
 
+    // ─── HALL OF FAME RENDER (FLOATING LAYOUT) ──────────────────────────
     function renderHallOfFame() {
         const container = document.getElementById('hof-container');
         if (!globalCommandData || globalCommandData.length === 0) {
@@ -451,42 +519,32 @@
                 html += `<div class="hof-divider"><span>ARCHIVED ERAS</span></div>`;
             }
 
-            let postBadgeCmd = era.status === "Posthumous" ? `<div class="hof-posthumous-badge"><i class="fas fa-ribbon"></i> IN MEMORIAM</div>` : '';
-            let quoteHtmlCmd = era.quote ? `<div class="hof-hero-quote">"${era.quote}"</div>` : '';
-            let bioBtnCmd = era.bio ? `<button class="hof-btn-dossier" onclick="openDossier('${era.id}')"><i class="fas fa-folder-open"></i> VIEW COMMAND DOSSIER</button>` : '';
             let imgCmd = era.image || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+            let tenureTxtCmd = era.status === "Posthumous" ? `<i class="fas fa-ribbon"></i> IN MEMORIAM` : era.tenure;
 
             html += `
             <div class="hof-era-block">
-              <div class="hof-hero-card">
-                ${postBadgeCmd}
-                <img src="${imgCmd}" class="hof-hero-photo" alt="${era.name}">
-                <div class="hof-hero-rank">${era.rank}</div>
-                <div class="hof-hero-name">${era.name}</div>
-                <div class="hof-hero-role">Unit Commandant • ${era.tenure}</div>
-                ${quoteHtmlCmd}
-                ${bioBtnCmd}
+              <div class="hof-floating-container" onclick="openCinematicDossier('${era.id}')">
+                <img src="${imgCmd}" class="hof-portrait" alt="${era.name}">
+                <div class="hof-role">UNIT COMMANDANT • ${tenureTxtCmd}</div>
+                <div class="hof-name">${era.rank} ${era.name}</div>
               </div>
             `;
 
             if (era.corpsCommanders && era.corpsCommanders.length > 0) {
+                // Faint divider separating Commandant from Corps Commanders
+                html += `<div style="width: 80px; height: 2px; background: var(--army-gold); margin: 20px auto 40px auto; opacity: 0.3;"></div>`;
                 html += `<div class="hof-cc-grid">`;
+                
                 era.corpsCommanders.forEach(cc => {
-                    let postBadgeCc = cc.status === "Posthumous" ? `<div class="hof-posthumous-badge"><i class="fas fa-ribbon"></i> IN MEMORIAM</div>` : '';
-                    let quoteHtmlCc = cc.quote ? `<div style="font-size:12px; font-style:italic; color:var(--text-muted); margin:10px 0;">"${cc.quote}"</div>` : '';
-                    let bioBtnCc = cc.bio ? `<button class="hof-btn-dossier" onclick="openDossier('${cc.id}', true, '${era.id}')"><i class="fas fa-folder-open"></i> DOSSIER</button>` : '';
                     let imgCc = cc.image || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+                    let tenureTxtCc = cc.status === "Posthumous" ? `<i class="fas fa-ribbon"></i> IN MEMORIAM` : cc.tenure;
 
                     html += `
-                    <div class="hof-cc-card">
-                      ${postBadgeCc}
-                      <img src="${imgCc}" class="hof-cc-photo" alt="${cc.name}">
-                      <div style="color:var(--army-gold); font-family:'Oswald', sans-serif; font-size:14px; font-weight:bold;">${cc.rank}</div>
-                      <div class="hof-cc-name" style="font-size:18px;">${cc.name}</div>
-                      <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Corps Commander</div>
-                      <div style="font-size:11px; color:#888;">${cc.tenure}</div>
-                      ${quoteHtmlCc}
-                      ${bioBtnCc}
+                    <div class="hof-cc-container" onclick="openDossier('${cc.id}', true, '${era.id}')">
+                      <img src="${imgCc}" class="hof-cc-portrait" alt="${cc.name}">
+                      <div class="hof-cc-role">CORPS COMMANDER • ${tenureTxtCc}</div>
+                      <div class="hof-cc-name">${cc.rank} ${cc.name}</div>
                     </div>`;
                 });
                 html += `</div>`; 
@@ -496,6 +554,65 @@
 
         container.innerHTML = html;
     }
+
+    // ─── CINEMATIC MODAL ENGINE (COMMANDANTS ONLY) ──────────────────────
+    window.openCinematicDossier = function(id) {
+        let person = globalCommandData.find(e => e.id === id);
+        if (!person) return;
+
+        let formattedBio = person.bio ? person.bio.replace(/- /g, "• ") : '<span style="font-style:italic; opacity:0.6;">No biography recorded.</span>';
+        let imgHtml = person.image ? `<img src="${person.image}" class="cinematic-hero-img">` : `<div style="display:flex; height:100%; align-items:center; justify-content:center; font-size:150px; color:#333;"><i class="fas fa-user"></i></div>`;
+        let quoteText = person.quote ? `"${person.quote}"` : "Leadership • Discipline • Excellence";
+
+        document.getElementById('cine-rank').innerText = `${person.rank} • UNIT COMMANDANT`;
+        document.getElementById('cine-name').innerText = person.name;
+        document.getElementById('cine-quote').innerText = quoteText;
+        document.getElementById('cine-bio').innerHTML = formattedBio;
+        document.getElementById('cine-img-container').innerHTML = imgHtml;
+
+        const modal = document.getElementById('cinematic-modal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    window.closeCinematicDossier = function(force) {
+        const modal = document.getElementById('cinematic-modal');
+        if (force === true || force.target === modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = ''; 
+            setTimeout(() => modal.style.display = 'none', 500);
+        }
+    }
+
+    // ─── STANDARD DOSSIER MODAL ENGINE (CORPS COMMANDERS ONLY) ──────────
+    window.openDossier = function(id, isCorpsCommander = false, parentId = null) {
+        let person = null;
+        if (isCorpsCommander) {
+            let era = globalCommandData.find(e => e.id === parentId);
+            if (era) { person = era.corpsCommanders.find(c => c.id === id); }
+        }
+        if (!person) return;
+
+        let formattedBio = person.bio ? person.bio.replace(/- /g, "• ") : '<div class="dossier-bio" style="font-style:italic; opacity:0.6;">No biography recorded.</div>';
+        const photo = person.image ? `<img src="${person.image}" class="dossier-img">` : `<div style="display:flex; height:350px; align-items:center; justify-content:center; color:#555; font-size:60px; width:100%;"><i class="fas fa-user"></i></div>`;
+
+        const html = `
+          <div class="dossier-layout">
+             <div class="dossier-img-wrap">${photo}</div>
+             <div class="dossier-info">
+                <div class="dossier-rank">${person.rank}</div>
+                <div class="dossier-name">${person.name}</div>
+                <div class="dossier-meta"><i class="fas fa-shield-alt"></i> ${person.role}</div>
+                <div class="dossier-meta"><i class="fas fa-clock"></i> ${person.tenure}</div>
+                <div class="dossier-bio">${formattedBio}</div>
+             </div>
+          </div>
+        `;
+        document.getElementById('modal-dynamic-content').innerHTML = html;
+        showModal();
+    }
+
 
     let currentSlideIdx = 0;
     function openPostModal(postId) {
@@ -577,35 +694,6 @@
         </div>
       `;
       document.getElementById('modal-dynamic-content').innerHTML = html;
-    }
-
-    window.openDossier = function(id, isCorpsCommander = false, parentId = null) {
-        let person = null;
-        if (!isCorpsCommander) {
-            person = globalCommandData.find(e => e.id === id);
-        } else {
-            let era = globalCommandData.find(e => e.id === parentId);
-            if (era) { person = era.corpsCommanders.find(c => c.id === id); }
-        }
-        if (!person) return;
-
-        let formattedBio = person.bio ? person.bio.replace(/- /g, "• ") : '<div class="dossier-bio" style="font-style:italic; opacity:0.6;">No biography recorded.</div>';
-        const photo = person.image ? `<img src="${person.image}" class="dossier-img">` : `<div style="display:flex; height:350px; align-items:center; justify-content:center; color:#555; font-size:60px; width:100%;"><i class="fas fa-user"></i></div>`;
-
-        const html = `
-          <div class="dossier-layout">
-             <div class="dossier-img-wrap">${photo}</div>
-             <div class="dossier-info">
-                <div class="dossier-rank">${person.rank}</div>
-                <div class="dossier-name">${person.name}</div>
-                <div class="dossier-meta"><i class="fas fa-shield-alt"></i> ${person.role}</div>
-                <div class="dossier-meta"><i class="fas fa-clock"></i> ${person.tenure}</div>
-                <div class="dossier-bio">${formattedBio}</div>
-             </div>
-          </div>
-        `;
-        document.getElementById('modal-dynamic-content').innerHTML = html;
-        showModal();
     }
 
     function showModal() {
