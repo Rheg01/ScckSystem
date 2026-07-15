@@ -1177,16 +1177,18 @@ function submitCommandRecord(role) {
 
  let globalAdminCommandData = [];
 
- function loadCommandTable() {
+let globalAdminCommandData = [];
+
+  function loadCommandTable() {
       const tbody = document.getElementById('cmd-table-body');
-      const dropdown = document.getElementById('cc-parent'); // Optional: for the add form
+      const dropdown = document.getElementById('cc-parent');
       
-      if(tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Fetching archives...</td></tr>';
-      if(dropdown) dropdown.innerHTML = '<option value="">Fetching...</option>';
+      if(tbody) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Fetching archives...</td></tr>'; }
+      if(dropdown) { dropdown.innerHTML = '<option value="">Fetching...</option>'; }
       
-      apiCall('getCommandHistory', {}, (res) => {
+      apiCall('getCommandHistory', {}, function(res) {
           if(!res.success) { 
-              if(tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#d32f2f;">Failed to load archives. Check Google Apps Script URL.</td></tr>'; 
+              if(tbody) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Failed to load.</td></tr>'; }
               return; 
           }
           
@@ -1194,49 +1196,74 @@ function submitCommandRecord(role) {
           let html = '';
           let opts = '<option value="">Select Commandant...</option>';
           
-          globalAdminCommandData.forEach(cmd => {
-              opts += `<option value="${cmd.id}">${cmd.rank} ${cmd.name} (${cmd.tenure})</option>`;
+          globalAdminCommandData.forEach(function(cmd) {
+              opts += `<option value="${cmd.id}">${cmd.rank} ${cmd.name}</option>`;
               
-              // Commandant Row
               html += `
-              <tr style="border-bottom:1px solid var(--border); transition: 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.05)'" onmouseout="this.style.background='transparent'">
-                  <td style="padding:15px 10px; font-weight:bold; color:var(--army-gold);">Commandant</td>
-                  <td style="padding:15px 10px; font-weight:bold; color:var(--text-main);">${cmd.rank} ${cmd.name}</td>
-                  <td style="padding:15px 10px; color:var(--text-muted);">${cmd.tenure}</td>
-                  <td style="padding:15px 10px;"><span style="background:#333; padding:4px 8px; border-radius:4px; font-size:11px;">${cmd.status}</span></td>
-                  <td style="padding:15px 10px; text-align:right;">
-                      <button style="background:var(--army-primary); border:none; padding:6px 12px; border-radius:4px; color:#fff; cursor:pointer; margin-right:5px; transition:0.3s;" onclick="openCmdEdit('${cmd.id}')"><i class="fas fa-edit"></i></button>
-                      <button style="background:#d32f2f; border:none; padding:6px 12px; border-radius:4px; color:#fff; cursor:pointer; transition:0.3s;" onclick="deleteCmdRecord('${cmd.id}')"><i class="fas fa-trash"></i></button>
+              <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px;"><b>Commandant</b></td>
+                  <td style="padding:10px;">${cmd.rank} ${cmd.name}</td>
+                  <td style="padding:10px;">${cmd.tenure}</td>
+                  <td style="padding:10px;">${cmd.status}</td>
+                  <td style="padding:10px; text-align:right;">
+                      <button onclick="openCmdEdit('${cmd.id}')" style="margin-right:5px; color:#1976d2; background:none; border:none; cursor:pointer;"><i class="fas fa-edit"></i></button>
+                      <button onclick="deleteCmdRecord('${cmd.id}')" style="color:#d32f2f; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
                   </td>
               </tr>`;
               
-              // Corps Commanders Rows
               if (cmd.corpsCommanders) {
-                  cmd.corpsCommanders.forEach(cc => {
+                  cmd.corpsCommanders.forEach(function(cc) {
                       html += `
-                      <tr style="border-bottom:1px solid var(--border); background:rgba(0,0,0,0.2); transition: 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.05)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">
-                          <td style="padding:12px 10px; padding-left:30px; font-size:12px; color:var(--text-muted);"><i class="fas fa-level-up-alt fa-rotate-90"></i> Corps Commander</td>
-                          <td style="padding:12px 10px; color:var(--text-main);">${cc.rank} ${cc.name}</td>
-                          <td style="padding:12px 10px; color:var(--text-muted);">${cc.tenure}</td>
-                          <td style="padding:12px 10px;"><span style="background:#222; padding:4px 8px; border-radius:4px; font-size:11px;">${cc.status}</span></td>
-                          <td style="padding:12px 10px; text-align:right;">
-                              <button style="background:var(--army-primary); border:none; padding:6px 12px; border-radius:4px; color:#fff; cursor:pointer; margin-right:5px; transition:0.3s;" onclick="openCmdEdit('${cc.id}', true, '${cmd.id}')"><i class="fas fa-edit"></i></button>
-                              <button style="background:#d32f2f; border:none; padding:6px 12px; border-radius:4px; color:#fff; cursor:pointer; transition:0.3s;" onclick="deleteCmdRecord('${cc.id}')"><i class="fas fa-trash"></i></button>
+                      <tr style="border-bottom:1px solid var(--border); background:rgba(0,0,0,0.02);">
+                          <td style="padding:10px; padding-left:20px; font-size:12px;">↳ Corps Commander</td>
+                          <td style="padding:10px;">${cc.rank} ${cc.name}</td>
+                          <td style="padding:10px;">${cc.tenure}</td>
+                          <td style="padding:10px;">${cc.status}</td>
+                          <td style="padding:10px; text-align:right;">
+                              <button onclick="openCmdEdit('${cc.id}', true, '${cmd.id}')" style="margin-right:5px; color:#1976d2; background:none; border:none; cursor:pointer;"><i class="fas fa-edit"></i></button>
+                              <button onclick="deleteCmdRecord('${cc.id}')" style="color:#d32f2f; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
                           </td>
                       </tr>`;
                   });
               }
           });
           
-          if(tbody) tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No records found in database.</td></tr>';
-          if(dropdown) dropdown.innerHTML = opts;
+          if(tbody) { tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No records found.</td></tr>'; }
+          if(dropdown) { dropdown.innerHTML = opts; }
+      });
+  }
+
+  function submitCommandRecord(role) {
+      let parentId = (role === 'Corps Commander') ? document.getElementById('cc-parent').value : '';
+      let prefix = (role === 'Commandant') ? 'cmd' : 'cc';
+      
+      const rank = document.getElementById(prefix+'-rank').value.trim();
+      const name = document.getElementById(prefix+'-name').value.trim();
+      const tenure = document.getElementById(prefix+'-tenure').value.trim();
+      const status = document.getElementById(prefix+'-status').value;
+      const quote = document.getElementById(prefix+'-quote').value.trim();
+      const bio = document.getElementById(prefix+'-bio').value.trim();
+      const imgData = croppedData[prefix+'-photo'];
+      
+      if(!rank || !name) { return Swal.fire({toast:true, position:'top', icon:'warning', title:'Rank and Name required.', showConfirmButton:false, timer:2000}); }
+      
+      Swal.fire({ title: 'Saving...', didOpen: () => Swal.showLoading() });
+      
+      apiCall('addCommandRecord', { parentId: parentId, role: role, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, pass: session.pass }, function(res) {
+          Swal.fire({toast:true, position:'top-end', icon:'success', title:'Record Added', showConfirmButton:false, timer:2000});
+          loadCommandTable(); 
       });
   }
 
   function openCmdEdit(id, isCC=false, parentId=null) {
       let record = null;
-      if (!isCC) { record = globalAdminCommandData.find(c => c.id === id); } 
-      else { let parent = globalAdminCommandData.find(c => c.id === parentId); if (parent) record = parent.corpsCommanders.find(c => c.id === id); }
+      if (!isCC) { 
+          record = globalAdminCommandData.find(c => c.id === id); 
+      } else { 
+          let parent = globalAdminCommandData.find(c => c.id === parentId); 
+          if (parent) { record = parent.corpsCommanders.find(c => c.id === id); }
+      }
+      
       if (!record) return;
 
       document.getElementById('edit-cmd-id').value = record.id;
@@ -1246,28 +1273,44 @@ function submitCommandRecord(role) {
       document.getElementById('edit-cmd-status').value = record.status;
       document.getElementById('edit-cmd-quote').value = record.quote || '';
       document.getElementById('edit-cmd-bio').value = record.bio || '';
-      
-      // Clear file cropper so old image remains untouched unless a new one is selected
       document.getElementById('edit-cmd-photo').value = '';
       delete croppedData['edit-cmd-photo'];
-      document.getElementById('edit-cmd-photo-status').innerText = "Leave empty to keep the current official photo.";
       
       document.getElementById('cmd-edit-modal').style.display = 'flex';
   }
 
-  function closeCmdEditModal() { document.getElementById('cmd-edit-modal').style.display = 'none'; }
+  function closeCmdEditModal() { 
+      document.getElementById('cmd-edit-modal').style.display = 'none'; 
+  }
 
   function submitCmdEdit() {
-      const id = document.getElementById('edit-cmd-id').value, rank = document.getElementById('edit-cmd-rank').value.trim(), name = document.getElementById('edit-cmd-name').value.trim();
-      const tenure = document.getElementById('edit-cmd-tenure').value.trim(), status = document.getElementById('edit-cmd-status').value, quote = document.getElementById('edit-cmd-quote').value.trim(), bio = document.getElementById('edit-cmd-bio').value.trim(), imgData = croppedData['edit-cmd-photo'];
+      const id = document.getElementById('edit-cmd-id').value;
+      const rank = document.getElementById('edit-cmd-rank').value.trim();
+      const name = document.getElementById('edit-cmd-name').value.trim();
+      const tenure = document.getElementById('edit-cmd-tenure').value.trim();
+      const status = document.getElementById('edit-cmd-status').value;
+      const quote = document.getElementById('edit-cmd-quote').value.trim();
+      const bio = document.getElementById('edit-cmd-bio').value.trim();
+      const imgData = croppedData['edit-cmd-photo'];
 
-      if (!rank || !name) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Rank and Name are required.', showConfirmButton:false, timer:2000});
-
-      Swal.fire({ title: 'UPDATING DOSSIER...', didOpen: () => Swal.showLoading() });
-      apiCall('editCommandRecord', { logId: id, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, pass: session.pass }, (res) => {
-          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
+      Swal.fire({ title: 'Updating...', didOpen: () => Swal.showLoading() });
+      
+      apiCall('editCommandRecord', { logId: id, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, pass: session.pass }, function(res) {
+          Swal.fire({toast:true, position:'top-end', icon:'success', title:'Updated', showConfirmButton:false, timer:2000});
           closeCmdEditModal();
-          loadCommandTable(); // Refresh the table
+          loadCommandTable(); 
+      });
+  }
+  
+  function deleteCmdRecord(id) {
+      Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes' }).then((result) => {
+          if (result.isConfirmed) {
+              Swal.fire({ title: 'Deleting...', didOpen: () => Swal.showLoading() });
+              apiCall('deleteCommandRecord', { logId: id, user: session.user, pass: session.pass }, function(res) {
+                  Swal.fire({toast:true, position:'top-end', icon:'success', title:'Deleted', showConfirmButton:false, timer:2000});
+                  loadCommandTable();
+              });
+          }
       });
   }
   
