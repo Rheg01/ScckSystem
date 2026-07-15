@@ -1176,8 +1176,7 @@ function submitCommandRecord(role) {
   }
 
  let globalAdminCommandData = [];
-
-  function loadCommandTable() {
+function loadCommandTable() {
       const tbody = document.getElementById('cmd-table-body');
       const dropdown = document.getElementById('cc-parent');
       
@@ -1228,7 +1227,7 @@ function submitCommandRecord(role) {
           
           if(tbody) { tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No records found.</td></tr>'; }
           if(dropdown) { dropdown.innerHTML = opts; }
-      }); // <-- THIS is the bracket that was missing!
+      });
   }
 
   function submitCommandRecord(role) {
@@ -1301,7 +1300,7 @@ function submitCommandRecord(role) {
   }
   
   function deleteCmdRecord(id) {
-      Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes' }).then((result) => {
+      Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes' }).then(function(result) {
           if (result.isConfirmed) {
               Swal.fire({ title: 'Deleting...', didOpen: () => Swal.showLoading() });
               apiCall('deleteCommandRecord', { logId: id, user: session.user, pass: session.pass }, function(res) {
