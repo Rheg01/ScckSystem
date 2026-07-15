@@ -325,7 +325,7 @@
 
   <script>
     // 🛑 MAKE SURE THIS MATCHES YOUR CURRENT DEPLOYMENT URL 🛑
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyi-rYsOjTdvfzPYPmlbKh47tNqTA3drmBL2ThKRo2Y6Ss2EHqLPBZ7UZWxh4krLkdGOw/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyi-rYsOjTdvfzPYPmlbKh47tNqTA3drmBL2ThKRo2Y6Ss2EHqLPBZ7UZWxh4krLkdGOw/execE";
 
     let legacyCache = [];
     let postCache = [];
@@ -601,7 +601,9 @@
                 let ccHtml = '';
                 activeEra.corpsCommanders.forEach(cc => {
                     let imgCc = cc.image || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
-                    let titleCc = cc.status === "Posthumous" ? `<i class="fas fa-ribbon"></i> IN MEMORIAM` : `CORPS COMMANDER`;
+                    
+                    // Added CC tenure directly to the role title as requested
+                    let titleCc = cc.status === "Posthumous" ? `<i class="fas fa-ribbon"></i> IN MEMORIAM` : `CORPS COMMANDER • ${cc.tenure}`;
                     
                     ccHtml += `
                     <div class="hof-cc-container" onclick="openDossier('${cc.id}', true, '${activeEra.id}')">
