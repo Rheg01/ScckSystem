@@ -628,33 +628,56 @@
         </div>
     </div>
 
-    <!-- 3. EDIT POPUP MODAL -->
-    <div id="cmd-edit-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
-        <div style="background: var(--card-bg); padding: 35px; border-radius: 12px; width: 90%; max-width: 550px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); border: 2px solid var(--army-gold); max-height: 90vh; overflow-y: auto; position: relative;">
-            
-            <i class="fas fa-times" onclick="closeCmdEditModal()" style="position: absolute; top: 20px; right: 25px; font-size: 24px; cursor: pointer; color: var(--text-muted); transition: 0.2s;" onmouseover="this.style.color='#d32f2f'" onmouseout="this.style.color='var(--text-muted)'"></i>
-            
-            <h2 style="color: var(--army-gold); font-family: 'Oswald', sans-serif; margin-bottom: 20px; text-transform:uppercase; letter-spacing:1px;"><i class="fas fa-pen"></i> EDIT DOSSIER</h2>
-            
+ <!-- SIMPLIFIED EDIT COMMAND RECORD MODAL -->
+<div class="modal-overlay" id="cmd-edit-modal" style="display:none; z-index:99999;">
+    <div class="modal-content" style="max-width:500px; padding:30px;">
+        <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+            <h2 style="color:var(--army-primary); font-family:'Oswald', sans-serif;"><i class="fas fa-pen"></i> EDIT DOSSIER</h2>
+            <i class="fas fa-times close-btn" onclick="closeCmdEditModal()" style="cursor:pointer; font-size:20px;"></i>
+        </div>
+        
+        <div class="modal-body">
             <input type="hidden" id="edit-cmd-id">
-            <div style="display:flex; gap:10px;">
-                <div class="input-group"><label>RANK</label><input type="text" id="edit-cmd-rank"></div>
-                <div class="input-group" style="flex:2;"><label>NAME</label><input type="text" id="edit-cmd-name"></div>
-            </div>
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <div class="input-group"><label>TENURE</label><input type="text" id="edit-cmd-tenure"></div>
-                <div class="input-group"><label>STATUS</label><select id="edit-cmd-status"><option value="Current">Current</option><option value="Past">Past</option><option value="Posthumous">Posthumous</option></select></div>
-            </div>
-            <div class="input-group" style="margin-top:10px;"><label>QUOTE</label><input type="text" id="edit-cmd-quote"></div>
-            <div class="input-group" style="margin-top:10px;"><label>BIOSCRIPT</label><textarea id="edit-cmd-bio" rows="4"></textarea></div>
             
-            <div class="input-group" style="margin-top:10px; background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--army-gold);">
-                <label style="color:var(--army-gold);">UPDATE PHOTO (FILE UPLOAD)</label>
+            <div class="input-group" style="margin-bottom:10px;">
+                <label>RANK & NAME</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="edit-cmd-rank" placeholder="Rank" style="flex:1;">
+                    <input type="text" id="edit-cmd-name" placeholder="Name" style="flex:2;">
+                </div>
+            </div>
+            
+            <div class="input-group" style="margin-bottom:10px;">
+                <label>TENURE & STATUS</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="edit-cmd-tenure" placeholder="Tenure" style="flex:1;">
+                    <select id="edit-cmd-status" style="flex:1;">
+                        <option value="Current">Current</option>
+                        <option value="Past">Past</option>
+                        <option value="Posthumous">Posthumous</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-bottom:10px;">
+                <label>QUOTE</label>
+                <input type="text" id="edit-cmd-quote">
+            </div>
+
+            <div class="input-group" style="margin-bottom:10px;">
+                <label>BIOSCRIPT</label>
+                <textarea id="edit-cmd-bio" rows="4"></textarea>
+            </div>
+            
+            <div class="input-group" style="margin-bottom:20px;">
+                <label>UPDATE PHOTO</label>
                 <input type="file" id="edit-cmd-photo" accept="image/*">
-                <p id="edit-cmd-photo-status" style="font-size:11px; color:var(--text-muted); margin-top:8px; margin-bottom:0;">Leave empty to keep the current official photo.</p>
+                <small style="color:var(--text-muted);">Leave empty to keep current photo.</small>
             </div>
             
-            <button class="btn-success" style="width:100%; margin-top:20px; font-family:'Oswald', sans-serif; font-size:16px; padding:12px; letter-spacing: 1px;" onclick="submitCmdEdit()"><i class="fas fa-save"></i> SAVE CHANGES</button>
+            <button class="btn-success" style="width:100%; padding:12px;" onclick="submitCmdEdit()">
+                <i class="fas fa-save"></i> SAVE CHANGES
+            </button>
         </div>
     </div>
 </div>
