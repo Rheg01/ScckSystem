@@ -77,7 +77,7 @@
     .hof-section { padding: 60px 0; position: relative; z-index: 1; border-bottom: 1px solid var(--border-color); overflow: hidden; }
     
     /* Carousel Stage */
-    .carousel-stage { position: relative; width: 100%; height: 450px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .carousel-stage { position: relative; width: 100%; height: 420px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
     
     /* Individual Planet/Commandant */
     .cmd-slide { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5); opacity: 0; transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; text-align: center; pointer-events: none; }
@@ -85,25 +85,23 @@
     .cmd-slide.left { transform: translate(-200%, -50%) scale(0.6); opacity: 0.3; z-index: 5; pointer-events: auto; filter: blur(2px) brightness(0.6); }
     .cmd-slide.right { transform: translate(100%, -50%) scale(0.6); opacity: 0.3; z-index: 5; pointer-events: auto; filter: blur(2px) brightness(0.6); }
 
-    .cmd-portrait { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(212, 175, 55, 0.5); box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: all 0.5s ease; animation: slowSpin 20s linear infinite; }
+    .cmd-portrait { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(212, 175, 55, 0.5); box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: all 0.5s ease; }
     .cmd-slide.center .cmd-portrait { border-color: var(--army-gold); }
     .cmd-slide.center:hover .cmd-portrait { box-shadow: 0 15px 50px rgba(212, 175, 55, 0.4); transform: scale(1.03); }
-    @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     /* Text Hierarchy */
     .cmd-name-wrap { margin-top: 25px; opacity: 0; transition: opacity 0.5s 0.2s, transform 0.5s; transform: translateY(20px); }
     .cmd-slide.center .cmd-name-wrap { opacity: 1; transform: translateY(0); }
-    .cmd-rank { font-size: 40px; color: var(--text-main); font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 5px 15px rgba(0,0,0,0.8); line-height: 1.1; margin-bottom: 5px; }
-    .cmd-title { font-size: 14px; color: var(--army-gold); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; border-top: 1px solid rgba(212, 175, 55, 0.4); padding-top: 8px; display: inline-block; }
+    .cmd-rank { font-size: 38px; color: var(--text-main); font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 5px 15px rgba(0,0,0,0.8); line-height: 1.1; margin-bottom: 5px; }
+    .cmd-divider { width: 80%; max-width: 250px; height: 1px; background: rgba(212, 175, 55, 0.6); margin: 10px auto; }
+    .cmd-title { font-size: 14px; color: var(--army-gold); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; display: inline-block; }
+    .cmd-title i { margin-right: 5px; }
 
     /* Carousel Nav Buttons */
     .carousel-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); width: 50px; height: 50px; border-radius: 50%; cursor: pointer; z-index: 20; transition: 0.3s; font-size: 18px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     .carousel-nav-btn:hover { border-color: var(--army-gold); color: var(--army-gold); background: rgba(212,175,55,0.1); transform: translateY(-50%) scale(1.1); }
     .nav-left { left: 40px; }
     .nav-right { right: 40px; }
-
-    .btn-learn-more { margin-top: 25px; background: #e0e5da; color: #111; border: none; padding: 12px 30px; border-radius: 30px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); letter-spacing: 1px; display: inline-flex; align-items: center; gap: 8px; }
-    .btn-learn-more:hover { background: var(--army-gold); color: #000; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(212,175,55,0.4); }
 
     /* Corps Commanders Grid (Fades in dynamically below carousel) */
     .cc-stage { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 30px 20px; border-top: 1px dashed rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.6s ease; transform: translateY(20px); }
@@ -122,9 +120,9 @@
     /* ========================================================================= */
     .cinematic-overlay { position: fixed; inset: 0; background: #0a0c08; z-index: 60000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s ease; }
     .cinematic-overlay.show { display: flex; opacity: 1; }
-    .cinematic-content { width: 100vw; height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; padding: 0 8%; }
+    .cinematic-content { width: 100vw; height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; padding: 0 8%; background: radial-gradient(circle at 75% 50%, #171d12 0%, #0a0c08 60%); }
     
-    .cine-stars { position: absolute; inset: 0; background-image: radial-gradient(circle at center, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.3; z-index: 0; }
+    .cine-stars { position: absolute; inset: 0; background-image: radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.5; z-index: 0; }
     
     /* Left Text Column */
     .cinematic-left { flex: 1; max-width: 600px; z-index: 2; transform: translateX(-50px); opacity: 0; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s; display: flex; flex-direction: column; justify-content: center;}
@@ -141,11 +139,10 @@
     .btn-return { background: #e0e5da; color: #111; border: none; padding: 14px 35px; border-radius: 30px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.5); letter-spacing: 1px; display: inline-flex; align-items: center; gap: 10px; width: fit-content; }
     .btn-return:hover { background: #ffffff; transform: scale(1.05); }
 
-    /* Right Image Column (Giant floating portrait) */
+    /* Right Image Column */
     .cinematic-right { flex: 1; position: relative; z-index: 1; height: 100%; display: flex; align-items: center; justify-content: flex-end; transform: translateX(100px); opacity: 0; transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
     .cinematic-overlay.show .cinematic-right { transform: translateX(0); opacity: 1; }
-    .cine-hero-img { width: 500px; height: 500px; border-radius: 50%; object-fit: cover; box-shadow: -20px 0 100px rgba(0,0,0,0.9), inset 0 0 50px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.05); transform: translateX(20%); animation: slowFloat 8s ease-in-out infinite; }
-    @keyframes slowFloat { 0% { transform: translateX(20%) translateY(0); } 50% { transform: translateX(20%) translateY(-15px); } 100% { transform: translateX(20%) translateY(0); } }
+    .cine-hero-img { width: 500px; height: 500px; border-radius: 50%; object-fit: cover; box-shadow: -20px 0 100px rgba(0,0,0,0.9), inset 0 0 50px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.05); transform: translateX(20%); }
 
     @media (max-width: 900px) {
         .carousel-stage { height: 380px; }
@@ -155,7 +152,7 @@
         .nav-left { left: 10px; }
         .nav-right { right: 10px; }
         
-        .cinematic-content { flex-direction: column; padding: 40px 20px; justify-content: flex-start; overflow-y: auto; }
+        .cinematic-content { flex-direction: column; padding: 40px 20px; justify-content: flex-start; overflow-y: auto; background: radial-gradient(circle at 50% 20%, #1e2418 0%, #0a0c08 60%); }
         .cinematic-right { height: 300px; width: 100%; justify-content: center; align-items: flex-start; margin-bottom: 20px; flex: none; transform: translateY(-50px); }
         .cine-hero-img { width: 250px; height: 250px; transform: none; animation: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .cinematic-left { text-align: center; align-items: center; flex: none; }
@@ -304,7 +301,6 @@
             <div class="cine-name" id="cine-name">MAJ DELA CRUZ</div>
             <div class="cine-divider"></div>
             
-            <!-- We display the quote prominently if it exists -->
             <div style="font-style: italic; color: var(--army-gold); font-size: 16px; margin-bottom: 20px;" id="cine-quote"></div>
             
             <div class="cine-bio" id="cine-bio"></div>
@@ -313,7 +309,7 @@
         </div>
         
         <div class="cinematic-right" id="cine-img-container">
-            <!-- Floating Hero Image Injected Here -->
+            <!-- Hero Image Injected Here -->
         </div>
     </div>
   </div>
@@ -584,22 +580,21 @@
             let tenureTxt = cmd.status === "Posthumous" ? `<i class="fas fa-ribbon"></i> IN MEMORIAM` : cmd.tenure;
             let action = posClass === 'center' ? `openCinematicDossier('${cmd.id}')` : `goToCommandSlide(${idx})`;
 
-            // Note: Exact formatting requested: Rank + Name on one line, Title + Tenure below.
+            // Formatted exactly to the reference: Portrait, Rank/Name, Thin Divider, Title/Tenure. Entire block is clickable.
             html += `
             <div class="cmd-slide ${posClass}" onclick="${action}">
                 <img src="${img}" class="cmd-portrait" alt="${cmd.name}">
                 <div class="cmd-name-wrap">
                     <div class="cmd-rank">${cmd.rank} ${cmd.name}</div>
+                    <div class="cmd-divider"></div>
                     <div class="cmd-title">UNIT COMMANDANT • ${tenureTxt}</div>
-                    <br>
-                    <button class="btn-learn-more" onclick="openCinematicDossier('${cmd.id}'); event.stopPropagation();"><i class="fas fa-play"></i> LEARN MORE</button>
                 </div>
             </div>`;
         });
         stage.innerHTML = html;
 
         // 3. Render Corps Commanders specifically for the Active Commandant
-        ccStage.classList.remove('visible'); // Fade out effect
+        ccStage.classList.remove('visible'); 
         setTimeout(() => {
             let activeEra = globalCommandData[activeCmdIndex];
             if (activeEra && activeEra.corpsCommanders && activeEra.corpsCommanders.length > 0) {
@@ -619,8 +614,8 @@
             } else {
                 ccStage.innerHTML = '<p style="text-align:center; width:100%; color:var(--text-muted); font-size: 14px; opacity: 0.5;">No Corps Commanders on record for this command era.</p>';
             }
-            ccStage.classList.add('visible'); // Fade in effect
-        }, 300); // Wait for transition before swapping data
+            ccStage.classList.add('visible'); 
+        }, 300); 
     }
 
 
@@ -629,11 +624,10 @@
         let person = globalCommandData.find(e => e.id === id);
         if (!person) return;
 
-        let formattedBio = person.bio ? person.bio.replace(/- /g, "• ") : '<span style="font-style:italic; opacity:0.6;">Earth is the third planet from the Sun... just kidding, no biography recorded!</span>';
+        let formattedBio = person.bio ? person.bio.replace(/- /g, "• ") : '<span style="font-style:italic; opacity:0.6;">No biography recorded!</span>';
         let imgHtml = person.image ? `<img src="${person.image}" class="cine-hero-img">` : `<div class="cine-hero-img" style="display:flex; align-items:center; justify-content:center; font-size:150px; color:#333; background:#000;"><i class="fas fa-user"></i></div>`;
         let quoteText = person.quote ? `"${person.quote}"` : "";
 
-        // Set the text exactly based on the "Planet Earth" cinematic split
         document.getElementById('cine-role').innerText = `UNIT COMMANDANT • ${person.tenure}`;
         document.getElementById('cine-name').innerText = `${person.rank} ${person.name}`;
         document.getElementById('cine-quote').innerText = quoteText;
@@ -642,7 +636,7 @@
 
         const modal = document.getElementById('cinematic-modal');
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        document.body.style.overflow = 'hidden'; 
         setTimeout(() => modal.classList.add('show'), 10);
     }
 
