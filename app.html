@@ -554,97 +554,110 @@
 
     <!-- LEGACY -->
     <div id="panel-legacy" class="view-panel">
-      <div class="header-bar anim-1">
-        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-landmark"></i> LEGACY MANAGEMENT</h2>
-      </div>
-      <div class="anim-2 header-bar" style="border:none; margin-top:10px; margin-bottom:10px; padding-bottom:0;">
-        <h3 style="color:var(--army-primary);"><i class="fas fa-star"></i> HALL OF FAME: COMMAND ERA</h3>
-      </div>
-      <div class="anim-2" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 30px;">
-        <div style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-          <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-user-shield"></i> 1. ADD COMMANDANT</h3>
-          <div style="display:flex; gap:10px;">
-            <div class="input-group"><label>RANK</label><input type="text" id="cmd-rank" placeholder="E.g. MAJ"></div>
-            <div class="input-group" style="flex:2;"><label>FULL NAME</label><input type="text" id="cmd-name" placeholder="E.g. Juan Dela Cruz"></div>
-          </div>
-          <div style="display:flex; gap:10px; margin-top:10px;">
-            <div class="input-group"><label>TENURE / ERA</label><input type="text" id="cmd-tenure" placeholder="E.g. 2021 - 2024"></div>
-            <div class="input-group"><label>STATUS</label><select id="cmd-status"><option value="Current">Current Commandant</option><option value="Past">Past Commandant</option><option value="Posthumous">Posthumous (In Memoriam)</option></select></div>
-          </div>
-          <div class="input-group" style="margin-top:10px;"><label>COMMANDER'S QUOTE</label><input type="text" id="cmd-quote" placeholder="E.g. 'Discipline is the bridge...'"></div>
-          <div class="input-group" style="margin-top:10px;"><label>DOSSIER / BIOSCRIPT</label><textarea id="cmd-bio" rows="3" placeholder="Achievements, deployments, etc..."></textarea></div>
-          <div class="input-group" style="margin-top:10px;"><label>OFFICIAL PHOTO (FILE UPLOAD)</label><input type="file" id="cmd-photo" accept="image/*"></div>
-          <p id="cmd-photo-status" style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Select an image to crop.</p>
-          <button class="btn-warning" style="width:100%;" onclick="submitCommandRecord('Commandant')"><i class="fas fa-plus-circle"></i> ADD COMMANDANT</button>
-        </div>
-        <div style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-          <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-user-ninja"></i> 2. ADD CORPS COMMANDER</h3>
-          <div class="input-group"><label>SERVED UNDER COMMANDANT</label><select id="cc-parent"><option value="">Loading...</option></select></div>
-          <div style="display:flex; gap:10px; margin-top:10px;">
-            <div class="input-group"><label>RANK</label><input type="text" id="cc-rank" placeholder="E.g. C/COL"></div>
-            <div class="input-group" style="flex:2;"><label>FULL NAME</label><input type="text" id="cc-name"></div>
-          </div>
-          <div style="display:flex; gap:10px; margin-top:10px;">
-            <div class="input-group"><label>PERIOD OF COMMAND</label><input type="text" id="cc-tenure" placeholder="E.g. S.Y. 2024-2025"></div>
-            <div class="input-group"><label>STATUS</label><select id="cc-status"><option value="Past">Past CC</option><option value="Posthumous">Posthumous (In Memoriam)</option></select></div>
-          </div>
-          <div class="input-group" style="margin-top:10px;"><label>QUOTE</label><input type="text" id="cc-quote"></div>
-          <div class="input-group" style="margin-top:10px;"><label>DOSSIER</label><textarea id="cc-bio" rows="3"></textarea></div>
-          <div class="input-group" style="margin-top:10px;"><label>OFFICIAL PHOTO (FILE UPLOAD)</label><input type="file" id="cc-photo" accept="image/*"></div>
-          <p id="cc-photo-status" style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Select an image to crop.</p>
-          <button class="btn-success" style="width:100%;" onclick="submitCommandRecord('Corps Commander')"><i class="fas fa-user-check"></i> ADD CORPS COMMANDER</button>
-          <!-- MANAGE COMMAND HISTORY TABLE -->
-      <!-- MANAGE COMMAND HISTORY TABLE -->
-      <div class="anim-3" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 8px 20px rgba(0,0,0,0.05); margin-top:20px; margin-bottom: 40px;">
-          <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px; font-family:'Oswald', sans-serif;"><i class="fas fa-list"></i> MANAGE LINEAGE OF COMMANDERS</h3>
-          <div style="overflow-x:auto;">
-              <table style="width:100%; text-align:left; border-collapse:collapse; min-width:600px; font-family:'Inter', sans-serif;">
-                  <thead>
-                      <tr style="border-bottom:2px solid var(--army-gold); color:var(--text-muted); font-size:12px; text-transform:uppercase;">
-                          <th style="padding:12px 10px;">Role</th>
-                          <th style="padding:12px 10px;">Rank & Name</th>
-                          <th style="padding:12px 10px;">Tenure</th>
-                          <th style="padding:12px 10px;">Status</th>
-                          <th style="padding:12px 10px; text-align:right;">Actions</th>
-                      </tr>
-                  </thead>
-                  <tbody id="cmd-table-body">
-                      <tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Loading records...</td></tr>
-                  </tbody>
-              </table>
-          </div>
-      </div>
+    <!-- ======================================================= -->
+    <!-- LINEAGE OF COMMANDERS: ADMIN DASHBOARD                  -->
+    <!-- ======================================================= -->
+    <div class="anim-1 header-bar" style="border:none; margin-top:20px; margin-bottom:10px; padding-bottom:0;">
+        <h3 style="color:var(--army-primary); font-family:'Oswald', sans-serif;"><i class="fas fa-star"></i> LINEAGE OF COMMANDERS</h3>
+    </div>
 
-      <!-- FIXED: EDIT COMMAND RECORD MODAL (Now a true floating popup) -->
-      <div id="cmd-edit-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
-          <div style="background: var(--card-bg); padding: 35px; border-radius: 12px; width: 90%; max-width: 550px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); border: 2px solid var(--army-gold); max-height: 90vh; overflow-y: auto; position: relative;">
-              
-              <i class="fas fa-times" onclick="closeCmdEditModal()" style="position: absolute; top: 20px; right: 25px; font-size: 24px; cursor: pointer; color: var(--text-muted); transition: 0.2s;" onmouseover="this.style.color='#d32f2f'" onmouseout="this.style.color='var(--text-muted)'"></i>
-              
-              <h2 style="color: var(--army-gold); font-family: 'Oswald', sans-serif; margin-bottom: 20px; text-transform:uppercase; letter-spacing:1px;"><i class="fas fa-pen"></i> EDIT DOSSIER</h2>
-              
-              <input type="hidden" id="edit-cmd-id">
-              <div style="display:flex; gap:10px;">
-                  <div class="input-group"><label>RANK</label><input type="text" id="edit-cmd-rank"></div>
-                  <div class="input-group" style="flex:2;"><label>NAME</label><input type="text" id="edit-cmd-name"></div>
-              </div>
-              <div style="display:flex; gap:10px; margin-top:10px;">
-                  <div class="input-group"><label>TENURE</label><input type="text" id="edit-cmd-tenure"></div>
-                  <div class="input-group"><label>STATUS</label><select id="edit-cmd-status"><option value="Current">Current</option><option value="Past">Past</option><option value="Posthumous">Posthumous</option></select></div>
-              </div>
-              <div class="input-group" style="margin-top:10px;"><label>QUOTE</label><input type="text" id="edit-cmd-quote"></div>
-              <div class="input-group" style="margin-top:10px;"><label>BIOSCRIPT</label><textarea id="edit-cmd-bio" rows="4"></textarea></div>
-              
-              <div class="input-group" style="margin-top:10px; background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--army-gold);">
-                  <label style="color:var(--army-gold);">UPDATE PHOTO (FILE UPLOAD)</label>
-                  <input type="file" id="edit-cmd-photo" accept="image/*">
-                  <p id="edit-cmd-photo-status" style="font-size:11px; color:var(--text-muted); margin-top:8px; margin-bottom:0;">Leave empty to keep the current official photo.</p>
-              </div>
-              
-              <button class="btn-success" style="width:100%; margin-top:20px; font-family:'Oswald', sans-serif; font-size:16px; padding:12px;" onclick="submitCmdEdit()"><i class="fas fa-save"></i> SAVE CHANGES</button>
-          </div>
-      </div>
-      </div>
+    <!-- 1. ADD FORMS -->
+    <div class="anim-2" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <!-- Add Commandant -->
+        <div style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 8px 20px rgba(0,0,0,0.05);">
+            <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px; font-family:'Oswald', sans-serif;"><i class="fas fa-user-shield"></i> 1. ADD COMMANDANT</h3>
+            <div style="display:flex; gap:10px;">
+                <div class="input-group"><label>RANK</label><input type="text" id="cmd-rank" placeholder="E.g. MAJ"></div>
+                <div class="input-group" style="flex:2;"><label>FULL NAME</label><input type="text" id="cmd-name" placeholder="E.g. Juan Dela Cruz"></div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <div class="input-group"><label>TENURE / ERA</label><input type="text" id="cmd-tenure" placeholder="E.g. 2021 - 2024"></div>
+                <div class="input-group"><label>STATUS</label><select id="cmd-status"><option value="Current">Current Commandant</option><option value="Past">Past Commandant</option><option value="Posthumous">Posthumous (In Memoriam)</option></select></div>
+            </div>
+            <div class="input-group" style="margin-top:10px;"><label>COMMANDER'S QUOTE</label><input type="text" id="cmd-quote" placeholder="E.g. 'Discipline is the bridge...'"></div>
+            <div class="input-group" style="margin-top:10px;"><label>DOSSIER / BIOSCRIPT</label><textarea id="cmd-bio" rows="3" placeholder="Achievements, deployments, etc..."></textarea></div>
+            <div class="input-group" style="margin-top:10px; background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--army-gold);">
+                <label style="color:var(--army-gold);">OFFICIAL PHOTO (FILE UPLOAD)</label>
+                <input type="file" id="cmd-photo" accept="image/*">
+                <p id="cmd-photo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px; margin-bottom:0;">Select an image to crop.</p>
+            </div>
+            <button class="btn-warning" style="width:100%; margin-top:15px; font-family:'Oswald', sans-serif; font-size:15px; letter-spacing:1px;" onclick="submitCommandRecord('Commandant')"><i class="fas fa-plus-circle"></i> ADD COMMANDANT</button>
+        </div>
+
+        <!-- Add Corps Commander -->
+        <div style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 8px 20px rgba(0,0,0,0.05);">
+            <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px; font-family:'Oswald', sans-serif;"><i class="fas fa-user-ninja"></i> 2. ADD CORPS COMMANDER</h3>
+            <div class="input-group"><label>SERVED UNDER COMMANDANT</label><select id="cc-parent"><option value="">Loading Commandants...</option></select></div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <div class="input-group"><label>RANK</label><input type="text" id="cc-rank" placeholder="E.g. C/COL"></div>
+                <div class="input-group" style="flex:2;"><label>FULL NAME</label><input type="text" id="cc-name"></div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <div class="input-group"><label>TENURE</label><input type="text" id="cc-tenure" placeholder="E.g. S.Y. 2024-2025"></div>
+                <div class="input-group"><label>STATUS</label><select id="cc-status"><option value="Past">Past CC</option><option value="Posthumous">Posthumous (In Memoriam)</option></select></div>
+            </div>
+            <div class="input-group" style="margin-top:10px;"><label>QUOTE</label><input type="text" id="cc-quote"></div>
+            <div class="input-group" style="margin-top:10px;"><label>DOSSIER</label><textarea id="cc-bio" rows="3"></textarea></div>
+            <div class="input-group" style="margin-top:10px; background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--army-gold);">
+                <label style="color:var(--army-gold);">OFFICIAL PHOTO (FILE UPLOAD)</label>
+                <input type="file" id="cc-photo" accept="image/*">
+                <p id="cc-photo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px; margin-bottom:0;">Select an image to crop.</p>
+            </div>
+            <button class="btn-success" style="width:100%; margin-top:15px; font-family:'Oswald', sans-serif; font-size:15px; letter-spacing:1px;" onclick="submitCommandRecord('Corps Commander')"><i class="fas fa-user-check"></i> ADD CORPS COMMANDER</button>
+        </div>
+    </div>
+
+    <!-- 2. MANAGEMENT TABLE -->
+    <div class="anim-3" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 8px 20px rgba(0,0,0,0.05); margin-bottom: 40px;">
+        <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px; font-family:'Oswald', sans-serif;"><i class="fas fa-list"></i> MANAGE ARCHIVES</h3>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; text-align:left; border-collapse:collapse; min-width:600px; font-family:'Inter', sans-serif;">
+                <thead>
+                    <tr style="border-bottom:2px solid var(--army-gold); color:var(--text-muted); font-size:12px; text-transform:uppercase;">
+                        <th style="padding:12px 10px;">Role</th>
+                        <th style="padding:12px 10px;">Rank & Name</th>
+                        <th style="padding:12px 10px;">Tenure</th>
+                        <th style="padding:12px 10px;">Status</th>
+                        <th style="padding:12px 10px; text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="cmd-table-body">
+                    <tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Initializing Database...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3. EDIT POPUP MODAL -->
+    <div id="cmd-edit-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div style="background: var(--card-bg); padding: 35px; border-radius: 12px; width: 90%; max-width: 550px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); border: 2px solid var(--army-gold); max-height: 90vh; overflow-y: auto; position: relative;">
+            
+            <i class="fas fa-times" onclick="closeCmdEditModal()" style="position: absolute; top: 20px; right: 25px; font-size: 24px; cursor: pointer; color: var(--text-muted); transition: 0.2s;" onmouseover="this.style.color='#d32f2f'" onmouseout="this.style.color='var(--text-muted)'"></i>
+            
+            <h2 style="color: var(--army-gold); font-family: 'Oswald', sans-serif; margin-bottom: 20px; text-transform:uppercase; letter-spacing:1px;"><i class="fas fa-pen"></i> EDIT DOSSIER</h2>
+            
+            <input type="hidden" id="edit-cmd-id">
+            <div style="display:flex; gap:10px;">
+                <div class="input-group"><label>RANK</label><input type="text" id="edit-cmd-rank"></div>
+                <div class="input-group" style="flex:2;"><label>NAME</label><input type="text" id="edit-cmd-name"></div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <div class="input-group"><label>TENURE</label><input type="text" id="edit-cmd-tenure"></div>
+                <div class="input-group"><label>STATUS</label><select id="edit-cmd-status"><option value="Current">Current</option><option value="Past">Past</option><option value="Posthumous">Posthumous</option></select></div>
+            </div>
+            <div class="input-group" style="margin-top:10px;"><label>QUOTE</label><input type="text" id="edit-cmd-quote"></div>
+            <div class="input-group" style="margin-top:10px;"><label>BIOSCRIPT</label><textarea id="edit-cmd-bio" rows="4"></textarea></div>
+            
+            <div class="input-group" style="margin-top:10px; background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--army-gold);">
+                <label style="color:var(--army-gold);">UPDATE PHOTO (FILE UPLOAD)</label>
+                <input type="file" id="edit-cmd-photo" accept="image/*">
+                <p id="edit-cmd-photo-status" style="font-size:11px; color:var(--text-muted); margin-top:8px; margin-bottom:0;">Leave empty to keep the current official photo.</p>
+            </div>
+            
+            <button class="btn-success" style="width:100%; margin-top:20px; font-family:'Oswald', sans-serif; font-size:16px; padding:12px; letter-spacing: 1px;" onclick="submitCmdEdit()"><i class="fas fa-save"></i> SAVE CHANGES</button>
+        </div>
+    </div>
+</div>
         </div>
       </div>
       <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
@@ -2343,55 +2356,160 @@ function submitCommandRecord(role) {
 
   function initCropperInputs() {
 const inputs = ['prof-image-file', 'set-logo-file', 'set-nav-logo-file', 'set-bg-file', 'leg-class-logo', 'leg-off-photo', 'cmd-photo', 'cc-photo', 'edit-cmd-photo'];
-    inputs.forEach(id => {
-      const el = document.getElementById(id);
-      if(el) { el.addEventListener('change', function(e) { if (e.target.files && e.target.files[0]) { const reader = new FileReader(); reader.onload = function(event) { openCropper(event.target.result, id); }; reader.readAsDataURL(e.target.files[0]); } }); }
-    
-    });
+
+  // Global tracker for the Admin Table
+  let globalAdminCommandData = [];
+
+  // ==========================================
+  // LINEAGE OF COMMANDERS: JS ENGINE
+  // ==========================================
+  
+  function loadCommandTable() {
+      const tbody = document.getElementById('cmd-table-body');
+      const dropdown = document.getElementById('cc-parent');
+      
+      if(tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Fetching archives from database...</td></tr>';
+      if(dropdown) dropdown.innerHTML = '<option value="">Fetching...</option>';
+      
+      apiCall('getCommandHistory', {}, (res) => {
+          if(!res.success) { 
+              if(tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#d32f2f;"><i class="fas fa-exclamation-triangle"></i> Failed to connect. Check Google App Script URL.</td></tr>'; 
+              if(dropdown) dropdown.innerHTML = '<option value="">Connection Error</option>';
+              return; 
+          }
+          
+          globalAdminCommandData = res.eras || [];
+          let html = '';
+          let opts = '<option value="">Select Commandant...</option>';
+          
+          globalAdminCommandData.forEach(cmd => {
+              opts += `<option value="${cmd.id}">${cmd.rank} ${cmd.name} (${cmd.tenure})</option>`;
+              
+              // Render Commandant
+              html += `
+              <tr style="border-bottom:1px solid var(--border); transition: 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.05)'" onmouseout="this.style.background='transparent'">
+                  <td style="padding:15px 10px; font-weight:bold; color:var(--army-gold);">Commandant</td>
+                  <td style="padding:15px 10px; font-weight:bold; color:var(--text-main);">${cmd.rank} ${cmd.name}</td>
+                  <td style="padding:15px 10px; color:var(--text-muted);">${cmd.tenure}</td>
+                  <td style="padding:15px 10px;"><span style="background:#333; padding:4px 8px; border-radius:4px; font-size:11px;">${cmd.status}</span></td>
+                  <td style="padding:15px 10px; text-align:right;">
+                      <button style="background:var(--army-primary); border:none; padding:6px 12px; border-radius:4px; color:#fff; cursor:pointer; margin-right:5px; transition:0.3s;" onclick="openCmdEdit('${cmd.id}')"><i class="fas fa-edit"></i></button>
+                      <button style="background:#d32f2f; border:none; padding:6px 12px; border-radius:4px; color:#fff; cursor:pointer; transition:0.3s;" onclick="deleteCmdRecord('${cmd.id}')"><i class="fas fa-trash"></i></button>
+                  </td>
+              </tr>`;
+              
+              // Render Corps Commanders
+              if (cmd.corpsCommanders) {
+                  cmd.corpsCommanders.forEach(cc => {
+                      html += `
+                      <tr style="border-bottom:1px solid var(--border); background:rgba(0,0,0,0.2); transition: 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.05)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">
+                          <td style="padding:12px 10px; padding-left:30px; font-size:12px; color:var(--text-muted);"><i class="fas fa-level-up-alt fa-rotate-90"></i> Corps Commander</td>
+                          <td style="padding:12px 10px; color:var(--text-main);">${cc.rank} ${cc.name}</td>
+                          <td style="padding:12px 10px; color:var(--text-muted);">${cc.tenure}</td>
+                          <td style="padding:12px 10px;"><span style="background:#222; padding:4px 8px; border-radius:4px; font-size:11px;">${cc.status}</span></td>
+                          <td style="padding:12px 10px; text-align:right;">
+                              <button style="background:var(--army-primary); border:none; padding:6px 12px; border-radius:4px; color:#fff; cursor:pointer; margin-right:5px; transition:0.3s;" onclick="openCmdEdit('${cc.id}', true, '${cmd.id}')"><i class="fas fa-edit"></i></button>
+                              <button style="background:#d32f2f; border:none; padding:6px 12px; border-radius:4px; color:#fff; cursor:pointer; transition:0.3s;" onclick="deleteCmdRecord('${cc.id}')"><i class="fas fa-trash"></i></button>
+                          </td>
+                      </tr>`;
+                  });
+              }
+          });
+          
+          if(tbody) tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">No records found in database.</td></tr>';
+          if(dropdown) dropdown.innerHTML = opts;
+      }, () => {
+          if(tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#d32f2f;"><i class="fas fa-exclamation-triangle"></i> API Error. Check Network.</td></tr>';
+      });
   }
 
-  function openCropper(imageSrc, targetId) { currentCropTarget = targetId; const modal = document.getElementById('cropper-modal'); const img = document.getElementById('cropper-image'); img.src = imageSrc; modal.style.display = 'flex'; let aspectRatio = (targetId === 'set-bg-file') ? NaN : 1; if(currentCropper) currentCropper.destroy(); currentCropper = new Cropper(img, { aspectRatio: aspectRatio, viewMode: 2, autoCropArea: 1 }); }
-  document.getElementById('btn-crop-apply').addEventListener('click', () => { if (!currentCropper) return; const canvas = currentCropper.getCroppedCanvas({ maxWidth: 800, maxHeight: 800 }); croppedData[currentCropTarget] = canvas.toDataURL('image/png'); let statusTextMap = { 'prof-image-file': 'prof-image-status', 'set-logo-file': 'set-logo-status', 'set-nav-logo-file': 'set-nav-logo-status', 'set-bg-file': 'set-bg-status', 'leg-class-logo': 'leg-class-status', 'leg-off-photo': 'leg-off-status' }; let statusEl = document.getElementById(statusTextMap[currentCropTarget]); if(statusEl) statusEl.innerHTML = '<span style="color:var(--status-green); font-weight:bold;"><i class="fas fa-check"></i> Image Cropped & Ready</span>'; closeCropper(); });
-  function closeCropper() { document.getElementById('cropper-modal').style.display = 'none'; if(currentCropper) { currentCropper.destroy(); currentCropper = null; } if(!croppedData[currentCropTarget]) document.getElementById(currentCropTarget).value = ''; }
+  function submitCommandRecord(role) {
+      let parentId = (role === 'Corps Commander') ? document.getElementById('cc-parent').value : '';
+      let prefix = (role === 'Commandant') ? 'cmd' : 'cc';
+      
+      const rank = document.getElementById(prefix+'-rank').value.trim();
+      const name = document.getElementById(prefix+'-name').value.trim();
+      const tenure = document.getElementById(prefix+'-tenure').value.trim();
+      const status = document.getElementById(prefix+'-status').value;
+      const quote = document.getElementById(prefix+'-quote').value.trim();
+      const bio = document.getElementById(prefix+'-bio').value.trim();
+      const imgData = croppedData[prefix+'-photo'];
+      
+      if(role === 'Corps Commander' && !parentId) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Select a Commandant first.', showConfirmButton:false, timer:2000});
+      if(!rank || !name || !imgData) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Rank, Name, and Photo required.', showConfirmButton:false, timer:2000});
+      
+      Swal.fire({ title: 'UPLOADING RECORD...', didOpen: () => Swal.showLoading() });
+      
+      apiCall('addCommandRecord', { parentId: parentId, role: role, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, pass: session.pass }, (res) => {
+          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
+          
+          document.getElementById(prefix+'-rank').value = ''; 
+          document.getElementById(prefix+'-name').value = ''; 
+          document.getElementById(prefix+'-tenure').value = ''; 
+          document.getElementById(prefix+'-quote').value = ''; 
+          document.getElementById(prefix+'-bio').value = ''; 
+          document.getElementById(prefix+'-photo').value = ''; 
+          delete croppedData[prefix+'-photo']; 
+          document.getElementById(prefix+'-photo-status').innerHTML = 'Select an image to crop.'; 
+          
+          loadCommandTable(); 
+      });
+  }
 
-  function compressAutoImage(file) { return new Promise((resolve) => { const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); const MAX_SIZE = 1080; let width = img.width, height = img.height; if (width > MAX_SIZE || height > MAX_SIZE) { if (width > height) { height = Math.round((height * MAX_SIZE) / width); width = MAX_SIZE; } else { width = Math.round((width * MAX_SIZE) / height); height = MAX_SIZE; } } canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); resolve(canvas.toDataURL('image/jpeg', 0.8)); }; img.src = e.target.result; }; reader.readAsDataURL(file); }); }
-  function createEmbed(url) { if (!url) return ''; let finalUrl = url; if (url.includes('youtube.com/watch?v=')) { finalUrl = url.replace('watch?v=', 'embed/').split('&')[0]; } else if (url.includes('youtu.be/')) { finalUrl = url.replace('youtu.be/', 'youtube.com/embed/'); } else if (url.includes('drive.google.com/file/d/')) { finalUrl = url.replace('/view', '/preview'); } else if (url.includes('facebook.com') || url.includes('fb.watch')) { finalUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`; } return `<iframe src="${finalUrl}" style="width:100%; height:450px; border:none; border-radius:8px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`; }
+  function openCmdEdit(id, isCC=false, parentId=null) {
+      let record = null;
+      if (!isCC) { record = globalAdminCommandData.find(c => c.id === id); } 
+      else { let parent = globalAdminCommandData.find(c => c.id === parentId); if (parent) record = parent.corpsCommanders.find(c => c.id === id); }
+      if (!record) return;
+
+      document.getElementById('edit-cmd-id').value = record.id;
+      document.getElementById('edit-cmd-rank').value = record.rank;
+      document.getElementById('edit-cmd-name').value = record.name;
+      document.getElementById('edit-cmd-tenure').value = record.tenure;
+      document.getElementById('edit-cmd-status').value = record.status;
+      document.getElementById('edit-cmd-quote').value = record.quote || '';
+      document.getElementById('edit-cmd-bio').value = record.bio || '';
+      
+      document.getElementById('edit-cmd-photo').value = '';
+      delete croppedData['edit-cmd-photo'];
+      document.getElementById('edit-cmd-photo-status').innerText = "Leave empty to keep the current official photo.";
+      
+      document.getElementById('cmd-edit-modal').style.display = 'flex';
+  }
+
+  function closeCmdEditModal() { document.getElementById('cmd-edit-modal').style.display = 'none'; }
+
+  function submitCmdEdit() {
+      const id = document.getElementById('edit-cmd-id').value;
+      const rank = document.getElementById('edit-cmd-rank').value.trim();
+      const name = document.getElementById('edit-cmd-name').value.trim();
+      const tenure = document.getElementById('edit-cmd-tenure').value.trim();
+      const status = document.getElementById('edit-cmd-status').value;
+      const quote = document.getElementById('edit-cmd-quote').value.trim();
+      const bio = document.getElementById('edit-cmd-bio').value.trim();
+      const imgData = croppedData['edit-cmd-photo'];
+
+      if (!rank || !name) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Rank and Name required.', showConfirmButton:false, timer:2000});
+
+      Swal.fire({ title: 'UPDATING DOSSIER...', didOpen: () => Swal.showLoading() });
+      
+      apiCall('editCommandRecord', { logId: id, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, pass: session.pass }, (res) => {
+          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
+          closeCmdEditModal();
+          loadCommandTable(); 
+      });
+  }
   
-  document.getElementById('post-image-file').addEventListener('change', async function(e) { const files = e.target.files; if(files.length === 0) return; document.getElementById('image-staging-grid').innerHTML = '<span style="color:var(--text-muted); font-size:12px;"><i class="fas fa-spinner fa-spin"></i> Processing images...</span>'; stagedImages = []; for(let i=0; i < files.length; i++) { let b64 = await compressAutoImage(files[i]); stagedImages.push(b64); } renderStagingGrid(); });
-  function renderStagingGrid() { const grid = document.getElementById('image-staging-grid'); grid.innerHTML = ''; stagedImages.forEach((b64, idx) => { let isCover = (idx === 0); let border = isCover ? 'border: 3px solid var(--army-gold);' : 'border: 1px solid var(--border);'; let coverBadge = isCover ? `<div style="position:absolute; top:0; left:0; background:var(--army-gold); color:#000; font-size:10px; font-weight:bold; padding:2px 5px; z-index:10;">COVER</div>` : ''; let makeCoverBtn = isCover ? '' : `<button type="button" style="padding:4px; font-size:10px; margin-top:5px; background:var(--bg); color:var(--text); border:1px solid var(--border); width:100%; height:auto;" onclick="setCoverImage(${idx})">Set Cover</button>`; grid.innerHTML += `<div style="position:relative; width: 100px; display:flex; flex-direction:column; animation: fadeUp 0.3s ease;"><div style="width:100px; height:100px; overflow:hidden; border-radius:4px; ${border} position:relative;">${coverBadge}<img src="${b64}" style="width:100%; height:100%; object-fit:cover;"></div>${makeCoverBtn}</div>`; }); }
-  window.setCoverImage = function(idx) { let selected = stagedImages.splice(idx, 1)[0]; stagedImages.unshift(selected); renderStagingGrid(); }
-
-  function formatHashtags(text) { if (!text) return ""; return text.replace(/(#\w+)/g, '<span style="color:var(--army-gold); font-weight:800;">$1</span>'); }
-
-  window.togglePasswordVisibility = function(inputId, iconId) { const passInput = document.getElementById(inputId); const toggleIcon = document.getElementById(iconId); if (passInput.type === 'password') { passInput.type = 'text'; toggleIcon.classList.remove('fa-eye'); toggleIcon.classList.add('fa-eye-slash'); } else { passInput.type = 'password'; toggleIcon.classList.remove('fa-eye-slash'); toggleIcon.classList.add('fa-eye'); } }
-  
-  function applyTheme(dark) { isDarkMode = dark; document.body.classList.toggle('dark-mode', dark); document.getElementById('theme-icon').className = dark ? 'fas fa-sun' : 'fas fa-moon'; document.getElementById('theme-text').innerText = dark ? 'LIGHT MODE' : 'DARK MODE'; try { localStorage.setItem('sccks_dark', dark ? '1' : '0'); } catch(e){} if (weeklyChart) weeklyChart.update(); if (donutChart) donutChart.update(); }
-  function toggleTheme() { applyTheme(!isDarkMode); }
-  function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('open'); document.getElementById('mobile-overlay').classList.toggle('show'); }
-
-  function switchTab(panelId, btnElement) {
-    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-    document.getElementById(panelId).classList.add('active-panel');
-    document.querySelectorAll('.sidebar-menu button').forEach(b => b.classList.remove('active'));
-    if (btnElement) btnElement.classList.add('active');
-    if (window.innerWidth <= 768) toggleSidebar();
-    if (panelId !== 'panel-scanner') stopScanner(false);
-    
-    if (['panel-dashboard','panel-attendance','panel-masterlist','panel-accounts'].includes(panelId)) silentRefresh('getAdminDashboardData');
-    if (panelId === 'panel-gradebook') silentRefresh('getGradebookData'); 
-    if (panelId === 'panel-leaves') { silentRefresh('getLeaveRequests'); silentRefresh('getStudentsForIDCards'); }
-    if (panelId === 'panel-idcards') silentRefresh('getStudentsForIDCards');
-    if (panelId === 'panel-audit') silentRefresh('getAuditLogs');
-    if (panelId === 'panel-profile') loadUserProfile();
-  if (panelId === 'panel-legacy') { loadLegacyClassesForDropdown(); loadCommandDropdown(); silentRefresh('getAdminLegacyData'); }
-    if (panelId === 'panel-posts') silentRefresh('getPostsAdmin');
-    if (panelId === 'panel-cadet-dashboard' || panelId === 'panel-cadet-leaves') { silentRefresh('getCadetData'); }
-    
-    if (panelId === 'panel-settings') {
-        apiCall('getTrainingSchedule', { user: session.user, pass: session.pass }, (res) => {
-            loadTrainingSchedule(res.schedule);
+  function deleteCmdRecord(id) {
+        Swal.fire({ title: 'Delete Record?', text: "This cannot be undone.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Yes, delete it' }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'DELETING...', didOpen: () => Swal.showLoading() });
+                apiCall('deleteCommandRecord', { logId: id, user: session.user, pass: session.pass }, (res) => {
+                    Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
+                    loadCommandTable();
+                });
+            }
         });
-    }
   }
 
   function exportTableToExcel(tableId, filename) {
