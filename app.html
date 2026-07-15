@@ -1228,7 +1228,7 @@ function submitCommandRecord(role) {
           
           if(tbody) { tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No records found.</td></tr>'; }
           if(dropdown) { dropdown.innerHTML = opts; }
-      });
+      }); // <-- THIS is the bracket that was missing!
   }
 
   function submitCommandRecord(role) {
