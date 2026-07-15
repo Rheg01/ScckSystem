@@ -593,6 +593,55 @@
           <div class="input-group" style="margin-top:10px;"><label>OFFICIAL PHOTO (FILE UPLOAD)</label><input type="file" id="cc-photo" accept="image/*"></div>
           <p id="cc-photo-status" style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Select an image to crop.</p>
           <button class="btn-success" style="width:100%;" onclick="submitCommandRecord('Corps Commander')"><i class="fas fa-user-check"></i> ADD CORPS COMMANDER</button>
+          <!-- MANAGE COMMAND HISTORY TABLE -->
+      <div class="anim-3" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); margin-top:20px; margin-bottom: 40px;">
+          <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-list"></i> MANAGE LINEAGE OF COMMANDERS</h3>
+          <div style="overflow-x:auto;">
+              <table style="width:100%; text-align:left; border-collapse:collapse; min-width:600px;">
+                  <thead>
+                      <tr style="border-bottom:2px solid var(--border); color:var(--text-muted); font-size:12px;">
+                          <th style="padding:10px;">ROLE</th>
+                          <th style="padding:10px;">RANK & NAME</th>
+                          <th style="padding:10px;">TENURE</th>
+                          <th style="padding:10px;">STATUS</th>
+                          <th style="padding:10px; text-align:right;">ACTIONS</th>
+                      </tr>
+                  </thead>
+                  <tbody id="cmd-table-body">
+                      <tr><td colspan="5" style="text-align:center; padding:20px;">Loading records...</td></tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+
+      <!-- EDIT COMMAND RECORD MODAL -->
+      <div class="modal-overlay" id="cmd-edit-modal">
+          <div class="modal-content" style="max-width:500px;">
+              <div class="modal-header">
+                  <h2><i class="fas fa-pen"></i> EDIT DOSSIER</h2>
+                  <span class="close-btn" onclick="closeCmdEditModal()">&times;</span>
+              </div>
+              <div class="modal-body">
+                  <input type="hidden" id="edit-cmd-id">
+                  <div style="display:flex; gap:10px;">
+                      <div class="input-group"><label>RANK</label><input type="text" id="edit-cmd-rank"></div>
+                      <div class="input-group" style="flex:2;"><label>NAME</label><input type="text" id="edit-cmd-name"></div>
+                  </div>
+                  <div style="display:flex; gap:10px; margin-top:10px;">
+                      <div class="input-group"><label>TENURE</label><input type="text" id="edit-cmd-tenure"></div>
+                      <div class="input-group"><label>STATUS</label><select id="edit-cmd-status"><option value="Current">Current</option><option value="Past">Past</option><option value="Posthumous">Posthumous</option></select></div>
+                  </div>
+                  <div class="input-group" style="margin-top:10px;"><label>QUOTE</label><input type="text" id="edit-cmd-quote"></div>
+                  <div class="input-group" style="margin-top:10px;"><label>BIOSCRIPT</label><textarea id="edit-cmd-bio" rows="4"></textarea></div>
+                  <div class="input-group" style="margin-top:10px;">
+                      <label>UPDATE PHOTO (FILE UPLOAD)</label>
+                      <input type="file" id="edit-cmd-photo" accept="image/*">
+                  </div>
+                  <p id="edit-cmd-photo-status" style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Leave empty to keep the current official photo.</p>
+                  <button class="btn-success" style="width:100%;" onclick="submitCmdEdit()"><i class="fas fa-save"></i> SAVE CHANGES</button>
+              </div>
+          </div>
+      </div>
         </div>
       </div>
       <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
@@ -1087,9 +1136,108 @@ function submitCommandRecord(role) {
       });
   }
 
-  function loadCommandDropdown() {
-      const dropdown = document.getElementById('cc-parent'); if(!dropdown) return; dropdown.innerHTML = '<option value="">Fetching...</option>';
-      apiCall('getCommandHistory', {}, (res) => { let opts = '<option value="">Select Commandant...</option>'; (res.eras || []).forEach(cmd => { opts += `<option value="${cmd.id}">${cmd.rank} ${cmd.name} (${cmd.tenure})</option>`; }); dropdown.innerHTML = opts; });
+ let globalAdminCommandData = [];
+
+  function loadCommandTable() {
+      const tbody = document.getElementById('cmd-table-body');
+      const dropdown = document.getElementById('cc-parent');
+      if(!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Fetching archives...</td></tr>';
+      if(dropdown) dropdown.innerHTML = '<option value="">Fetching...</option>';
+      
+      apiCall('getCommandHistory', {}, (res) => {
+          if(!res.success) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Failed to load archives.</td></tr>'; return; }
+          
+          globalAdminCommandData = res.eras || [];
+          let html = '';
+          let opts = '<option value="">Select Commandant...</option>';
+          
+          globalAdminCommandData.forEach(cmd => {
+              opts += `<option value="${cmd.id}">${cmd.rank} ${cmd.name} (${cmd.tenure})</option>`;
+              
+              // Commandant Row
+              html += `
+              <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px; font-weight:bold; color:var(--army-primary);">Commandant</td>
+                  <td style="padding:10px;">${cmd.rank} ${cmd.name}</td>
+                  <td style="padding:10px;">${cmd.tenure}</td>
+                  <td style="padding:10px;">${cmd.status}</td>
+                  <td style="padding:10px; text-align:right;">
+                      <button style="background:transparent; border:none; color:#1976d2; cursor:pointer; margin-right:10px;" onclick="openCmdEdit('${cmd.id}')"><i class="fas fa-edit"></i></button>
+                      <button style="background:transparent; border:none; color:#d32f2f; cursor:pointer;" onclick="deleteCmdRecord('${cmd.id}')"><i class="fas fa-trash"></i></button>
+                  </td>
+              </tr>`;
+              
+              // Corps Commanders Rows (if they exist)
+              if (cmd.corpsCommanders) {
+                  cmd.corpsCommanders.forEach(cc => {
+                      html += `
+                      <tr style="border-bottom:1px solid var(--border); background:rgba(0,0,0,0.02);">
+                          <td style="padding:10px; padding-left:30px; font-size:12px;"><i class="fas fa-level-up-alt fa-rotate-90"></i> Corps Commander</td>
+                          <td style="padding:10px;">${cc.rank} ${cc.name}</td>
+                          <td style="padding:10px;">${cc.tenure}</td>
+                          <td style="padding:10px;">${cc.status}</td>
+                          <td style="padding:10px; text-align:right;">
+                              <button style="background:transparent; border:none; color:#1976d2; cursor:pointer; margin-right:10px;" onclick="openCmdEdit('${cc.id}', true, '${cmd.id}')"><i class="fas fa-edit"></i></button>
+                              <button style="background:transparent; border:none; color:#d32f2f; cursor:pointer;" onclick="deleteCmdRecord('${cc.id}')"><i class="fas fa-trash"></i></button>
+                          </td>
+                      </tr>`;
+                  });
+              }
+          });
+          tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No historical records found.</td></tr>';
+          if(dropdown) dropdown.innerHTML = opts;
+      });
+  }
+
+  function openCmdEdit(id, isCC=false, parentId=null) {
+      let record = null;
+      if (!isCC) { record = globalAdminCommandData.find(c => c.id === id); } 
+      else { let parent = globalAdminCommandData.find(c => c.id === parentId); if (parent) record = parent.corpsCommanders.find(c => c.id === id); }
+      if (!record) return;
+
+      document.getElementById('edit-cmd-id').value = record.id;
+      document.getElementById('edit-cmd-rank').value = record.rank;
+      document.getElementById('edit-cmd-name').value = record.name;
+      document.getElementById('edit-cmd-tenure').value = record.tenure;
+      document.getElementById('edit-cmd-status').value = record.status;
+      document.getElementById('edit-cmd-quote').value = record.quote || '';
+      document.getElementById('edit-cmd-bio').value = record.bio || '';
+      
+      // Clear file cropper so old image remains untouched unless a new one is selected
+      document.getElementById('edit-cmd-photo').value = '';
+      delete croppedData['edit-cmd-photo'];
+      document.getElementById('edit-cmd-photo-status').innerText = "Leave empty to keep the current official photo.";
+      
+      document.getElementById('cmd-edit-modal').style.display = 'flex';
+  }
+
+  function closeCmdEditModal() { document.getElementById('cmd-edit-modal').style.display = 'none'; }
+
+  function submitCmdEdit() {
+      const id = document.getElementById('edit-cmd-id').value, rank = document.getElementById('edit-cmd-rank').value.trim(), name = document.getElementById('edit-cmd-name').value.trim();
+      const tenure = document.getElementById('edit-cmd-tenure').value.trim(), status = document.getElementById('edit-cmd-status').value, quote = document.getElementById('edit-cmd-quote').value.trim(), bio = document.getElementById('edit-cmd-bio').value.trim(), imgData = croppedData['edit-cmd-photo'];
+
+      if (!rank || !name) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Rank and Name are required.', showConfirmButton:false, timer:2000});
+
+      Swal.fire({ title: 'UPDATING DOSSIER...', didOpen: () => Swal.showLoading() });
+      apiCall('editCommandRecord', { logId: id, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, pass: session.pass }, (res) => {
+          Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
+          closeCmdEditModal();
+          loadCommandTable(); // Refresh the table
+      });
+  }
+  
+  function deleteCmdRecord(id) {
+        Swal.fire({ title: 'Delete Record?', text: "This will remove the leader from the public timeline.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Yes, delete it' }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'DELETING...', didOpen: () => Swal.showLoading() });
+                apiCall('deleteCommandRecord', { logId: id, user: session.user, pass: session.pass }, (res) => {
+                    Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
+                    loadCommandTable();
+                });
+            }
+        });
   }
   // =========================================================================
   // ACTIONS, ALERTS & MODALS (Flexbox Layout)
@@ -2187,10 +2335,11 @@ function submitCommandRecord(role) {
   }
 
   function initCropperInputs() {
-const inputs = ['prof-image-file', 'set-logo-file', 'set-nav-logo-file', 'set-bg-file', 'leg-class-logo', 'leg-off-photo', 'cmd-photo', 'cc-photo'];
+const inputs = ['prof-image-file', 'set-logo-file', 'set-nav-logo-file', 'set-bg-file', 'leg-class-logo', 'leg-off-photo', 'cmd-photo', 'cc-photo', 'edit-cmd-photo'];
     inputs.forEach(id => {
       const el = document.getElementById(id);
       if(el) { el.addEventListener('change', function(e) { if (e.target.files && e.target.files[0]) { const reader = new FileReader(); reader.onload = function(event) { openCropper(event.target.result, id); }; reader.readAsDataURL(e.target.files[0]); } }); }
+    
     });
   }
 
