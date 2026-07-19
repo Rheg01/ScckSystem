@@ -2321,48 +2321,9 @@
       document.getElementById('app-container').style.display = 'none'; 
       document.getElementById('view-login').style.display = 'flex'; 
   }
+
   window.performLogin = performLogin; 
   window.logout = logout;
-
-  // =========================================================================
-  // SECURITY UTILITIES
-  // =========================================================================
-  window.sanitizeHTML = function(str) {
-      if (typeof str !== 'string') return str;
-      const temp = document.createElement('div');
-      temp.textContent = str;
-      return temp.innerHTML;
-  };
-
-  // =========================================================================
-  // BROWSER NETWORK LISTENERS (AUTO-SYNC)
-  // =========================================================================
-  window.addEventListener('online', () => {
-      let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
-      if (offlineScans.length > 0) {
-          Swal.fire({
-              toast: true, 
-              position: 'top-end', 
-              icon: 'info', 
-              title: 'Connection restored. Auto-syncing logs...', 
-              showConfirmButton: false, 
-              timer: 3000
-          });
-          syncOfflineScans();
-      }
-  });
-
-  window.addEventListener('offline', () => {
-      Swal.fire({
-          toast: true, 
-          position: 'top-end', 
-          icon: 'warning', 
-          title: 'System Offline. Caching scans locally.', 
-          showConfirmButton: false, 
-          timer: 3000
-      });
-  });
-
 
   window.onload = () => {
     buildScheduleUI();
@@ -2590,7 +2551,7 @@
       const u = document.getElementById('new-user').value.trim(), p = document.getElementById('new-pass').value, r = document.getElementById('new-role').value;
       if(!u || !p) return Swal.fire('Error', 'Username and Password required.', 'warning');
       Swal.fire({title:'Provisioning...', didOpen:()=>Swal.showLoading()});
-apiCall('createAccount', { newUser: u, newPass: p, role: r, user: session.user, pass: session.pass }, res => {
+      apiCall('createAccount', { newUser: u, newPass: p, newRole: r, user: session.user, pass: session.pass }, res => {
           Swal.fire('Success', 'Account created.', 'success');
           document.getElementById('new-user').value=''; document.getElementById('new-pass').value='';
           silentRefresh('getAdminDashboardData');
