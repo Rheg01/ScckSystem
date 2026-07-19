@@ -2590,7 +2590,7 @@
       const u = document.getElementById('new-user').value.trim(), p = document.getElementById('new-pass').value, r = document.getElementById('new-role').value;
       if(!u || !p) return Swal.fire('Error', 'Username and Password required.', 'warning');
       Swal.fire({title:'Provisioning...', didOpen:()=>Swal.showLoading()});
-      apiCall('createAccount', { newUser: u, newPass: p, newRole: r, user: session.user, pass: session.pass }, res => {
+apiCall('createAccount', { newUser: u, newPass: p, role: r, user: session.user, pass: session.pass }, res => {
           Swal.fire('Success', 'Account created.', 'success');
           document.getElementById('new-user').value=''; document.getElementById('new-pass').value='';
           silentRefresh('getAdminDashboardData');
