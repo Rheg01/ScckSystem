@@ -505,13 +505,13 @@
     </div>
 
     <!-- ATTENDANCE -->
-    <div id="panel-attendance" class="view-panel">
-      <div class="header-bar anim-1">
-        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-clipboard-list"></i> ATTENDANCE LOG</h2>
+  <div class="header-bar anim-1">
+        <h2 id="att-log-header"><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-clipboard-list"></i> LIVE ATTENDANCE LOG</h2>
         <div class="header-actions">
           <div class="input-group" style="min-width: 200px; margin-right: 10px;">
             <input type="text" id="search-attendance" placeholder="Search log..." oninput="filterAttendance()">
           </div>
+          <button id="btn-hist-att" class="btn-warning" onclick="openHistoricalAttendance()"><i class="fas fa-history"></i> PAST LOGS</button>
           <button class="btn-info" onclick="promptExport('attendance-table', 'Attendance_Report')"><i class="fas fa-file-excel"></i> EXPORT</button>
           <button id="btn-ref-att" class="btn-outline" onclick="silentRefresh('getAdminDashboardData', 'btn-ref-att')"><i class="fas fa-sync"></i> SYNC</button>
         </div>
@@ -1414,14 +1414,23 @@ sortedAtt.forEach(r => {
 }); 
 document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="6" style="text-align:center;">No entries logged.</td></tr>'; 
 
-// Sort Masterlist Alphabetically & Make Clickable
+// Reset Attendance Header back to LIVE when syncing
+      if(document.getElementById('att-log-header')) document.getElementById('att-log-header').innerHTML = '<button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-clipboard-list"></i> LIVE ATTENDANCE LOG';
+
+      // Sort Masterlist Alphabetically & Make Clickable (WITH ALL BUTTONS RESTORED)
       let sortedMaster = (res.masterlist || []).sort((a,b) => getLastName(a.name).localeCompare(getLastName(b.name)));
       let mh = ''; 
       sortedMaster.forEach(r => { 
           let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); 
-          mh += `<tr><td><b>${r.id}</b></td><td><a href="#" onclick="viewAdminCadetDashboard('${r.id}', '${r.name.replace(/'/g, "\\'")}')" style="color:var(--army-primary); font-weight:600; text-decoration:none; border-bottom:1px dashed var(--border);">${r.name}</a></td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name.replace(/'/g, "\\'")}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-warning" onclick="editStudentDynamic('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button></td></tr>`; 
-      }); // <-- THIS MISSING BRACKET CAUSED THE CRASH
+          mh += `<tr><td><b>${r.id}</b></td><td><a href="#" onclick="viewAdminCadetDashboard('${r.id}', '${r.name.replace(/'/g, "\\'")}')" style="color:var(--army-primary); font-weight:600; text-decoration:none; border-bottom:1px dashed var(--border);">${r.name}</a></td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;">
+            <button class="btn-icon btn-info" onclick="showQR('${r.id}', '${r.name.replace(/'/g, "\\'")}')" title="View QR"><i class="fas fa-qrcode"></i></button>
+            <button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name.replace(/'/g, "\\'")}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> 
+            <button class="btn-icon btn-warning" onclick="editStudentDynamic('${r.id}','${r.company}','${r.contact}')" title="Edit Dossier"><i class="fas fa-edit"></i></button>
+            <button class="btn-icon btn-danger" onclick="deleteStudentPrompt('${r.id}')" title="Discharge Cadet"><i class="fas fa-trash"></i></button>
+          </td></tr>`; 
+      }); 
       document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="6" style="text-align:center;">Roster currently clean.</td></tr>';
+     
       
       let ach = ''; 
       for(let i = 1; i < (res.accounts || []).length; i++) { 
@@ -2934,6 +2943,61 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     let wb = XLSX.utils.book_new(); 
     XLSX.utils.book_append_sheet(wb, ws, "Unit Data"); 
     XLSX.writeFile(wb, filename + ".xlsx");
+  }
+  // =========================================================================
+  // HISTORICAL ATTENDANCE VIEWER
+  // =========================================================================
+  window.openHistoricalAttendance = function() {
+      Swal.fire({ title: 'Establishing uplink...', didOpen: () => Swal.showLoading() });
+      apiCall('getAttendanceDates', { user: session.user, pass: session.pass }, (res) => {
+          if (!res.dates || res.dates.length === 0) {
+              return Swal.fire('No History', 'There are no past training logs in the database.', 'info');
+          }
+          
+          let dateOpts = res.dates.map(d => `<option value="${d}">${d}</option>`).join('');
+          let companiesList = (window.globalCompanies && window.globalCompanies.length > 0) ? window.globalCompanies : ["Alpha", "Bravo", "Charlie", "Headquarters", "Delta"];
+          let coyOpts = '<option value="ALL">Entire Unit</option>' + companiesList.map(c => `<option value="${c}">${c} Company</option>`).join('');
+          
+          Swal.fire({
+              title: 'PAST TRAINING LOGS',
+              html: `
+                  <div style="text-align:left; margin-top:10px;">
+                      <label style="font-size:12px; font-weight:bold; color:var(--text-muted);">SELECT DATE</label>
+                      <select id="hist-date" style="width:100%; height:46px; border-radius:6px; border:2px solid var(--border); padding:5px; margin-top:5px; outline:none; margin-bottom:15px; background:var(--bg); color:var(--text);">${dateOpts}</select>
+                      
+                      <label style="font-size:12px; font-weight:bold; color:var(--text-muted);">FILTER BY COMPANY</label>
+                      <select id="hist-coy" style="width:100%; height:46px; border-radius:6px; border:2px solid var(--border); padding:5px; margin-top:5px; outline:none; background:var(--bg); color:var(--text);">${coyOpts}</select>
+                  </div>
+              `,
+              showCancelButton: true,
+              confirmButtonText: 'FETCH LOGS',
+              confirmButtonColor: 'var(--army-primary)',
+              preConfirm: () => [document.getElementById('hist-date').value, document.getElementById('hist-coy').value]
+          }).then(r => {
+              if (r.isConfirmed) fetchHistoricalData(r.value[0], r.value[1]);
+          });
+      });
+  }
+  
+  window.fetchHistoricalData = function(date, coy) {
+      const btn = document.getElementById('btn-hist-att');
+      if(btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      
+      apiCall('getHistoricalAttendance', { date: date, coy: coy, user: session.user, pass: session.pass }, res => {
+          if(btn) btn.innerHTML = '<i class="fas fa-history"></i> PAST LOGS';
+          
+          let ah = ''; 
+          res.records.forEach(r => { 
+              let bc = r.status === 'Present' ? 'badge-present' : (r.status === 'Late' ? 'badge-late' : (r.status === 'Very Late' ? 'badge-verylate' : 'badge-absent')); 
+              let tc = (r.status === 'Late' || r.status === 'Very Late') ? 'var(--status-red)' : 'var(--status-green)'; 
+              ah += `<tr><td><b>${r.id}</b></td><td>${r.name}</td><td>${r.company}</td><td style="color:${tc}; font-weight:bold;">${r.in}</td><td style="color:var(--army-primary); font-weight:bold;">${r.out}</td><td><span class="badge ${bc}">${r.status}</span></td></tr>`; 
+          }); 
+          document.getElementById('attendance-table').innerHTML = ah || `<tr><td colspan="6" style="text-align:center;">No entries logged for ${date}.</td></tr>`; 
+          
+          Swal.fire({toast:true, position:'top-end', icon:'success', title:`Logs loaded for ${date}`, showConfirmButton:false, timer:2000});
+          
+          document.getElementById('att-log-header').innerHTML = `<button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-history"></i> ATTENDANCE LOG: ${date} <span style="font-size:14px; color:var(--text-muted); margin-left:10px;">(${coy === 'ALL' ? 'Entire Unit' : coy})</span>`;
+      });
   }
 
 // Modify your existing exportTableToExcel logic slightly to accept the targetCompany param.
