@@ -822,32 +822,36 @@
     <!-- SETTINGS & SCHEDULE CONFIGURATION -->
     <div id="panel-settings" class="view-panel">
       <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-cog"></i> SYSTEM SETTINGS</h2></div>
-      <div class="anim-4 super-admin-only" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 800px; margin-top: 25px;">
-  <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-sitemap"></i> MANAGE COMPANIES</h3>
-  <div class="input-group" style="margin-bottom:15px;">
-    <label>OFFICIAL COMPANIES (COMMA SEPARATED)</label>
-    <textarea id="set-companies" rows="3" placeholder="Alpha, Bravo, Charlie..."></textarea>
-  </div>
-  <button class="btn-success" onclick="saveCompanies()"><i class="fas fa-save"></i> UPDATE COMPANIES</button>
-</div>
-      <!-- BRANDING SECTION -->
-      <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 800px; margin-bottom: 25px;">
-        <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-paint-brush"></i> SYSTEM BRANDING</h3>
-        <div class="input-group" style="margin-bottom:15px;"><label>LOGIN SHIELD LOGO</label><input type="file" id="set-logo-file" accept="image/*"><p id="set-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
-        <div class="input-group" style="margin-bottom:15px;"><label>HEADER / NAVBAR LOGO</label><input type="file" id="set-nav-logo-file" accept="image/*"><p id="set-nav-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
-        <div class="input-group" style="margin-bottom:20px;"><label>BACKGROUND IMAGE</label><input type="file" id="set-bg-file" accept="image/*"><p id="set-bg-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
-        <div style="display:flex; gap:10px;"><button id="btn-save-settings" class="btn-success" style="flex:2;" onclick="saveSystemSettings()"><i class="fas fa-save"></i> SAVE BRANDING</button><button class="btn-outline" style="flex:1;" onclick="resetBackground()"><i class="fas fa-eraser"></i> RESET BG</button></div>
+      
+      <!-- GRID CONTAINER TO UTILIZE FULL SCREEN -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; align-items: start; margin-bottom: 25px;">
+        
+        <!-- MANAGE COMPANIES CARD -->
+        <div class="anim-4 super-admin-only" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); width: 100%;">
+          <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-sitemap"></i> MANAGE COMPANIES</h3>
+          <div class="input-group" style="margin-bottom:15px;">
+            <label>OFFICIAL COMPANIES (COMMA SEPARATED)</label>
+            <textarea id="set-companies" rows="3" placeholder="Alpha, Bravo, Charlie..."></textarea>
+          </div>
+          <button class="btn-success" onclick="saveCompanies()"><i class="fas fa-save"></i> UPDATE COMPANIES</button>
+        </div>
+
+        <!-- BRANDING SECTION CARD -->
+        <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); width: 100%;">
+          <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-paint-brush"></i> SYSTEM BRANDING</h3>
+          <div class="input-group" style="margin-bottom:15px;"><label>LOGIN SHIELD LOGO</label><input type="file" id="set-logo-file" accept="image/*"><p id="set-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
+          <div class="input-group" style="margin-bottom:15px;"><label>HEADER / NAVBAR LOGO</label><input type="file" id="set-nav-logo-file" accept="image/*"><p id="set-nav-logo-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
+          <div class="input-group" style="margin-bottom:20px;"><label>BACKGROUND IMAGE</label><input type="file" id="set-bg-file" accept="image/*"><p id="set-bg-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
+          <div style="display:flex; gap:10px;"><button id="btn-save-settings" class="btn-success" style="flex:2;" onclick="saveSystemSettings()"><i class="fas fa-save"></i> SAVE BRANDING</button><button class="btn-outline" style="flex:1;" onclick="resetBackground()"><i class="fas fa-eraser"></i> RESET BG</button></div>
+        </div>
+
       </div>
       
-      <!-- TRAINING SCHEDULE CONFIGURATION (NEW) -->
-      <div class="anim-3" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 800px;">
+      <!-- TRAINING SCHEDULE CONFIGURATION -->
+      <div class="anim-3" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); width: 100%;">
         <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-calendar-alt"></i> TRAINING SCHEDULE (15 DAYS)</h3>
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:20px;">Set official dates and session types. 'Double' allows AM/PM scans (4 per day).</p>
-        
-        <div id="schedule-config-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom:20px;">
-          <!-- Populated by JavaScript -->
-        </div>
-        
+        <div id="schedule-config-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom:20px;"></div>
         <button id="btn-save-schedule" class="btn-success" onclick="saveTrainingSchedule()"><i class="fas fa-save"></i> UPDATE SCHEDULE</button>
       </div>
       
@@ -1173,48 +1177,68 @@ apiCall('getSystemCompanies', {}, res => {
   }
 });
 
-function editStudentDynamic(id, coy, con) { 
-  let optionsHtml = '';
-  globalCompanies.forEach(c => {
-    let sel = (c.toLowerCase() === coy.toLowerCase()) ? 'selected' : '';
-    optionsHtml += `<option value="${c}" ${sel}>${c}</option>`;
-  });
+// Ensure the variable is globally accessible
+  window.globalCompanies = ["Alpha", "Bravo", "Charlie", "Headquarters"];
 
-  Swal.fire({ 
-      title: 'UPDATE DATA', 
-      html: `
-      <div style="text-align: left; margin-bottom: 15px;">
-        <label style="font-size:12px; font-weight:bold; color:var(--text-muted);">COMPANY</label>
-        <select id="swal-coy" style="width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; margin-top: 5px;">
-          ${optionsHtml}
-        </select>
-      </div>
-      <div style="text-align: left;">
-        <label style="font-size:12px; font-weight:bold; color:var(--text-muted);">CONTACT</label>
-        <input id="swal-con" style="width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; margin-top: 5px;" value="${con}">
-      </div>`, 
-      showCancelButton: true, 
-      confirmButtonText: 'SAVE', 
-      preConfirm: () => [document.getElementById('swal-coy').value, document.getElementById('swal-con').value] 
-  }).then(r => { 
-      if(r.isConfirmed) {
-          Swal.fire({ title: 'UPDATING...', didOpen: () => Swal.showLoading() });
-          apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, pass: session.pass }, () => {
-              Swal.fire({toast:true, position:'top-end', icon:'success', title:'Dossier updated.', showConfirmButton:false, timer:2000}); 
-              silentRefresh('getAdminDashboardData');
-          }); 
-      }
-  }); 
-}
+  // Create a function to fetch companies that we trigger upon successful login
+  window.loadSystemCompanies = function() {
+    if (session && session.user) {
+      apiCall('getSystemCompanies', { user: session.user, pass: session.pass }, res => { 
+        if(res.companies) {
+          window.globalCompanies = res.companies;
+          if(document.getElementById('set-companies')) {
+            document.getElementById('set-companies').value = window.globalCompanies.join(", ");
+          }
+        }
+      });
+    }
+  };
 
-function saveCompanies() {
-  const val = document.getElementById('set-companies').value;
-  const arr = val.split(',').map(s => s.trim()).filter(s => s);
-  apiCall('saveSystemCompanies', { companies: arr, user: session.user, pass: session.pass }, res => {
-    Swal.fire({toast:true, position:'top-end', icon:'success', title:'Companies updated.', showConfirmButton:false, timer:2000});
-    globalCompanies = arr;
-  });
-}
+  // Add "window." to make the Edit button function globally accessible
+  window.editStudentDynamic = function(id, coy, con) { 
+    let optionsHtml = '';
+    window.globalCompanies.forEach(c => {
+      let sel = (c.toLowerCase() === coy.toLowerCase()) ? 'selected' : '';
+      optionsHtml += `<option value="${c}" ${sel}>${c}</option>`;
+    });
+
+    Swal.fire({ 
+        title: 'UPDATE DOSSIER', 
+        html: `
+        <div style="text-align: left; margin-bottom: 15px;">
+          <label style="font-size:12px; font-weight:bold; color:var(--text-muted);">COMPANY</label>
+          <select id="swal-coy" style="width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; margin-top: 5px;">
+            ${optionsHtml}
+          </select>
+        </div>
+        <div style="text-align: left;">
+          <label style="font-size:12px; font-weight:bold; color:var(--text-muted);">CONTACT</label>
+          <input id="swal-con" style="width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; margin-top: 5px;" value="${con}">
+        </div>`, 
+        showCancelButton: true, 
+        confirmButtonText: 'SAVE', 
+        preConfirm: () => [document.getElementById('swal-coy').value, document.getElementById('swal-con').value] 
+    }).then(r => { 
+        if(r.isConfirmed) {
+            Swal.fire({ title: 'UPDATING...', didOpen: () => Swal.showLoading() });
+            apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, pass: session.pass }, () => {
+                Swal.fire({toast:true, position:'top-end', icon:'success', title:'Dossier updated.', showConfirmButton:false, timer:2000}); 
+                silentRefresh('getAdminDashboardData');
+            }); 
+        }
+    }); 
+  };
+
+  // Add "window." to make the Update Companies button globally accessible
+  window.saveCompanies = function() {
+    const val = document.getElementById('set-companies').value;
+    const arr = val.split(',').map(s => s.trim()).filter(s => s);
+    
+    apiCall('saveSystemCompanies', { companies: arr, user: session.user, pass: session.pass }, res => {
+      Swal.fire({toast:true, position:'top-end', icon:'success', title:'Companies updated.', showConfirmButton:false, timer:2000});
+      window.globalCompanies = arr;
+    });
+  };
           html += `<tr>
               <td><b>${g.id}</b></td>
               <td>${g.name}</td>
@@ -2405,6 +2429,7 @@ document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="
     const btn = document.getElementById('btn-login');
     const err = document.getElementById('login-err');
     
+    
     if (!u || !p) { err.innerText = 'Identification required.'; return; }
     
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; 
@@ -2426,6 +2451,7 @@ document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="
         loadUserProfile(); 
         setupRoleUI(res.role); 
         updateOfflineSyncUI();
+        window.loadSystemCompanies();
       }, 
       (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; btn.disabled = false; err.innerText = e.message; }
     );
