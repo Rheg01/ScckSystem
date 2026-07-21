@@ -875,23 +875,26 @@
         <div class="input-group" style="margin-bottom:20px;"><label>PROFILE IMAGE</label><input type="file" id="prof-image-file" accept="image/*"><p id="prof-image-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
         <button id="btn-save-profile" class="btn-success" onclick="saveUserProfile()"><i class="fas fa-save"></i> UPDATE PROFILE</button>
         <hr style="border: 1px solid var(--border); margin: 25px 0;">
-<h3 style="color:var(--army-primary); margin-bottom:15px; font-size:16px;"><i class="fas fa-lock"></i> ACCOUNT SECURITY</h3>
-<div class="input-group" style="margin-bottom:15px;">
-  <label>NEW PASSWORD</label>
-  <input type="password" id="prof-new-pass" placeholder="Enter new password">
-</div>
-<div id="otp-section" style="display:none; margin-bottom:15px;">
-  <div class="input-group">
-    <label style="color: var(--army-gold);">ENTER 6-DIGIT OTP SENT TO EMAIL</label>
-    <input type="text" id="prof-otp" placeholder="123456">
-  </div>
-</div>
-<div style="display:flex; gap:10px;">
-  <button id="btn-req-otp" class="btn-warning" style="flex:1;" onclick="requestPassOTP()">REQUEST OTP</button>
-  <button id="btn-submit-pass" class="btn-success" style="flex:1; display:none;" onclick="submitNewPassword()">SAVE PASSWORD</button>
-</div>
+<!-- ACCOUNT SECURITY (Appended below existing text boxes) -->
+      <div class="table-card anim-3" style="max-width: 600px; padding: 25px; margin-top: 25px;">
+        <h3 style="color: var(--army-primary); margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 18px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+          <i class="fas fa-shield-alt"></i> ACCOUNT SECURITY
+        </h3>
+        <div class="input-group" style="margin-bottom: 15px;">
+          <label style="font-size: 11px; font-weight: bold; color: var(--text-muted); letter-spacing: 0.5px;">NEW PASSWORD</label>
+          <input type="password" id="prof-new-pass" placeholder="Enter new password (min. 6 characters)" style="width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; background: var(--bg); color: var(--text);">
+        </div>
+        <div id="otp-section" style="display: none; margin-bottom: 15px;">
+          <div class="input-group">
+            <label style="font-size: 11px; font-weight: bold; color: var(--army-gold); letter-spacing: 0.5px;">ENTER 6-DIGIT OTP SENT TO EMAIL</label>
+            <input type="text" id="prof-otp" placeholder="123456" style="width: 100%; height: 46px; padding: 0 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; background: var(--bg); color: var(--text);">
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button id="btn-req-otp" class="btn-warning" style="flex: 1; height: 46px; font-weight: bold;" onclick="requestPassOTP()">REQUEST OTP</button>
+          <button id="btn-submit-pass" class="btn-success" style="flex: 1; height: 46px; font-weight: bold; display: none;" onclick="submitNewPassword()">SAVE PASSWORD</button>
+        </div>
       </div>
-    </div>
 
   </div>
 </div>
@@ -1425,8 +1428,7 @@ let mh = '';
 sortedMaster.forEach(r => { 
     let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); 
     // Notice the clickable name calling viewAdminCadetDashboard(id)
-    mh += `<tr><td><b>${r.id}</b></td><td><a href="#" onclick="viewAdminCadetDashboard('${r.id}')" style="color:var(--army-primary); font-weight:600; text-decoration:none; border-bottom:1px dashed var(--border);">${r.name}</a></td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-warning" onclick="editStudentDynamic('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button></td></tr>`; 
-}); 
+  mh += `<tr><td><b>${r.id}</b></td><td><a href="#" onclick="viewAdminCadetDashboard('${r.id}', '${r.name.replace(/'/g, "\\'")}')" style="color:var(--army-primary); font-weight:600; text-decoration:none; border-bottom:1px dashed var(--border);">${r.name}</a></td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name.replace(/'/g, "\\'")}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-warning" onclick="editStudentDynamic('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button></td></tr>`;
 document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="6" style="text-align:center;">Roster currently clean.</td></tr>';
       let ach = ''; 
       for(let i = 1; i < (res.accounts || []).length; i++) { 
@@ -2346,16 +2348,20 @@ document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="
           btn.disabled = false;
       });
   }
-  function loadUserProfile() { 
-      apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => { 
-          document.getElementById('prof-name').value=res.name||""; 
-          document.getElementById('prof-rank').value=res.rank||""; 
-          document.getElementById('prof-age').value=res.age||""; 
-          document.getElementById('prof-course').value=res.course||""; 
-          document.getElementById('prof-position').value=res.position||""; 
-          document.getElementById('prof-contact').value=res.contact||""; 
-          updateSidebarProfile(res); 
-      }); 
+  window.loadUserProfile = function() {
+    if (!session || !session.user) return;
+    
+    // Injects data without destroying the password UI below it
+    let html = `
+      <div style="text-align:center;">
+        <i class="fas fa-shield-alt" style="font-size:64px; color:var(--army-primary); margin-bottom: 15px;"></i>
+        <h2 style="margin-bottom: 5px; font-family: 'Oswald', sans-serif;">${session.user}</h2>
+        <p style="color:var(--text-muted); font-weight: bold; letter-spacing: 1px; text-transform:uppercase;">ROLE: ${session.role}</p>
+      </div>
+    `;
+    let container = document.getElementById('profile-dynamic-content');
+    if (container) container.innerHTML = html;
+  };
   }
   
   function saveUserProfile() { 
@@ -2663,34 +2669,74 @@ document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="
 // =========================================================================
   // ADMIN VIEW CADET & PASSWORD OTP (Number 5)
   // =========================================================================
- window.viewAdminCadetDashboard = function(studentId) {
+ // --- UPGRADED ADMIN DOSSIER VIEW (WITH PROFILE PIC & LIVE TRACKER) ---
+  window.viewAdminCadetDashboard = function(studentId, studentName) {
     const modal = document.getElementById('admin-cadet-modal');
-    document.getElementById('admin-cadet-dynamic-content').innerHTML = '<p style="text-align: center; margin-top:20px; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> Fetching Cadet Dossier...</p>';
+    let safeName = studentName || "Cadet";
+    
+    document.getElementById('admin-cadet-dynamic-content').innerHTML = '<div style="padding: 40px; text-align: center; color:var(--army-primary);"><i class="fas fa-spinner fa-spin fa-2x"></i><p style="margin-top:15px; font-weight:bold;">Retrieving Secure Dossier...</p></div>';
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
 
     apiCall('getAnyCadetData', { targetId: studentId, user: session.user, pass: session.pass }, res => {
+      
+      // Auto-generate a beautiful placeholder avatar using their initials
+      let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(safeName)}&background=2C3E20&color=F5A623&size=150&font-size=0.4&bold=true`;
+
+      // Build the 15-Day Tracker UI
+      let trackerHtml = '<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:15px;">';
+      if(res.tracker && res.tracker.length > 0) {
+          res.tracker.forEach((status, idx) => {
+              let bg = 'var(--hover-bg)', col = 'var(--text-muted)';
+              if(status === 'Present') { bg = 'var(--status-green)'; col = '#fff'; }
+              else if(status === 'Late' || status === 'Very Late') { bg = 'var(--status-yellow)'; col = '#000'; }
+              else if(status === 'Absent') { bg = 'var(--status-red)'; col = '#fff'; }
+              trackerHtml += `<div style="padding:8px 12px; background:${bg}; color:${col}; border-radius:4px; font-size:12px; font-weight:bold;" title="Day ${idx+1}: ${status}">D${idx+1}</div>`;
+          });
+      }
+      trackerHtml += '</div>';
+
       let html = `
-        <h2 style="color:var(--army-primary); margin-bottom: 20px; font-family:'Oswald', sans-serif;"><i class="fas fa-id-badge"></i> CADET DOSSIER: ${studentId}</h2>
-        <div style="display:flex; gap:15px; margin-bottom:20px; flex-wrap: wrap;">
-          <div style="flex:1; min-width:150px; background:var(--hover-bg); padding:20px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-              <div style="font-size:12px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">APTITUDE SCORE</div>
-              <div style="font-size:32px; font-weight:bold; color:var(--army-primary); font-family:'Oswald', sans-serif;">${res.score}</div>
-          </div>
-          <div style="flex:1; min-width:150px; background:var(--hover-bg); padding:20px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-              <div style="font-size:12px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">FINAL GRADE</div>
-              <div style="font-size:32px; font-weight:bold; color:var(--status-green); font-family:'Oswald', sans-serif;">${res.finalGrade}</div>
-          </div>
-          <div style="flex:1; min-width:150px; background:var(--hover-bg); padding:20px; border-radius:8px; border:1px solid var(--border); text-align:center;">
-              <div style="font-size:12px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">ATTENDANCE</div>
-              <div style="font-size:32px; font-weight:bold; color:var(--text); font-family:'Oswald', sans-serif;">${res.attendancePct}%</div>
-          </div>
+        <h2 style="color:var(--army-primary); margin-bottom: 20px; font-family:'Oswald', sans-serif; border-bottom: 2px solid var(--border); padding-bottom: 10px;"><i class="fas fa-folder-open"></i> OFFICIAL CADET DOSSIER</h2>
+        
+        <div style="display:flex; flex-wrap:wrap; gap:25px; text-align:left;">
+            
+            <!-- LEFT COLUMN: PROFILE IMAGE & INFO -->
+            <div style="flex: 1; min-width: 200px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:25px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+                <img src="${avatarUrl}" style="border-radius:50%; border:4px solid var(--army-gold); margin-bottom:15px; width:130px; height:130px; object-fit:cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                <h3 style="font-family:'Oswald', sans-serif; color:var(--army-primary); margin-bottom:5px; font-size:22px; line-height:1.2;">${safeName}</h3>
+                <div style="font-weight:bold; color:var(--text-muted); font-size:14px; letter-spacing:1px; background: var(--hover-bg); padding: 5px; border-radius: 4px; display:inline-block; margin-top:5px;">ID: ${studentId}</div>
+            </div>
+
+            <!-- RIGHT COLUMN: LIVE STATS & TRACKER -->
+            <div style="flex: 2; min-width: 300px; display:flex; flex-direction:column; gap:15px;">
+                
+                <div style="display:flex; gap:15px; flex-wrap: wrap;">
+                    <div style="flex:1; min-width:120px; background:var(--hover-bg); padding:15px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:11px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">APTITUDE SCORE</div>
+                        <div style="font-size:28px; font-weight:bold; color:var(--army-primary); font-family:'Oswald', sans-serif;">${res.score}</div>
+                    </div>
+                    <div style="flex:1; min-width:120px; background:var(--hover-bg); padding:15px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:11px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">FINAL GRADE</div>
+                        <div style="font-size:28px; font-weight:bold; color:var(--status-green); font-family:'Oswald', sans-serif;">${res.finalGrade}</div>
+                    </div>
+                    <div style="flex:1; min-width:120px; background:var(--hover-bg); padding:15px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+                        <div style="font-size:11px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">ATTENDANCE</div>
+                        <div style="font-size:28px; font-weight:bold; color:var(--text); font-family:'Oswald', sans-serif;">${res.attendancePct}%</div>
+                    </div>
+                </div>
+                
+                <div style="background:var(--hover-bg); padding:20px; border-radius:8px; border:1px solid var(--border);">
+                    <div style="font-size:13px; color:var(--text-muted); font-weight:bold;"><i class="fas fa-calendar-check"></i> 15-DAY TRAINING TRACKER</div>
+                    ${trackerHtml}
+                </div>
+                
+            </div>
         </div>
       `;
       document.getElementById('admin-cadet-dynamic-content').innerHTML = html;
     }, err => {
-      // Failsafe: Closes the infinite loading modal if the backend throws an error
-      closeAdminCadetModal(true);
+      document.getElementById('admin-cadet-dynamic-content').innerHTML = '<p style="color:var(--status-red); text-align:center; padding: 20px; font-weight:bold;">Error: Could not retrieve dossier.</p>';
     });
   }
 
