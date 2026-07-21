@@ -2221,8 +2221,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       const grid = document.getElementById('schedule-config-grid');
       if(!grid) return;
       
-      // Increased minmax from 280px to 320px to give cards breathing room
-      grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(320px, 1fr))";
+      grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(290px, 1fr))";
       grid.style.gap = "20px";
 
       let html = '';
@@ -2233,21 +2232,23 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
                   <i class="fas fa-calendar-day" style="margin-right:8px;"></i> DAY ${i}
               </label>
               
-              <!-- CHANGED FROM FLEX TO GRID TO FORCE INPUTS TO STAY INSIDE THE CARD -->
-              <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:10px; width:100%; box-sizing:border-box;">
-                  <input type="date" id="sched-date-${i}" style="width:100%; box-sizing:border-box; height:42px; padding:0 8px; border:2px solid var(--border); border-radius:6px; font-size:12px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
-                  
-                  <select id="sched-type-${i}" style="width:100%; box-sizing:border-box; height:42px; padding:0 8px; border:2px solid var(--border); border-radius:6px; font-size:12px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
-                      <option value="Single">Single (PM)</option>
-                      <option value="Double">Double (AM/PM)</option>
-                  </select>
+              <!-- THE BULLETPROOF WRAPPER: min-width:0 forces the browser to obey width:100% -->
+              <div style="display:flex; gap:10px; width:100%;">
+                  <div style="flex:1.2; min-width:0;">
+                      <input type="date" id="sched-date-${i}" style="width:100%; height:42px; padding:0 8px; border:2px solid var(--border); border-radius:6px; font-size:12px; outline:none; background:var(--card-bg); color:var(--text); box-sizing:border-box; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                      <select id="sched-type-${i}" style="width:100%; height:42px; padding:0 8px; border:2px solid var(--border); border-radius:6px; font-size:12px; outline:none; background:var(--card-bg); color:var(--text); box-sizing:border-box; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
+                          <option value="Single">Single (PM)</option>
+                          <option value="Double">Double (AM/PM)</option>
+                      </select>
+                  </div>
               </div>
           </div>`;
       }
       grid.innerHTML = html;
       updateScheduleLocks(); // Initialize locks on load
   }
-
   window.updateScheduleLocks = function() {
       let currentVirtualDay = 1;
       let skipNext = false;
