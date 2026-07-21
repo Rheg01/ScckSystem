@@ -2345,17 +2345,24 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     window.loadUserProfile = function() {
     if (!session || !session.user) return;
     
-    // Update the visual sidebar
-    updateSidebarProfile({name: session.user, position: session.role});
-    
-    // Fetch the actual profile data from the backend to populate the text boxes
+    // Fetch the actual profile data from the backend FIRST
     apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => {
+        
+        // 1. Populate the text boxes
         if(document.getElementById('prof-name')) document.getElementById('prof-name').value = res.name || session.user;
         if(document.getElementById('prof-rank')) document.getElementById('prof-rank').value = res.rank || '';
         if(document.getElementById('prof-age')) document.getElementById('prof-age').value = res.age || '';
         if(document.getElementById('prof-course')) document.getElementById('prof-course').value = res.course || '';
         if(document.getElementById('prof-position')) document.getElementById('prof-position').value = res.position || '';
         if(document.getElementById('prof-contact')) document.getElementById('prof-contact').value = res.contact || '';
+        
+        // 2. Update the visual sidebar using the FETCHED data
+        updateSidebarProfile({
+            name: res.name || session.user, 
+            rank: res.rank || '',
+            position: res.position || session.role,
+            image: res.image || ''
+        });
     });
   };
   
