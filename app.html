@@ -824,9 +824,6 @@
       <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-cog"></i> SYSTEM SETTINGS</h2></div>
       
       <!-- GRID CONTAINER TO UTILIZE FULL SCREEN -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; align-items: start; margin-bottom: 25px;">
-        
-        <!-- GRID CONTAINER TO UTILIZE FULL SCREEN -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; align-items: stretch; margin-bottom: 25px;">
         
         <!-- MANAGE COMPANIES CARD (Fixed UI) -->
@@ -863,6 +860,7 @@
     <!-- PROFILE -->
     <div id="panel-profile" class="view-panel">
       <div class="header-bar anim-1"><h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-user-circle"></i> MY PROFILE</h2></div>
+      
       <div class="anim-2" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); max-width: 600px;">
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom:15px;">
           <div class="input-group"><label>FULL NAME</label><input type="text" id="prof-name"></div>
@@ -874,7 +872,9 @@
         </div>
         <div class="input-group" style="margin-bottom:20px;"><label>PROFILE IMAGE</label><input type="file" id="prof-image-file" accept="image/*"><p id="prof-image-status" style="font-size:11px; color:var(--text-muted); margin-top:5px;">Select an image to crop.</p></div>
         <button id="btn-save-profile" class="btn-success" onclick="saveUserProfile()"><i class="fas fa-save"></i> UPDATE PROFILE</button>
-        <!-- ACCOUNT SECURITY (Appended below existing text boxes) -->
+      </div>
+      
+      <!-- ACCOUNT SECURITY -->
       <div class="table-card anim-3" style="max-width: 600px; padding: 25px; margin-top: 25px;">
         <h3 style="color: var(--army-primary); margin-bottom: 20px; font-family: 'Oswald', sans-serif; font-size: 18px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
           <i class="fas fa-shield-alt"></i> ACCOUNT SECURITY
@@ -894,8 +894,9 @@
           <button id="btn-submit-pass" class="btn-success" style="flex: 1; height: 46px; font-weight: bold; display: none;" onclick="submitNewPassword()">SAVE PASSWORD</button>
         </div>
       </div>
+      
+    </div>
   </div>
-</div>
 
 <script>
   // 🛑 PASTE YOUR LIVE URL HERE
