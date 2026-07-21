@@ -17,6 +17,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* FORCE SYSTEM SETTINGS CARDS TO STACK VERTICALLY */
+#schedule-config-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    gap: 20px !important;
+}
+
+#schedule-config-grid > div {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 18px 15px !important;
+    box-sizing: border-box !important;
+}
+
+/* Forces the input row container to break from horizontal flex to vertical column */
+#schedule-config-grid > div > div {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+/* Fixes the width constraints for individual inputs */
+#schedule-config-grid input[type="date"],
+#schedule-config-grid select {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 44px !important;
+}
     :root { 
       --army-dark: #1b2015; --army-primary: #2d3821; --army-light: #4b5a36; --army-gold: #d4af37; 
       --bg: #e8ece1; --card-bg: #ffffff; --text: #2c3539; --text-muted: #6b705c; 
