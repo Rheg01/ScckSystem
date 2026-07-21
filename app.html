@@ -965,16 +965,23 @@ function filterAttendance() {
           }, (err) => { 
               btn.innerHTML = oldHtml; 
               btn.disabled = false; 
+              // THIS EXPOSES THE SILENT ERROR
+              Swal.fire({ title: 'DATA FEED OFFLINE', text: err.message || "Failed to retrieve data. Verify your GAS_API_URL or re-authorize the script.", icon: 'error' });
           });
       } else {
-          if(actionName === 'getAdminDashboardData') apiCall(actionName, { user: session.user, pass: session.pass }, processDashboardData);
-          if(actionName === 'getCadetData') apiCall(actionName, { user: session.user, pass: session.pass }, processCadetData);
-          if(actionName === 'getLeaveRequests') apiCall(actionName, { user: session.user, pass: session.pass }, processLeaveRequests);
-          if(actionName === 'getStudentsForIDCards') apiCall(actionName, { user: session.user, pass: session.pass }, processIDStudents);
-          if(actionName === 'getAdminLegacyData') apiCall(actionName, { user: session.user, pass: session.pass }, processLegacyData);
-          if(actionName === 'getPostsAdmin') apiCall(actionName, { user: session.user, pass: session.pass }, (res) => { globalAdminPostCache = res.posts; renderAdminPostsHTML(); });
-          if(actionName === 'getAuditLogs') apiCall(actionName, { user: session.user, pass: session.pass }, processAuditLogs);
-          if(actionName === 'getGradebookData') apiCall(actionName, { user: session.user, pass: session.pass }, processGradebookData);
+          apiCall(actionName, { user: session.user, pass: session.pass }, (res) => {
+              if(actionName === 'getAdminDashboardData') processDashboardData(res);
+              if(actionName === 'getCadetData') processCadetData(res);
+              if(actionName === 'getLeaveRequests') processLeaveRequests(res);
+              if(actionName === 'getStudentsForIDCards') processIDStudents(res);
+              if(actionName === 'getAdminLegacyData') processLegacyData(res);
+              if(actionName === 'getPostsAdmin') { globalAdminPostCache = res.posts; renderAdminPostsHTML(); }
+              if(actionName === 'getAuditLogs') processAuditLogs(res);
+              if(actionName === 'getGradebookData') processGradebookData(res);
+          }, (err) => {
+              // THIS EXPOSES THE SILENT ERROR FOR BACKGROUND REFRESHES
+              Swal.fire({ title: 'DATA FEED OFFLINE', text: err.message || "Failed to retrieve data. Verify your GAS_API_URL or re-authorize the script.", icon: 'error', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000 });
+          });
       }
   }
 
