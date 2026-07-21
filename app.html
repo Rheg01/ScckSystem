@@ -505,15 +505,27 @@
     </div>
 
     <!-- ATTENDANCE -->
-   <div class="header-actions">
-  <div class="input-group" style="min-width: 200px; margin-right: 10px;">
-    <input type="text" id="search-attendance" placeholder="Search log..." oninput="filterAttendance()">
-  </div>
-  <button class="btn-info" onclick="promptExport('attendance-table', 'Attendance_Report')"><i class="fas fa-file-excel"></i> EXPORT</button>
-  <button id="btn-ref-att" class="btn-outline" onclick="silentRefresh('getAdminDashboardData', 'btn-ref-att')"><i class="fas fa-sync"></i> SYNC</button>
-</div>
-      <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Company</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead><tbody id="attendance-table"></tbody></table></div></div>
-    
+    <div id="panel-attendance" class="view-panel">
+      <div class="header-bar anim-1">
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-clipboard-list"></i> ATTENDANCE LOG</h2>
+        <div class="header-actions">
+          <div class="input-group" style="min-width: 200px; margin-right: 10px;">
+            <input type="text" id="search-attendance" placeholder="Search log..." oninput="filterAttendance()">
+          </div>
+          <button class="btn-info" onclick="promptExport('attendance-table', 'Attendance_Report')"><i class="fas fa-file-excel"></i> EXPORT</button>
+          <button id="btn-ref-att" class="btn-outline" onclick="silentRefresh('getAdminDashboardData', 'btn-ref-att')"><i class="fas fa-sync"></i> SYNC</button>
+        </div>
+      </div>
+      <div class="table-card anim-2">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Name</th><th>Company</th><th>Time In</th><th>Time Out</th><th>Status</th></tr>
+            </thead>
+            <tbody id="attendance-table"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- UNIT ROSTER -->
