@@ -446,7 +446,7 @@
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-graduation-cap"></i> UNIT GRADEBOOK</h2>
         <div class="header-actions">
-          <button class="btn-info" onclick="exportTableToExcel('gradebook-table', 'ROTC_Gradebook')"><i class="fas fa-file-excel"></i> EXPORT</button>
+<button class="btn-info" onclick="promptExport('gradebook-table', 'ROTC_Gradebook')"><i class="fas fa-file-excel"></i> EXPORT</button><button class="btn-info" onclick="exportTableToExcel('gradebook-table', 'ROTC_Gradebook')"><i class="fas fa-file-excel"></i> EXPORT</button>
           <button id="btn-ref-grade" class="btn-outline" onclick="silentRefresh('getGradebookData', 'btn-ref-grade')"><i class="fas fa-sync"></i> SYNC</button>
         </div>
       </div>
@@ -2832,13 +2832,13 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       });
   }
 
-  // =========================================================================
+// =========================================================================
   // ADVANCED EXPORT (Number 4)
   // =========================================================================
   window.promptExport = function(tableId, defaultName) {
     let optionsHtml = '<option value="ALL">Entire Unit</option>';
-    if (typeof globalCompanies !== 'undefined') {
-        globalCompanies.forEach(c => optionsHtml += `<option value="${c}">${c} Company</option>`);
+    if (typeof window.globalCompanies !== 'undefined') {
+        window.globalCompanies.forEach(c => optionsHtml += `<option value="${c}">${c} Company</option>`);
     }
     
     Swal.fire({
@@ -2856,6 +2856,12 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     });
   }
 
+  // BRIDGE FUNCTION TO FIX GRADEBOOK AND LEAVES BUTTONS
+  window.exportTableToExcel = function(tableId, filename) {
+      // Bypasses the popup and exports whatever is currently visible on the screen
+      exportTableToExcelAdvanced(tableId, filename, "ALL");
+  }
+
   window.exportTableToExcelAdvanced = function(tableId, filename, targetCompany) {
     let table = document.getElementById(tableId).closest('table'); 
     let rows = table.querySelectorAll('tr'); 
@@ -2864,9 +2870,14 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     let aoa = []; 
     let headerRow = []; 
     let headers = rows[0].querySelectorAll("th, td"); 
+    let nameColIndex = 1; // Default fallback
+    
     for (let j = 0; j < headers.length; j++) { 
         if(headers[j].querySelector('button') && j === headers.length - 1) continue; 
-        headerRow.push(headers[j].innerText.trim()); 
+        let headerText = headers[j].innerText.trim();
+        headerRow.push(headerText); 
+        // Dynamically find where the "Name" column is for perfect sorting
+        if (headerText.toLowerCase().includes("name")) nameColIndex = j;
     } 
     aoa.push(headerRow);
     
@@ -2895,10 +2906,10 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     
     if (bodyData.length === 0) return Swal.fire({toast:true, position:'top', icon:'info', title:'No matching data to export.', showConfirmButton:false, timer:2000});
     
-    // Sort Alphabetically by Last Name (Name is usually in the 2nd column, index 1)
+    // Sort Alphabetically by Last Name dynamically
     bodyData.sort((a, b) => { 
-        let nameA = a[1] ? a[1] : ""; 
-        let nameB = b[1] ? b[1] : ""; 
+        let nameA = a[nameColIndex] ? a[nameColIndex] : ""; 
+        let nameB = b[nameColIndex] ? b[nameColIndex] : ""; 
         let lastNameA = nameA.split(" ").pop().toLowerCase();
         let lastNameB = nameB.split(" ").pop().toLowerCase();
         return lastNameA.localeCompare(lastNameB); 
