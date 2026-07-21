@@ -826,14 +826,17 @@
       <!-- GRID CONTAINER TO UTILIZE FULL SCREEN -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; align-items: start; margin-bottom: 25px;">
         
-        <!-- MANAGE COMPANIES CARD -->
-        <div class="anim-4 super-admin-only" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); width: 100%;">
+        <!-- GRID CONTAINER TO UTILIZE FULL SCREEN -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; align-items: stretch; margin-bottom: 25px;">
+        
+        <!-- MANAGE COMPANIES CARD (Fixed UI) -->
+        <div class="anim-4" style="background:var(--card-bg); padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column;">
           <h3 style="color:var(--army-primary); margin-bottom:15px; font-size:18px;"><i class="fas fa-sitemap"></i> MANAGE COMPANIES</h3>
-          <div class="input-group" style="margin-bottom:15px;">
+          <div class="input-group" style="flex: 1; display: flex; flex-direction: column; margin-bottom:15px;">
             <label>OFFICIAL COMPANIES (COMMA SEPARATED)</label>
-            <textarea id="set-companies" rows="3" placeholder="Alpha, Bravo, Charlie..."></textarea>
+            <textarea id="set-companies" style="flex: 1; resize: none;" placeholder="Alpha, Bravo, Charlie..."></textarea>
           </div>
-          <button class="btn-success" onclick="saveCompanies()"><i class="fas fa-save"></i> UPDATE COMPANIES</button>
+          <button class="btn-success" style="width: 100%;" onclick="saveCompanies()"><i class="fas fa-save"></i> UPDATE COMPANIES</button>
         </div>
 
         <!-- BRANDING SECTION CARD -->
@@ -1195,9 +1198,13 @@ apiCall('getSystemCompanies', {}, res => {
   };
 
   // Add "window." to make the Edit button function globally accessible
+ // --- INDESTRUCTIBLE EDIT BUTTON ---
   window.editStudentDynamic = function(id, coy, con) { 
+    // Failsafe: If global array hasn't loaded, use the defaults
+    let companiesList = (window.globalCompanies && window.globalCompanies.length > 0) ? window.globalCompanies : ["Alpha", "Bravo", "Charlie", "Headquarters", "Delta"];
+    
     let optionsHtml = '';
-    window.globalCompanies.forEach(c => {
+    companiesList.forEach(c => {
       let sel = (c.toLowerCase() === coy.toLowerCase()) ? 'selected' : '';
       optionsHtml += `<option value="${c}" ${sel}>${c}</option>`;
     });
@@ -1228,7 +1235,6 @@ apiCall('getSystemCompanies', {}, res => {
         }
     }); 
   };
-
   // Add "window." to make the Update Companies button globally accessible
   window.saveCompanies = function() {
     const val = document.getElementById('set-companies').value;
@@ -2657,21 +2663,34 @@ document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="
 // =========================================================================
   // ADMIN VIEW CADET & PASSWORD OTP (Number 5)
   // =========================================================================
-  window.viewAdminCadetDashboard = function(studentId) {
+ window.viewAdminCadetDashboard = function(studentId) {
     const modal = document.getElementById('admin-cadet-modal');
-    document.getElementById('admin-cadet-dynamic-content').innerHTML = '<p style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> Fetching Cadet Dossier...</p>';
+    document.getElementById('admin-cadet-dynamic-content').innerHTML = '<p style="text-align: center; margin-top:20px; color:var(--army-primary);"><i class="fas fa-spinner fa-spin"></i> Fetching Cadet Dossier...</p>';
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
 
     apiCall('getAnyCadetData', { targetId: studentId, user: session.user, pass: session.pass }, res => {
       let html = `
-        <h2 style="color:var(--army-primary); margin-bottom: 20px;"><i class="fas fa-id-badge"></i> CADET DOSSIER: ${studentId}</h2>
-        <div style="display:flex; gap:20px; margin-bottom:20px;">
-          <div style="flex:1; background:var(--hover-bg); padding:15px; border-radius:8px;"><b>Aptitude:</b> ${res.score}</div>
-          <div style="flex:1; background:var(--hover-bg); padding:15px; border-radius:8px;"><b>Final Grade:</b> ${res.finalGrade}</div>
+        <h2 style="color:var(--army-primary); margin-bottom: 20px; font-family:'Oswald', sans-serif;"><i class="fas fa-id-badge"></i> CADET DOSSIER: ${studentId}</h2>
+        <div style="display:flex; gap:15px; margin-bottom:20px; flex-wrap: wrap;">
+          <div style="flex:1; min-width:150px; background:var(--hover-bg); padding:20px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+              <div style="font-size:12px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">APTITUDE SCORE</div>
+              <div style="font-size:32px; font-weight:bold; color:var(--army-primary); font-family:'Oswald', sans-serif;">${res.score}</div>
+          </div>
+          <div style="flex:1; min-width:150px; background:var(--hover-bg); padding:20px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+              <div style="font-size:12px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">FINAL GRADE</div>
+              <div style="font-size:32px; font-weight:bold; color:var(--status-green); font-family:'Oswald', sans-serif;">${res.finalGrade}</div>
+          </div>
+          <div style="flex:1; min-width:150px; background:var(--hover-bg); padding:20px; border-radius:8px; border:1px solid var(--border); text-align:center;">
+              <div style="font-size:12px; color:var(--text-muted); font-weight:bold; margin-bottom:5px;">ATTENDANCE</div>
+              <div style="font-size:32px; font-weight:bold; color:var(--text); font-family:'Oswald', sans-serif;">${res.attendancePct}%</div>
+          </div>
         </div>
       `;
       document.getElementById('admin-cadet-dynamic-content').innerHTML = html;
+    }, err => {
+      // Failsafe: Closes the infinite loading modal if the backend throws an error
+      closeAdminCadetModal(true);
     });
   }
 
