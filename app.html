@@ -1148,7 +1148,7 @@ function filterAttendance() {
   // GRADEBOOK LOGIC
   // =========================================================================
 
-  function processGradebookData(res) {
+  function processGradebookData(res) { 
       if(!res.success) return;
       globalGradebookCache = res.gradebook; 
       
@@ -1167,24 +1167,37 @@ function filterAttendance() {
   function filterGradebook() {
       const filter = document.getElementById('gradebook-filter').value;
       let html = '';
-      globalGradebookCache.forEach(g => {
+      
+      // Sort Gradebook Alphabetically
+      let sortedGradebook = [...globalGradebookCache].sort((a,b) => getLastName(a.name).localeCompare(getLastName(b.name)));
+      
+      sortedGradebook.forEach(g => {
           if (filter !== "ALL" && g.company !== filter) return;
           let colorClass = g.finalGrade >= 75 ? 'var(--status-green)' : 'var(--status-red)';
           let daysColor = g.daysAttended < 10 ? 'var(--status-red)' : 'var(--text)';
-          let globalCompanies = ["Alpha", "Bravo", "Charlie", "Headquarters"];
-
-// Load companies silently on boot
-apiCall('getSystemCompanies', {}, res => { 
-  if(res.companies) {
-    globalCompanies = res.companies;
-    if(document.getElementById('set-companies')) document.getElementById('set-companies').value = globalCompanies.join(", ");
+          
+          html += `<tr>
+              <td><b>${g.id}</b></td>
+              <td>${g.name}</td>
+              <td style="color:${daysColor}; font-weight:bold;">${g.daysAttended}</td>
+              <td>${g.prelim}</td>
+              <td>${g.midterm}</td>
+              <td>${g.final}</td>
+              <td>${g.examAvg}</td>
+              <td>${g.aptitudePct}</td>
+              <td>${g.attendancePct}</td>
+              <td style="color:${colorClass}; font-weight:bold; font-size:16px;">${g.finalGrade}</td>
+          </tr>`;
+      });
+      document.getElementById('gradebook-table').innerHTML = html || '<tr><td colspan="10" style="text-align:center;">No records.</td></tr>';
   }
-});
 
-// Ensure the variable is globally accessible
+  // =========================================================================
+  // GLOBAL COMPANY & EDIT STUDENT LOGIC 
+  // =========================================================================
+  
   window.globalCompanies = ["Alpha", "Bravo", "Charlie", "Headquarters"];
 
-  // Create a function to fetch companies that we trigger upon successful login
   window.loadSystemCompanies = function() {
     if (session && session.user) {
       apiCall('getSystemCompanies', { user: session.user, pass: session.pass }, res => { 
@@ -1198,12 +1211,17 @@ apiCall('getSystemCompanies', {}, res => {
     }
   };
 
-  // Add "window." to make the Edit button function globally accessible
- // --- INDESTRUCTIBLE EDIT BUTTON ---
+  window.saveCompanies = function() {
+    const val = document.getElementById('set-companies').value;
+    const arr = val.split(',').map(s => s.trim()).filter(s => s);
+    apiCall('saveSystemCompanies', { companies: arr, user: session.user, pass: session.pass }, res => {
+      Swal.fire({toast:true, position:'top-end', icon:'success', title:'Companies updated.', showConfirmButton:false, timer:2000});
+      window.globalCompanies = arr;
+    });
+  };
+
   window.editStudentDynamic = function(id, coy, con) { 
-    // Failsafe: If global array hasn't loaded, use the defaults
     let companiesList = (window.globalCompanies && window.globalCompanies.length > 0) ? window.globalCompanies : ["Alpha", "Bravo", "Charlie", "Headquarters", "Delta"];
-    
     let optionsHtml = '';
     companiesList.forEach(c => {
       let sel = (c.toLowerCase() === coy.toLowerCase()) ? 'selected' : '';
@@ -1236,31 +1254,6 @@ apiCall('getSystemCompanies', {}, res => {
         }
     }); 
   };
-  // Add "window." to make the Update Companies button globally accessible
-  window.saveCompanies = function() {
-    const val = document.getElementById('set-companies').value;
-    const arr = val.split(',').map(s => s.trim()).filter(s => s);
-    
-    apiCall('saveSystemCompanies', { companies: arr, user: session.user, pass: session.pass }, res => {
-      Swal.fire({toast:true, position:'top-end', icon:'success', title:'Companies updated.', showConfirmButton:false, timer:2000});
-      window.globalCompanies = arr;
-    });
-  };
-          html += `<tr>
-              <td><b>${g.id}</b></td>
-              <td>${g.name}</td>
-              <td style="color:${daysColor}; font-weight:bold;">${g.daysAttended}</td>
-              <td>${g.prelim}</td>
-              <td>${g.midterm}</td>
-              <td>${g.final}</td>
-              <td>${g.examAvg}</td>
-              <td>${g.aptitudePct}</td>
-              <td>${g.attendancePct}</td>
-              <td style="color:${colorClass}; font-weight:bold; font-size:16px;">${g.finalGrade}</td>
-          </tr>`;
-      });
-      document.getElementById('gradebook-table').innerHTML = html || '<tr><td colspan="10" style="text-align:center;">No records.</td></tr>';
-  }
 
   // =========================================================================
   // CADET DATA & 15-DAY TRACKER
@@ -1421,13 +1414,14 @@ sortedAtt.forEach(r => {
 document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="6" style="text-align:center;">No entries logged.</td></tr>'; 
 
 // Sort Masterlist Alphabetically & Make Clickable
-let sortedMaster = (res.masterlist || []).sort((a,b) => getLastName(a.name).localeCompare(getLastName(b.name)));
-let mh = ''; 
-sortedMaster.forEach(r => { 
-    let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); 
-    // Notice the clickable name calling viewAdminCadetDashboard(id)
-  mh += `<tr><td><b>${r.id}</b></td><td><a href="#" onclick="viewAdminCadetDashboard('${r.id}', '${r.name.replace(/'/g, "\\'")}')" style="color:var(--army-primary); font-weight:600; text-decoration:none; border-bottom:1px dashed var(--border);">${r.name}</a></td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name.replace(/'/g, "\\'")}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-warning" onclick="editStudentDynamic('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button></td></tr>`;
-document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="6" style="text-align:center;">Roster currently clean.</td></tr>';
+      let sortedMaster = (res.masterlist || []).sort((a,b) => getLastName(a.name).localeCompare(getLastName(b.name)));
+      let mh = ''; 
+      sortedMaster.forEach(r => { 
+          let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); 
+          mh += `<tr><td><b>${r.id}</b></td><td><a href="#" onclick="viewAdminCadetDashboard('${r.id}', '${r.name.replace(/'/g, "\\'")}')" style="color:var(--army-primary); font-weight:600; text-decoration:none; border-bottom:1px dashed var(--border);">${r.name}</a></td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;"><button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name.replace(/'/g, "\\'")}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> <button class="btn-icon btn-warning" onclick="editStudentDynamic('${r.id}','${r.company}','${r.contact}')"><i class="fas fa-edit"></i></button></td></tr>`; 
+      }); // <-- THIS MISSING BRACKET CAUSED THE CRASH
+      document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="6" style="text-align:center;">Roster currently clean.</td></tr>';
+      
       let ach = ''; 
       for(let i = 1; i < (res.accounts || []).length; i++) { 
           let r = res.accounts[i]; 
@@ -2348,19 +2342,13 @@ document.getElementById('masterlist-table').innerHTML = mh || '<tr><td colspan="
   }
   window.loadUserProfile = function() {
     if (!session || !session.user) return;
+    updateSidebarProfile({name: session.user, position: session.role});
     
-    // Injects data without destroying the password UI below it
-    let html = `
-      <div style="text-align:center;">
-        <i class="fas fa-shield-alt" style="font-size:64px; color:var(--army-primary); margin-bottom: 15px;"></i>
-        <h2 style="margin-bottom: 5px; font-family: 'Oswald', sans-serif;">${session.user}</h2>
-        <p style="color:var(--text-muted); font-weight: bold; letter-spacing: 1px; text-transform:uppercase;">ROLE: ${session.role}</p>
-      </div>
-    `;
-    let container = document.getElementById('profile-dynamic-content');
-    if (container) container.innerHTML = html;
+    // Automatically pre-fill the name field if it's empty
+    if(document.getElementById('prof-name') && document.getElementById('prof-name').value === '') {
+        document.getElementById('prof-name').value = session.user;
+    }
   };
-  }
   
   function saveUserProfile() { 
       const d={ name: document.getElementById('prof-name').value.trim(), rank: document.getElementById('prof-rank').value.trim(), age: document.getElementById('prof-age').value.trim(), course: document.getElementById('prof-course').value.trim(), position: document.getElementById('prof-position').value.trim(), contact: document.getElementById('prof-contact').value.trim() }; 
