@@ -2220,14 +2220,22 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   function buildScheduleUI() {
       const grid = document.getElementById('schedule-config-grid');
       if(!grid) return;
+      
+      // Dynamically improve grid spacing
+      grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(280px, 1fr))";
+      grid.style.gap = "20px";
+
       let html = '';
       for(let i=1; i<=15; i++) {
           html += `
-          <div id="sched-box-${i}" style="background:var(--hover-bg); padding:10px; border-radius:6px; border:1px solid var(--border); transition: 0.3s;">
-              <label id="sched-lbl-${i}" style="font-size:12px; font-weight:bold; color:var(--army-primary);">DAY ${i}</label>
-              <div style="display:flex; gap:10px; margin-top:5px;">
-                  <input type="date" id="sched-date-${i}" style="flex:2; height:36px; padding:0 10px; border:1px solid var(--border); border-radius:4px; font-size:13px; background:var(--bg); color:var(--text);" onchange="updateScheduleLocks()">
-                  <select id="sched-type-${i}" style="flex:1; height:36px; padding:0 10px; border:1px solid var(--border); border-radius:4px; font-size:13px; background:var(--bg); color:var(--text);" onchange="updateScheduleLocks()">
+          <div id="sched-box-${i}" style="background:var(--bg); padding:15px; border-radius:8px; border:1px solid var(--border); border-left: 4px solid var(--army-gold); transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+              <label id="sched-lbl-${i}" style="font-size:13px; font-weight:800; color:var(--army-primary); display:flex; align-items:center; margin-bottom:12px; font-family:'Inter', sans-serif;">
+                  <i class="fas fa-calendar-day" style="margin-right:8px;"></i> DAY ${i}
+              </label>
+              <div style="display:flex; gap:10px;">
+                  <input type="date" id="sched-date-${i}" style="flex:1.5; height:42px; padding:0 12px; border:2px solid var(--border); border-radius:6px; font-size:13px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
+                  
+                  <select id="sched-type-${i}" style="flex:1; height:42px; padding:0 12px; border:2px solid var(--border); border-radius:6px; font-size:13px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
                       <option value="Single">Single (PM)</option>
                       <option value="Double">Double (AM & PM)</option>
                   </select>
@@ -2251,20 +2259,23 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
           
           if(!box) continue;
 
+          // Handle the LOCKED state for the second half of a "Double" day
           if(skipNext) {
-              box.style.opacity = '0.5';
+              box.style.opacity = '0.6';
+              box.style.borderLeftColor = 'var(--status-gray)';
               box.style.display = 'block';
               dateInput.disabled = true;
               typeInput.disabled = true;
               dateInput.value = '';
               typeInput.value = 'Single';
               
-              lbl.innerHTML = `<span style="color:var(--status-red); font-size:11px;"><i class="fas fa-lock"></i> LOCKED (Consumed by ${consumedLabel})</span>`;
+              lbl.innerHTML = `<i class="fas fa-lock" style="margin-right:8px; color:var(--text-muted);"></i> DAY ${i} <span style="margin-left:auto; background:rgba(211,47,47,0.1); color:var(--status-red); border: 1px dashed var(--status-red); padding:3px 8px; border-radius:4px; font-size:10px;">LOCKED (${consumedLabel})</span>`;
               
               skipNext = false;
               continue; 
           }
           
+          // Hide boxes that exceed the 15-day limit
           if (currentVirtualDay > 15) {
               box.style.display = 'none';
               continue;
@@ -2272,10 +2283,13 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
               box.style.display = 'block';
           }
 
+          // Reset to NORMAL state
           box.style.opacity = '1';
+          box.style.borderLeftColor = 'var(--army-gold)';
           dateInput.disabled = false;
           typeInput.disabled = false;
           
+          // Prevent selecting "Double" on the very last day (Day 15)
           let doubleOption = typeInput.querySelector('option[value="Double"]');
           if (currentVirtualDay === 15) {
               if (typeInput.value === 'Double') typeInput.value = 'Single';
@@ -2284,13 +2298,106 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
               if (doubleOption) doubleOption.disabled = false;
           }
 
+          // Handle active "Double" day UI
           if(typeInput.value === 'Double') {
-              lbl.innerHTML = `DAY ${currentVirtualDay} & ${currentVirtualDay + 1} <span style="color:var(--army-primary); font-size:10px; margin-left:5px;">(Full Day Session)</span>`;
-              consumedLabel = `Day ${currentVirtualDay} & ${currentVirtualDay + 1}`;
+              lbl.innerHTML = `<i class="fas fa-calendar-day" style="margin-right:8px;"></i> DAY ${currentVirtualDay} & ${currentVirtualDay + 1} <span style="margin-left:auto; background:var(--hover-bg); border: 1px solid var(--border); color:var(--army-primary); padding:3px 8px; border-radius:4px; font-size:10px;">FULL DAY</span>`;
+              consumedLabel = `D${currentVirtualDay}`;
               skipNext = true;
               currentVirtualDay += 2; 
           } else {
-              lbl.innerHTML = `DAY ${currentVirtualDay}`;
+              lbl.innerHTML = `<i class="fas fa-calendar-day" style="margin-right:8px;"></i> DAY ${currentVirtualDay}`;
+              currentVirtualDay += 1; 
+          }
+      }
+  }function buildScheduleUI() {
+      const grid = document.getElementById('schedule-config-grid');
+      if(!grid) return;
+      
+      // Dynamically improve grid spacing
+      grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(280px, 1fr))";
+      grid.style.gap = "20px";
+
+      let html = '';
+      for(let i=1; i<=15; i++) {
+          html += `
+          <div id="sched-box-${i}" style="background:var(--bg); padding:15px; border-radius:8px; border:1px solid var(--border); border-left: 4px solid var(--army-gold); transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+              <label id="sched-lbl-${i}" style="font-size:13px; font-weight:800; color:var(--army-primary); display:flex; align-items:center; margin-bottom:12px; font-family:'Inter', sans-serif;">
+                  <i class="fas fa-calendar-day" style="margin-right:8px;"></i> DAY ${i}
+              </label>
+              <div style="display:flex; gap:10px;">
+                  <input type="date" id="sched-date-${i}" style="flex:1.5; height:42px; padding:0 12px; border:2px solid var(--border); border-radius:6px; font-size:13px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
+                  
+                  <select id="sched-type-${i}" style="flex:1; height:42px; padding:0 12px; border:2px solid var(--border); border-radius:6px; font-size:13px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
+                      <option value="Single">Single (PM)</option>
+                      <option value="Double">Double (AM & PM)</option>
+                  </select>
+              </div>
+          </div>`;
+      }
+      grid.innerHTML = html;
+      updateScheduleLocks(); // Initialize locks on load
+  }
+
+  window.updateScheduleLocks = function() {
+      let currentVirtualDay = 1;
+      let skipNext = false;
+      let consumedLabel = "";
+      
+      for(let i=1; i<=15; i++) {
+          let box = document.getElementById(`sched-box-${i}`);
+          let dateInput = document.getElementById(`sched-date-${i}`);
+          let typeInput = document.getElementById(`sched-type-${i}`);
+          let lbl = document.getElementById(`sched-lbl-${i}`);
+          
+          if(!box) continue;
+
+          // Handle the LOCKED state for the second half of a "Double" day
+          if(skipNext) {
+              box.style.opacity = '0.6';
+              box.style.borderLeftColor = 'var(--status-gray)';
+              box.style.display = 'block';
+              dateInput.disabled = true;
+              typeInput.disabled = true;
+              dateInput.value = '';
+              typeInput.value = 'Single';
+              
+              lbl.innerHTML = `<i class="fas fa-lock" style="margin-right:8px; color:var(--text-muted);"></i> DAY ${i} <span style="margin-left:auto; background:rgba(211,47,47,0.1); color:var(--status-red); border: 1px dashed var(--status-red); padding:3px 8px; border-radius:4px; font-size:10px;">LOCKED (${consumedLabel})</span>`;
+              
+              skipNext = false;
+              continue; 
+          }
+          
+          // Hide boxes that exceed the 15-day limit
+          if (currentVirtualDay > 15) {
+              box.style.display = 'none';
+              continue;
+          } else {
+              box.style.display = 'block';
+          }
+
+          // Reset to NORMAL state
+          box.style.opacity = '1';
+          box.style.borderLeftColor = 'var(--army-gold)';
+          dateInput.disabled = false;
+          typeInput.disabled = false;
+          
+          // Prevent selecting "Double" on the very last day (Day 15)
+          let doubleOption = typeInput.querySelector('option[value="Double"]');
+          if (currentVirtualDay === 15) {
+              if (typeInput.value === 'Double') typeInput.value = 'Single';
+              if (doubleOption) doubleOption.disabled = true;
+          } else {
+              if (doubleOption) doubleOption.disabled = false;
+          }
+
+          // Handle active "Double" day UI
+          if(typeInput.value === 'Double') {
+              lbl.innerHTML = `<i class="fas fa-calendar-day" style="margin-right:8px;"></i> DAY ${currentVirtualDay} & ${currentVirtualDay + 1} <span style="margin-left:auto; background:var(--hover-bg); border: 1px solid var(--border); color:var(--army-primary); padding:3px 8px; border-radius:4px; font-size:10px;">FULL DAY</span>`;
+              consumedLabel = `D${currentVirtualDay}`;
+              skipNext = true;
+              currentVirtualDay += 2; 
+          } else {
+              lbl.innerHTML = `<i class="fas fa-calendar-day" style="margin-right:8px;"></i> DAY ${currentVirtualDay}`;
               currentVirtualDay += 1; 
           }
       }
