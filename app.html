@@ -2221,23 +2221,25 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       const grid = document.getElementById('schedule-config-grid');
       if(!grid) return;
       
-      // Dynamically improve grid spacing
-      grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(280px, 1fr))";
+      // Increased minmax from 280px to 320px to give cards breathing room
+      grid.style.gridTemplateColumns = "repeat(auto-fit, minmax(320px, 1fr))";
       grid.style.gap = "20px";
 
       let html = '';
       for(let i=1; i<=15; i++) {
           html += `
-          <div id="sched-box-${i}" style="background:var(--bg); padding:15px; border-radius:8px; border:1px solid var(--border); border-left: 4px solid var(--army-gold); transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+          <div id="sched-box-${i}" style="background:var(--bg); padding:15px; border-radius:8px; border:1px solid var(--border); border-left: 4px solid var(--army-gold); transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02); box-sizing: border-box;">
               <label id="sched-lbl-${i}" style="font-size:13px; font-weight:800; color:var(--army-primary); display:flex; align-items:center; margin-bottom:12px; font-family:'Inter', sans-serif;">
                   <i class="fas fa-calendar-day" style="margin-right:8px;"></i> DAY ${i}
               </label>
-              <div style="display:flex; gap:10px;">
-                  <input type="date" id="sched-date-${i}" style="flex:1.5; height:42px; padding:0 12px; border:2px solid var(--border); border-radius:6px; font-size:13px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
+              
+              <!-- CHANGED FROM FLEX TO GRID TO FORCE INPUTS TO STAY INSIDE THE CARD -->
+              <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:10px; width:100%; box-sizing:border-box;">
+                  <input type="date" id="sched-date-${i}" style="width:100%; box-sizing:border-box; height:42px; padding:0 8px; border:2px solid var(--border); border-radius:6px; font-size:12px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
                   
-                  <select id="sched-type-${i}" style="flex:1; height:42px; padding:0 12px; border:2px solid var(--border); border-radius:6px; font-size:13px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
+                  <select id="sched-type-${i}" style="width:100%; box-sizing:border-box; height:42px; padding:0 8px; border:2px solid var(--border); border-radius:6px; font-size:12px; outline:none; background:var(--card-bg); color:var(--text); transition:0.2s; cursor:pointer;" onchange="updateScheduleLocks()" onfocus="this.style.borderColor='var(--army-gold)'" onblur="this.style.borderColor='var(--border)'">
                       <option value="Single">Single (PM)</option>
-                      <option value="Double">Double (AM & PM)</option>
+                      <option value="Double">Double (AM/PM)</option>
                   </select>
               </div>
           </div>`;
