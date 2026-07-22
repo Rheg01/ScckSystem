@@ -1461,7 +1461,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
           let scoreColor = r.score < 75 ? 'var(--status-red)' : (r.score < 90 ? 'var(--status-yellow)' : 'var(--status-green)'); 
           mh += `<tr><td><b>${r.id}</b></td><td><a href="#" onclick="viewAdminCadetDashboard('${r.id}', '${r.name.replace(/'/g, "\\'")}')" style="color:var(--army-primary); font-weight:600; text-decoration:none; border-bottom:1px dashed var(--border);">${r.name}</a></td><td>${r.company}</td><td style="font-weight:bold; font-size:16px; color:${scoreColor};">${r.score}</td><td>${r.contact}</td><td style="white-space:nowrap;">
             <button class="btn-icon btn-info" onclick="showQR('${r.id}', '${r.name.replace(/'/g, "\\'")}')" title="View QR"><i class="fas fa-qrcode"></i></button>
-            <button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name.replace(/'/g, "\\'")}',${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> 
+            <button class="btn-icon btn-secondary" onclick="openDisciplineModal('${r.id}','${r.name}', ${r.score})" title="Discipline Ledger"><i class="fas fa-balance-scale"></i></button> 
             <button class="btn-icon btn-warning" onclick="editStudentDynamic('${r.id}','${r.company}','${r.contact}')" title="Edit Dossier"><i class="fas fa-edit"></i></button>
             <button class="btn-icon btn-danger" onclick="deleteStudentPrompt('${r.id}')" title="Discharge Cadet"><i class="fas fa-trash"></i></button>
           </td></tr>`; 
