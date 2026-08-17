@@ -83,86 +83,106 @@ function getVirtualSchedule() {
 }
 
 // ─── API ROUTER ──────────────────────────────────────────
-function doPost(e) {
+// api/index.js
+
+export default async function handler(req, res) {
+  // 1. Set CORS headers so your frontend can communicate securely
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  // Handle browser pre-flight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   try {
-    const params = JSON.parse(e.postData.contents);
+    // 2. Parse incoming request parameters
+    const params = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const action = params.action;
     let result = {};
 
-    if (action === "systemLogin") result = systemLogin(params.user, params.pass);
-    else if (action === "getAdminDashboardData") result = getAdminDashboardData(params.user, params.pass);
-    else if (action === "markAttendance") result = markAttendance(params.scannedData, params.user, params.pass, params.offlineDate, params.offlineTime);
-    else if (action === "bulkMarkAttendance") result = bulkMarkAttendance(params.scans, params.user, params.pass);
-    else if (action === "updateStudentInfo") result = updateStudentInfo(params.id, params.company, params.contact, params.user, params.pass);
-    else if (action === "deleteStudentData") result = deleteStudentData(params.id, params.user, params.pass);
-    else if (action === "createAccount") result = { message: createAccount(params.newUser, params.newPass, params.role, params.user, params.pass) };
-    else if (action === "updateAccountStatus") result = { message: updateAccountStatus(params.targetUser, params.newStatus, params.user, params.pass) };
-    else if (action === "updateLegacyAccess") result = { message: updateLegacyAccess(params.targetUser, params.newStatus, params.user, params.pass) };
-    else if (action === "toggleLegacyAccess") result = { message: toggleLegacyAccess(params.targetUser, params.user, params.pass) };
+    // 3. MASTER ROUTER (Converted directly from your doPost)
+    if (action === "systemLogin") result = await systemLogin(params.user, params.pass);
+    else if (action === "getAdminDashboardData") result = await getAdminDashboardData(params.user, params.pass);
+    else if (action === "markAttendance") result = await markAttendance(params.scannedData, params.user, params.pass, params.offlineDate, params.offlineTime);
+    else if (action === "bulkMarkAttendance") result = await bulkMarkAttendance(params.scans, params.user, params.pass);
+    else if (action === "updateStudentInfo") result = await updateStudentInfo(params.id, params.company, params.contact, params.user, params.pass);
+    else if (action === "deleteStudentData") result = await deleteStudentData(params.id, params.user, params.pass);
+    else if (action === "createAccount") result = { message: await createAccount(params.newUser, params.newPass, params.role, params.user, params.pass) };
+    else if (action === "updateAccountStatus") result = { message: await updateAccountStatus(params.targetUser, params.newStatus, params.user, params.pass) };
+    else if (action === "updateLegacyAccess") result = { message: await updateLegacyAccess(params.targetUser, params.newStatus, params.user, params.pass) };
+    else if (action === "toggleLegacyAccess") result = { message: await toggleLegacyAccess(params.targetUser, params.user, params.pass) };
     
     // Leaves
-    else if (action === "submitLeaveRequest") result = submitLeaveRequest(params.studentId, params.fromDate, params.toDate, params.reason, params.user, params.pass);
-    else if (action === "getLeaveRequests") result = getLeaveRequests(params.user, params.pass);
-    else if (action === "updateLeaveStatus") result = updateLeaveStatus(params.leaveId, params.status, params.user, params.pass);
+    else if (action === "submitLeaveRequest") result = await submitLeaveRequest(params.studentId, params.fromDate, params.toDate, params.reason, params.user, params.pass);
+    else if (action === "getLeaveRequests") result = await getLeaveRequests(params.user, params.pass);
+    else if (action === "updateLeaveStatus") result = await updateLeaveStatus(params.leaveId, params.status, params.user, params.pass);
     
     // System & Schedule
-    else if (action === "getStudentsForIDCards") result = getStudentsForIDCards(params.user, params.pass);
-    else if (action === "getAuditLogs") result = getAuditLogs(params.user, params.pass);
-    else if (action === "getSettings") result = getSettings();
-    else if (action === "saveSettings") result = saveSettings(params.logoData, params.bgData, params.navLogoData, params.clearBg, params.user, params.pass);
-    else if (action === "getProfile") result = getProfile(params.targetUser, params.user, params.pass);
-    else if (action === "saveProfile") result = saveProfile(params.profileData, params.user, params.pass);
-    else if (action === "saveTrainingSchedule") result = saveTrainingSchedule(params.schedule, params.user, params.pass);
-    else if (action === "getTrainingSchedule") result = getTrainingSchedule(params.user, params.pass);
+    else if (action === "getStudentsForIDCards") result = await getStudentsForIDCards(params.user, params.pass);
+    else if (action === "getAuditLogs") result = await getAuditLogs(params.user, params.pass);
+    else if (action === "getSettings") result = await getSettings();
+    else if (action === "saveSettings") result = await saveSettings(params.logoData, params.bgData, params.navLogoData, params.clearBg, params.user, params.pass);
+    else if (action === "getProfile") result = await getProfile(params.targetUser, params.user, params.pass);
+    else if (action === "saveProfile") result = await saveProfile(params.profileData, params.user, params.pass);
+    else if (action === "saveTrainingSchedule") result = await saveTrainingSchedule(params.schedule, params.user, params.pass);
+    else if (action === "getTrainingSchedule") result = await getTrainingSchedule(params.user, params.pass);
     
     // Cadets & Grading
-    else if (action === "getCadetData") result = getCadetData(params.user, params.pass);
-    else if (action === "getGradebookData") result = processAndGetGradebook(params.user, params.pass); 
+    else if (action === "getCadetData") result = await getCadetData(params.user, params.pass);
+    else if (action === "getGradebookData") result = await processAndGetGradebook(params.user, params.pass); 
     
     // Discipline
-    else if (action === "bulkAddDiscipline") result = bulkAddDiscipline(params.targetCompany, params.type, params.points, params.reason, params.user, params.pass);
-    else if (action === "addDiscipline") result = addDiscipline(params.studentId, params.type, params.points, params.reason, params.user, params.pass);
-    else if (action === "getDiscipline") result = getDiscipline(params.studentId, params.user, params.pass);
+    else if (action === "bulkAddDiscipline") result = await bulkAddDiscipline(params.targetCompany, params.type, params.points, params.reason, params.user, params.pass);
+    else if (action === "addDiscipline") result = await addDiscipline(params.studentId, params.type, params.points, params.reason, params.user, params.pass);
+    else if (action === "getDiscipline") result = await getDiscipline(params.studentId, params.user, params.pass);
     
     // Legacy DB
-    else if (action === "addLegacyClass") result = addLegacyClass(params.year, params.name, params.logoData, params.user, params.pass);
-    else if (action === "getLegacyClasses") result = getLegacyClasses(params.user, params.pass); 
-    else if (action === "addLegacyOfficer") result = addLegacyOfficer(params.classId, params.rank, params.name, params.designation, params.course, params.bio, params.imageData, params.user, params.pass);
-    else if (action === "getAdminLegacyData") result = getAdminLegacyData(params.user, params.pass); 
-    else if (action === "updateLegacyClassStatus") result = updateLegacyClassStatus(params.classId, params.status, params.user, params.pass);
-    else if (action === "deleteLegacyClass") result = deleteLegacyClass(params.classId, params.user, params.pass);
-    else if (action === "deleteLegacyOfficer") result = deleteLegacyOfficer(params.offId, params.user, params.pass);
-    else if (action === "getLegacyData") result = getLegacyData();
-    else if (action === "requestEditOTP") result = requestEditOTP(params.user, params.pass);
-    else if (action === "submitOfficerEdit") result = submitOfficerEdit(params.offId, params.rank, params.name, params.desig, params.course, params.bio, params.otp, params.user, params.pass);
+    else if (action === "addLegacyClass") result = await addLegacyClass(params.year, params.name, params.logoData, params.user, params.pass);
+    else if (action === "getLegacyClasses") result = await getLegacyClasses(params.user, params.pass); 
+    else if (action === "addLegacyOfficer") result = await addLegacyOfficer(params.classId, params.rank, params.name, params.designation, params.course, params.bio, params.imageData, params.user, params.pass);
+    else if (action === "getAdminLegacyData") result = await getAdminLegacyData(params.user, params.pass); 
+    else if (action === "updateLegacyClassStatus") result = await updateLegacyClassStatus(params.classId, params.status, params.user, params.pass);
+    else if (action === "deleteLegacyClass") result = await deleteLegacyClass(params.classId, params.user, params.pass);
+    else if (action === "deleteLegacyOfficer") result = await deleteLegacyOfficer(params.offId, params.user, params.pass);
+    else if (action === "getLegacyData") result = await getLegacyData();
+    else if (action === "requestEditOTP") result = await requestEditOTP(params.user, params.pass);
+    else if (action === "submitOfficerEdit") result = await submitOfficerEdit(params.offId, params.rank, params.name, params.desig, params.course, params.bio, params.otp, params.user, params.pass);
     
     // Command History
-    else if (action === "addCommandRecord") result = addCommandRecord(params.parentId, params.role, params.rank, params.name, params.tenure, params.status, params.quote, params.bio, params.imageData, params.user, params.pass);
-    else if (action === "getCommandHistory") result = getCommandHistory();
-    else if (action === "editCommandRecord") result = editCommandRecord(params.logId, params.rank, params.name, params.tenure, params.status, params.quote, params.bio, params.imageData, params.user, params.pass);
-    else if (action === "deleteCommandRecord") result = deleteCommandRecord(params.logId, params.user, params.pass);
+    else if (action === "addCommandRecord") result = await addCommandRecord(params.parentId, params.role, params.rank, params.name, params.tenure, params.status, params.quote, params.bio, params.imageData, params.user, params.pass);
+    else if (action === "getCommandHistory") result = await getCommandHistory();
+    else if (action === "editCommandRecord") result = await editCommandRecord(params.logId, params.rank, params.name, params.tenure, params.status, params.quote, params.bio, params.imageData, params.user, params.pass);
+    else if (action === "deleteCommandRecord") result = await deleteCommandRecord(params.logId, params.user, params.pass);
     
     // Posts
-    else if (action === "submitPost") result = submitPost(params.title, params.description, params.imageArray, params.videoUrl, params.user, params.pass);
-    else if (action === "getPostsAdmin") result = getPostsAdmin(params.user, params.pass);
-    else if (action === "updatePostStatus") result = updatePostStatus(params.postId, params.status, params.feedback, params.user, params.pass);
-    else if (action === "resubmitPost") result = resubmitPost(params.postId, params.title, params.description, params.imageArray, params.videoUrl, params.user, params.pass);
-    else if (action === "getApprovedPosts") result = getApprovedPosts();
-    else if (action === "deletePost") result = deletePost(params.postId, params.user, params.pass);
-    else if (action === "togglePinPost") result = togglePinPost(params.postId, params.user, params.pass);
-    // --- NEW FEATURES API ROUTES ---
-    else if (action === "getSystemCompanies") result = { success: true, companies: getSystemCompanies() };
-    else if (action === "saveSystemCompanies") result = saveSystemCompanies(params.companies, params.user, params.pass);
-    else if (action === "getAnyCadetData") result = getAnyCadetData(params.targetId, params.user, params.pass);
-    else if (action === "requestPasswordOTP") result = requestPasswordOTP(params.user, params.pass);
-    else if (action === "confirmPasswordChange") result = confirmPasswordChange(params.otp, params.newPass, params.user, params.pass);
-    else if (action === "getAttendanceDates") result = getAttendanceDates(params.user, params.pass);
-    else if (action === "getHistoricalAttendance") result = getHistoricalAttendance(params.date, params.coy, params.user, params.pass);
+    else if (action === "submitPost") result = await submitPost(params.title, params.description, params.imageArray, params.videoUrl, params.user, params.pass);
+    else if (action === "getPostsAdmin") result = await getPostsAdmin(params.user, params.pass);
+    else if (action === "updatePostStatus") result = await updatePostStatus(params.postId, params.status, params.feedback, params.user, params.pass);
+    else if (action === "resubmitPost") result = await resubmitPost(params.postId, params.title, params.description, params.imageArray, params.videoUrl, params.user, params.pass);
+    else if (action === "getApprovedPosts") result = await getApprovedPosts();
+    else if (action === "deletePost") result = await deletePost(params.postId, params.user, params.pass);
+    else if (action === "togglePinPost") result = await togglePinPost(params.postId, params.user, params.pass);
+    
+    // Feature Routes
+    else if (action === "getSystemCompanies") result = { success: true, companies: await getSystemCompanies() };
+    else if (action === "saveSystemCompanies") result = await saveSystemCompanies(params.companies, params.user, params.pass);
+    else if (action === "getAnyCadetData") result = await getAnyCadetData(params.targetId, params.user, params.pass);
+    else if (action === "requestPasswordOTP") result = await requestPasswordOTP(params.user, params.pass);
+    else if (action === "confirmPasswordChange") result = await confirmPasswordChange(params.otp, params.newPass, params.user, params.pass);
+    else if (action === "getAttendanceDates") result = await getAttendanceDates(params.user, params.pass);
+    else if (action === "getHistoricalAttendance") result = await getHistoricalAttendance(params.date, params.coy, params.user, params.pass);
     else throw new Error("Unknown action requested.");
 
-    return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+    // 4. Return successful JSON response
+    res.status(200).json(result);
+
   } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({ error: true, message: error.message })).setMimeType(ContentService.MimeType.JSON);
+    // 5. Catch and return error responses
+    res.status(500).json({ error: true, message: error.message });
   }
 }
 
