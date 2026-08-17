@@ -2983,7 +2983,10 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
 
   window.toggleLegacyAccess = function(user, status) {
       Swal.fire({ title: `Change Legacy Access to ${status}?`, showCancelButton: true }).then(r => {
-          if(r.isConfirmed) { apiCall('updateLegacyAccess', { targetUser: user, access: status, user: session.user, pass: session.pass }, () => silentRefresh('getAdminDashboardData')); }
+          if(r.isConfirmed) { 
+              // FIXED: Changed "access" to "newStatus" to match the Code.gs router
+              apiCall('updateLegacyAccess', { targetUser: user, newStatus: status, user: session.user, pass: session.pass }, () => silentRefresh('getAdminDashboardData')); 
+          }
       });
   }
 
