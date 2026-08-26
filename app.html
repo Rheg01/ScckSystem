@@ -463,7 +463,14 @@
         </div>
       </div>
       <div class="scanner-dashboard">
-        <div class="scanner-left anim-2"><h4 style="margin-bottom:15px; color:var(--text-muted);"><i class="fas fa-camera"></i> OPTICAL INPUT</h4><div class="camera-wrap" style="position: relative; border: 4px solid var(--army-dark); border-radius: 6px; overflow: hidden; background: #000; min-height: 250px;"><video id="qr-video" autoplay playsinline muted style="width: 100%; display: block; object-fit: cover; max-height: 400px;"></video><div class="camera-overlay" id="msg" style="position: absolute; bottom: 10px; left: 10px; right: 10px; text-align: center; background: rgba(232, 240, 254, 0.9); padding: 8px; border-radius: 4px; font-weight: bold; color: var(--army-primary);">CAMERA OFFLINE</div></div><div id="camera-error" style="display:none; text-align:center; padding:25px; color:var(--status-red); background:rgba(211,47,47,0.1); border-radius:6px; margin-top:15px; border:1px dashed var(--status-red);"><i class="fas fa-video-slash" style="font-size:36px; display:block; margin-bottom:10px;"></i><strong id="camera-error-title" style="font-family:'Oswald',sans-serif; font-size:18px;">CAMERA UNAVAILABLE</strong><p id="camera-error-detail" style="margin-top:8px; font-size:13px; font-family:'Inter',sans-serif; color:var(--text);"></p></div><div style="display:flex; gap:10px; margin-top:12px;"><button id="btn-start-cam" class="btn-success" style="flex:1;" onclick="startScanner()">📷 ACTIVATE CAMERA</button><button id="btn-stop-cam" class="btn-danger" style="flex:1; display:none;" onclick="stopScanner(true)">⏹ DEACTIVATE</button></div><div style="margin-top: 10px;"><input type="file" id="qr-file-input" accept="image/*" capture="environment" style="display:none;" onchange="handleQRImageUpload(event)"><button class="btn-warning" style="width:100%;" onclick="document.getElementById('qr-file-input').click()"><i class="fas fa-upload"></i> UPLOAD / CAPTURE QR</button></div></div>
+        <div class="scanner-left anim-2"><h4 style="margin-bottom:15px; color:var(--text-muted);"><i class="fas fa-camera"></i> OPTICAL INPUT</h4><div class="camera-wrap" style="position: relative; border: 4px solid var(--army-dark); border-radius: 6px; overflow: hidden; background: #000; min-height: 250px;"><video id="qr-video" autoplay playsinline muted style="width: 100%; display: block; object-fit: cover; max-height: 400px;"></video><div class="camera-overlay" id="msg" style="position: absolute; bottom: 10px; left: 10px; right: 10px; text-align: center; background: rgba(232, 240, 254, 0.9); padding: 8px; border-radius: 4px; font-weight: bold; color: var(--army-primary);">CAMERA OFFLINE</div></div><div id="camera-error" style="display:none; text-align:center; padding:25px; color:var(--status-red); background:rgba(211,47,47,0.1); border-radius:6px; margin-top:15px; border:1px dashed var(--status-red);"><i class="fas fa-video-slash" style="font-size:36px; display:block; margin-bottom:10px;"></i><strong id="camera-error-title" style="font-family:'Oswald',sans-serif; font-size:18px;">CAMERA UNAVAILABLE</strong><p id="camera-error-detail" style="margin-top:8px; font-size:13px; font-family:'Inter',sans-serif; color:var(--text);"></p></div>
+        <div style="display:flex; gap:10px; margin-top:12px;">
+    <button id="btn-start-cam" class="btn-success" style="flex:1;" onclick="startScanner()">📷 ACTIVATE CAMERA</button>
+    <button id="btn-flip-cam" class="btn-info" style="flex:1; display:none;" onclick="flipCamera()"><i class="fas fa-sync-alt"></i> FLIP CAM</button>
+    <button id="btn-stop-cam" class="btn-danger" style="flex:1; display:none;" onclick="stopScanner(true)">⏹ DEACTIVATE</button>
+</div>
+        <div style="margin-top: 10px;"><input type="file" id="qr-file-input" accept="image/*" capture="environment" style="display:none;" onchange="handleQRImageUpload(event)">
+          <button class="btn-warning" style="width:100%;" onclick="document.getElementById('qr-file-input').click()"><i class="fas fa-upload"></i> UPLOAD / CAPTURE QR</button></div></div>
         <div class="scanner-right anim-3"><h4 style="margin-bottom:15px; color:var(--text-muted);"><i class="fas fa-id-badge"></i> PERSONNEL DATA</h4><div class="detail-card"><div class="detail-avatar"><i class="fas fa-user" id="scan-avatar-icon"></i><img id="scan-avatar" src="" alt="Cadet Photo"></div><h3 id="scan-name" style="color:var(--army-primary); margin-bottom:20px; font-size:22px; text-align:center;">AWAITING SCAN...</h3><div class="detail-row"><span class="detail-label">Cadet ID</span><span class="detail-value" id="scan-id">--</span></div><div class="detail-row"><span class="detail-label">Date</span><span class="detail-value" id="scan-date">--</span></div><div class="detail-row"><span class="detail-label">Time In</span><span class="detail-value" id="scan-in" style="color:var(--status-green);">--</span></div><div class="detail-row"><span class="detail-label">Time Out</span><span class="detail-value" id="scan-out" style="color:var(--army-primary);">--</span></div><div class="detail-row"><span class="detail-label">Status</span><span class="detail-value" id="scan-status">--</span></div></div></div>
       </div>
       <div class="anim-4" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; margin-bottom:10px;"><h4 style="color:var(--text-muted);"><i class="fas fa-list"></i> RECENT LOGS <span id="scan-count" style="font-size:12px; background:var(--army-dark); color:var(--army-gold); padding:2px 8px; border-radius:4px; margin-left:6px; font-family:'Inter',sans-serif;">0</span></h4></div>
@@ -2005,31 +2012,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   // PUBLIC POSTS
   // =========================================================================
 
-  async function submitPublicPost() {
-    const title = document.getElementById('post-title').value.trim(); 
-    const desc = document.getElementById('post-desc').value.trim(); 
-    const vid = document.getElementById('post-video-url').value.trim();
-    
-    if (!title || !desc) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Title & Description required.', showConfirmButton:false, timer:2500});
-    if (!editingPostId && stagedImages.length === 0 && !vid) return Swal.fire({toast:true, position:'top', icon:'warning', title:'Media required.', showConfirmButton:false, timer:2500});
-    
-    const btn = document.getElementById('btn-submit-post'); 
-    const oldHtml = btn.innerHTML; 
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; 
-    btn.disabled = true;
-    
-    let actionName = editingPostId ? 'resubmitPost' : 'submitPost'; 
-    let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, token: session.token }; 
-    if (editingPostId) payload.postId = editingPostId;
-
-    apiCall(actionName, payload, (res) => {
-      Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
-      btn.innerHTML = oldHtml; 
-      btn.disabled = false; 
-      cancelEdit(); 
-      silentRefresh('getPostsAdmin');
-    }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
-  }
+  
 
   function editPost(id) {
     const p = globalAdminPostCache.find(x => x.id === id); if (!p) return;
@@ -2198,15 +2181,6 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   function showCameraError(t, d) { document.getElementById('qr-video').style.display='none'; document.getElementById('camera-error').style.display='block'; document.getElementById('camera-error-title').innerText=t; document.getElementById('camera-error-detail').innerHTML=d; document.getElementById('msg').innerText='CAMERA FAILED'; document.getElementById('btn-start-cam').style.display='block'; document.getElementById('btn-stop-cam').style.display='none'; document.getElementById('btn-torch').style.display='none'; }
   function hideCameraError() { document.getElementById('qr-video').style.display='block'; document.getElementById('camera-error').style.display='none'; }
   
-  function startScanner() { 
-      const v = document.getElementById('qr-video'), m = document.getElementById('msg'); 
-      m.innerText='REQUESTING HIGH-RES OPTICS...'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; 
-      if(!qrScanner) { qrScanner = new QrScanner(v, r => { if(!isScanning) onScanSuccess(r.data); }, { onDecodeError: e => {}, highlightScanRegion: true, preferredCamera: 'environment', maxScansPerSecond: 10 }); }
-      qrScanner.start().then(() => { 
-          hideCameraError(); m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; document.getElementById('btn-start-cam').style.display='none'; document.getElementById('btn-stop-cam').style.display='block'; 
-          qrScanner.hasFlash().then(hasFlash => { if (hasFlash) document.getElementById('btn-torch').style.display = 'block'; });
-      }).catch(err => { showCameraError('ACCESS DENIED', 'Camera access blocked.'); }); 
-  }
   
   function toggleFlashlight() {
       if(qrScanner) {
@@ -2217,11 +2191,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       }
   }
 
-  function stopScanner(manual) { 
-      if(qrScanner) { qrScanner.turnFlashOff(); qrScanner.stop(); }
-      isScanning=false; 
-      if(manual){ document.getElementById('btn-start-cam').style.display='block'; document.getElementById('btn-stop-cam').style.display='none'; document.getElementById('btn-torch').style.display='none'; document.getElementById('msg').innerText='CAMERA OFFLINE'; document.getElementById('msg').style.background='rgba(232, 240, 254, 0.9)'; document.getElementById('msg').style.color='var(--army-primary)'; } 
-  }
+  
 
   function handleQRImageUpload(event) { 
       const f = event.target.files[0]; if(!f) return; 
@@ -2233,27 +2203,110 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       }); 
       event.target.value=''; 
   }
+  let currentFacingMode = 'environment'; // Defaults to back camera
 
-  function clearRecentScans() { document.getElementById('recent-scans').innerHTML=''; recentScanCount=0; document.getElementById('scan-count').innerText='0'; }
-  
-  async function onScanSuccess(text) { 
-    if(isScanning) return; isScanning=true; const m=document.getElementById('msg'); 
-    
-    const payloadString = text.toString() + offTime.toString() + session.token.toString();
-const signature = await generateLocalHash(payloadString);
-
-offlineScans.push({ 
-    scannedData: text, 
-    offlineDate: offDate, 
-    offlineTime: offTime,
-    localHash: signature 
-}); 
-localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
-
-    m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; 
-    apiCall('markAttendance', { scannedData: text, user: session.user, token: session.token }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); 
+  function startScanner() { 
+      const v = document.getElementById('qr-video'), m = document.getElementById('msg'); 
+      m.innerText='REQUESTING HIGH-RES OPTICS...'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; 
+      if(!qrScanner) { 
+          qrScanner = new QrScanner(v, r => { if(!isScanning) onScanSuccess(r.data); }, { onDecodeError: e => {}, highlightScanRegion: true, preferredCamera: currentFacingMode, maxScansPerSecond: 10 }); 
+      }
+      qrScanner.start().then(() => { 
+          hideCameraError(); 
+          m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; 
+          document.getElementById('btn-start-cam').style.display='none'; 
+          document.getElementById('btn-flip-cam').style.display='block'; 
+          document.getElementById('btn-stop-cam').style.display='block'; 
+          qrScanner.hasFlash().then(hasFlash => { if (hasFlash) document.getElementById('btn-torch').style.display = 'block'; });
+      }).catch(err => { showCameraError('ACCESS DENIED', 'Camera access blocked.'); }); 
   }
 
+  function flipCamera() {
+      if (qrScanner) {
+          // Toggle between front ('user') and back ('environment') camera
+          currentFacingMode = (currentFacingMode === 'environment') ? 'user' : 'environment';
+          qrScanner.setCamera(currentFacingMode).then(() => {
+              const m = document.getElementById('msg');
+              m.innerText = 'CAMERA FLIPPED.';
+              setTimeout(() => m.innerText = 'OPTICS ONLINE. POINT AT QR CODE.', 1500);
+          });
+      }
+  }
+
+  function stopScanner(manual) { 
+      if(qrScanner) { qrScanner.turnFlashOff(); qrScanner.stop(); }
+      isScanning=false; 
+      if(manual){ 
+          document.getElementById('btn-start-cam').style.display='block'; 
+          document.getElementById('btn-flip-cam').style.display='none'; 
+          document.getElementById('btn-stop-cam').style.display='none'; 
+          document.getElementById('btn-torch').style.display='none'; 
+          document.getElementById('msg').innerText='CAMERA OFFLINE'; 
+          document.getElementById('msg').style.background='rgba(232, 240, 254, 0.9)'; 
+          document.getElementById('msg').style.color='var(--army-primary)'; 
+      } 
+  }
+
+  async function onScanSuccess(text) { 
+    if(isScanning) return; 
+    isScanning=true; 
+    const m=document.getElementById('msg'); 
+    
+    // 1. Generate timestamps securely so the system doesn't crash
+    let offDate = new Date().toLocaleDateString();
+    let offTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+    let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
+
+    // 2. Hash payload securely
+    const payloadString = text.toString() + offTime.toString() + session.token.toString();
+    const signature = await generateLocalHash(payloadString);
+
+    // 3. Temporarily save to offline cache
+    offlineScans.push({ 
+        scannedData: text, 
+        offlineDate: offDate, 
+        offlineTime: offTime,
+        localHash: signature 
+    }); 
+    localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
+    updateOfflineSyncUI();
+
+    m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; 
+    document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; 
+    document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; 
+    
+    // 4. Attempt Live API Call
+    apiCall('markAttendance', { scannedData: text, user: session.user, token: session.token }, (res) => { 
+        
+        // If live call succeeds, remove the temporary offline cache entry
+        let currentScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
+        currentScans = currentScans.filter(s => s.localHash !== signature);
+        localStorage.setItem('scck_offline_scans', JSON.stringify(currentScans));
+        updateOfflineSyncUI();
+
+        if(res.status==='ok') { 
+            m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; 
+            document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; 
+            document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; 
+            document.getElementById('scan-out').innerText=res.timeOut; 
+            if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } 
+            let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); 
+            document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; 
+            const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); 
+            nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; 
+            tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; 
+            if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); 
+        } else { 
+            m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; 
+        } 
+        setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); 
+    }, (err) => { 
+        // Live call failed (no internet), leave it in the offline cache
+        m.innerHTML='<i class="fas fa-wifi"></i> SAVED OFFLINE'; 
+        m.style.background='var(--status-gray)'; 
+        setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 2000); 
+    }); 
+  }
 
   function buildScheduleUI() {
       const grid = document.getElementById('schedule-config-grid');
