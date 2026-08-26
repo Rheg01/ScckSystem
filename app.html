@@ -929,6 +929,13 @@
   </div>
 
 <script>
+
+  async function generateLocalHash(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
   // 🛑 PASTE YOUR LIVE URL HERE
   const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwjd_vwSw8-WCCvyEY7zqNEZ2p5TAyZg2esb_8lKkgiXQP2z7IXvVuFA1D3sqHCsIiSRQ/exec";
 
@@ -2230,16 +2237,19 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
 
   function clearRecentScans() { document.getElementById('recent-scans').innerHTML=''; recentScanCount=0; document.getElementById('scan-count').innerText='0'; }
   
-  function onScanSuccess(text) { 
+  async function onScanSuccess(text) { 
     if(isScanning) return; isScanning=true; const m=document.getElementById('msg'); 
     
-    if (!navigator.onLine) {
-      let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
-      const now = new Date(); const offDate = ('0' + (now.getMonth() + 1)).slice(-2) + '/' + ('0' + now.getDate()).slice(-2) + '/' + now.getFullYear(); let hours = now.getHours(); let ampm = hours >= 12 ? 'PM' : 'AM'; hours = hours % 12; hours = hours ? hours : 12; let mins = ('0' + now.getMinutes()).slice(-2); let secs = ('0' + now.getSeconds()).slice(-2); let offTime = ('0' + hours).slice(-2) + ':' + mins + ':' + secs + ' ' + ampm;
-      offlineScans.push({ scannedData: text, offlineDate: offDate, offlineTime: offTime }); localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
-      m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-save"></i> SAVED OFFLINE'; document.getElementById('scan-name').innerText='OFFLINE SCAN CACHED'; document.getElementById('scan-id').innerText=text;
-      updateOfflineSyncUI(); setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 2000); return;
-    }
+    const payloadString = text.toString() + offTime.toString() + session.token.toString();
+const signature = await generateLocalHash(payloadString);
+
+offlineScans.push({ 
+    scannedData: text, 
+    offlineDate: offDate, 
+    offlineTime: offTime,
+    localHash: signature 
+}); 
+localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
 
     m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; 
     apiCall('markAttendance', { scannedData: text, user: session.user, token: session.token }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); 
@@ -2605,24 +2615,25 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
 
   function performLogin() {
     const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-token').value;
+    const p = document.getElementById('login-pass').value; // MUST BE login-pass
     const btn = document.getElementById('btn-login');
     const err = document.getElementById('login-err');
-    
     
     if (!u || !p) { err.innerText = 'Identification required.'; return; }
     
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; 
     btn.disabled = true; err.innerText = '';
 
-    apiCall('systemLogin', { user: u, token: p }, 
+    // MUST SEND pass: p
+    apiCall('systemLogin', { user: u, pass: p }, 
       (res) => {
         btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; 
         btn.disabled = false;
         
+        // This part you got right: store the token
         session = { user: u, token: res.token, role: res.role };
-localStorage.setItem('scck_session', JSON.stringify({ user: u, token: res.token, role: res.role, expiry: Date.now() + 12*60*60*1000 }));        
-        document.getElementById('login-user').value = ''; document.getElementById('login-token').value = '';
+        localStorage.setItem('scck_session', JSON.stringify({ user: u, token: res.token, role: res.role, expiry: Date.now() + 12*60*60*1000 }));        
+        document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
         
         document.getElementById('view-login').style.display = 'none'; 
         document.getElementById('app-container').style.display = 'flex';
@@ -2634,7 +2645,7 @@ localStorage.setItem('scck_session', JSON.stringify({ user: u, token: res.token,
       }, 
       (e) => { btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; btn.disabled = false; err.innerText = e.message; }
     );
-  }
+}
 
   function logout() { 
       session = {}; 
