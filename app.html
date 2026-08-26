@@ -2252,7 +2252,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       } 
   }
 
-  async function onScanSuccess(text) { 
+ async function onScanSuccess(text) { 
     if(isScanning) return; 
     isScanning=true; 
     const m=document.getElementById('msg'); 
@@ -2285,6 +2285,19 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     }); 
     localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
     updateOfflineSyncUI();
+
+    m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; 
+    document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; 
+    document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; 
+    
+    // 4. Attempt Live API Call
+    apiCall('markAttendance', { scannedData: text, user: session.user, token: session.token }, (res) => { 
+        
+        // If live call succeeds, remove the temporary offline cache entry
+        let currentScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
+        currentScans = currentScans.filter(s => s.localHash !== signature);
+        localStorage.setItem('scck_offline_scans', JSON.stringify(currentScans));
+        updateOfflineSyncUI();
 
         if(res.status==='ok') { 
             m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; 
