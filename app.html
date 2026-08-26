@@ -482,7 +482,9 @@
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-graduation-cap"></i> UNIT GRADEBOOK</h2>
         <div class="header-actions">
-<button class="btn-info" onclick="exportGradebookByCourse()"><i class="fas fa-file-excel"></i> EXPORT BY COURSE</button>          <button id="btn-ref-grade" class="btn-outline" onclick="silentRefresh('getGradebookData', 'btn-ref-grade')"><i class="fas fa-sync"></i> SYNC</button>
+          <button class="btn-info" onclick="promptExport('gradebook-table', 'ROTC_Gradebook_By_Coy')"><i class="fas fa-building"></i> BY COMPANY</button>
+          <button class="btn-info" onclick="exportGradebookByCourse()"><i class="fas fa-graduation-cap"></i> BY COURSE</button>
+          <button id="btn-ref-grade" class="btn-outline" onclick="silentRefresh('getGradebookData', 'btn-ref-grade')"><i class="fas fa-sync"></i> SYNC</button>
         </div>
       </div>
       <div class="action-bar anim-2">
@@ -2184,9 +2186,12 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   
   function toggleFlashlight() {
       if(qrScanner) {
-          qrScanner.isFlashOn().then(isOn => {
-              if(isOn) { qrScanner.turnFlashOff(); document.getElementById('btn-torch').innerHTML = '<i class="fas fa-bolt"></i> LIGHT'; } 
-              else { qrScanner.turnFlashOn(); document.getElementById('btn-torch').innerHTML = '<i class="fas fa-lightbulb"></i> LIGHT OFF'; }
+          qrScanner.toggleFlash().then(() => {
+              qrScanner.isFlashOn().then(isOn => {
+                  document.getElementById('btn-torch').innerHTML = isOn ? '<i class="fas fa-lightbulb"></i> LIGHT OFF' : '<i class="fas fa-bolt"></i> LIGHT';
+              });
+          }).catch(e => {
+              Swal.fire({toast:true, position:'top', icon:'error', title:'Flashlight unavailable on this device.', showConfirmButton:false, timer:2000});
           });
       }
   }
@@ -2252,9 +2257,19 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     isScanning=true; 
     const m=document.getElementById('msg'); 
     
-    // 1. Generate timestamps securely so the system doesn't crash
-    let offDate = new Date().toLocaleDateString();
-    let offTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+    // 1. Force strict MM/dd/yyyy and hh:mm:ss a formats to perfectly match Google Apps Script
+    let d = new Date();
+    let mm = String(d.getMonth() + 1).padStart(2, '0');
+    let dd = String(d.getDate()).padStart(2, '0');
+    let yyyy = d.getFullYear();
+    let offDate = `${mm}/${dd}/${yyyy}`;
+    
+    let rawTime = d.toLocaleTimeString('en-US', { hour12: true }); // e.g., "2:30:00 PM"
+    let timeParts = rawTime.split(' ');
+    let timeHMS = timeParts[0];
+    if (timeHMS.split(':')[0].length === 1) timeHMS = '0' + timeHMS; // Forces "02:30:00 PM"
+    let offTime = `${timeHMS} ${timeParts[1]}`;
+
     let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
 
     // 2. Hash payload securely
@@ -2270,19 +2285,6 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     }); 
     localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
     updateOfflineSyncUI();
-
-    m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; 
-    document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; 
-    document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; 
-    
-    // 4. Attempt Live API Call
-    apiCall('markAttendance', { scannedData: text, user: session.user, token: session.token }, (res) => { 
-        
-        // If live call succeeds, remove the temporary offline cache entry
-        let currentScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]");
-        currentScans = currentScans.filter(s => s.localHash !== signature);
-        localStorage.setItem('scck_offline_scans', JSON.stringify(currentScans));
-        updateOfflineSyncUI();
 
         if(res.status==='ok') { 
             m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; 
