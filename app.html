@@ -980,7 +980,7 @@ function filterAttendance() {
           btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
           btn.disabled = true;
           
-          apiCall(actionName, { user: session.user, pass: session.pass }, (res) => {
+          apiCall(actionName, { user: session.user, token: session.token }, (res) => {
               if(actionName === 'getAdminDashboardData') processDashboardData(res);
               if(actionName === 'getCadetData') processCadetData(res);
               if(actionName === 'getLeaveRequests') processLeaveRequests(res);
@@ -999,7 +999,7 @@ function filterAttendance() {
               Swal.fire({ title: 'DATA FEED OFFLINE', text: err.message || "Failed to retrieve data. Verify your GAS_API_URL or re-authorize the script.", icon: 'error' });
           });
       } else {
-          apiCall(actionName, { user: session.user, pass: session.pass }, (res) => {
+          apiCall(actionName, { user: session.user, token: session.token }, (res) => {
               if(actionName === 'getAdminDashboardData') processDashboardData(res);
               if(actionName === 'getCadetData') processCadetData(res);
               if(actionName === 'getLeaveRequests') processLeaveRequests(res);
@@ -1117,7 +1117,7 @@ function filterAttendance() {
       
       Swal.fire({ title: 'Saving...', didOpen: () => Swal.showLoading() });
       
-      apiCall('addCommandRecord', { parentId: parentId, role: role, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, pass: session.pass }, function(res) {
+      apiCall('addCommandRecord', { parentId: parentId, role: role, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, token: session.token }, function(res) {
           Swal.fire({toast:true, position:'top-end', icon:'success', title:'Record Added', showConfirmButton:false, timer:2000});
           loadCommandTable(); 
       });
@@ -1163,7 +1163,7 @@ function filterAttendance() {
 
       Swal.fire({ title: 'Updating...', didOpen: () => Swal.showLoading() });
       
-      apiCall('editCommandRecord', { logId: id, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, pass: session.pass }, function(res) {
+      apiCall('editCommandRecord', { logId: id, rank: rank, name: name, tenure: tenure, status: status, quote: quote, bio: bio, imageData: imgData, user: session.user, token: session.token }, function(res) {
           Swal.fire({toast:true, position:'top-end', icon:'success', title:'Updated', showConfirmButton:false, timer:2000});
           closeCmdEditModal();
           loadCommandTable(); 
@@ -1174,7 +1174,7 @@ function filterAttendance() {
       Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes' }).then(function(result) {
           if (result.isConfirmed) {
               Swal.fire({ title: 'Deleting...', didOpen: () => Swal.showLoading() });
-              apiCall('deleteCommandRecord', { logId: id, user: session.user, pass: session.pass }, function(res) {
+              apiCall('deleteCommandRecord', { logId: id, user: session.user, token: session.token }, function(res) {
                   Swal.fire({toast:true, position:'top-end', icon:'success', title:'Deleted', showConfirmButton:false, timer:2000});
                   loadCommandTable();
               });
@@ -1238,7 +1238,7 @@ function filterAttendance() {
 
   window.loadSystemCompanies = function() {
     if (session && session.user) {
-      apiCall('getSystemCompanies', { user: session.user, pass: session.pass }, res => { 
+      apiCall('getSystemCompanies', { user: session.user, token: session.token }, res => { 
         if(res.companies) {
           window.globalCompanies = res.companies;
           if(document.getElementById('set-companies')) {
@@ -1252,7 +1252,7 @@ function filterAttendance() {
   window.saveCompanies = function() {
     const val = document.getElementById('set-companies').value;
     const arr = val.split(',').map(s => s.trim()).filter(s => s);
-    apiCall('saveSystemCompanies', { companies: arr, user: session.user, pass: session.pass }, res => {
+    apiCall('saveSystemCompanies', { companies: arr, user: session.user, token: session.token }, res => {
       Swal.fire({toast:true, position:'top-end', icon:'success', title:'Companies updated.', showConfirmButton:false, timer:2000});
       window.globalCompanies = arr;
     });
@@ -1285,7 +1285,7 @@ function filterAttendance() {
     }).then(r => { 
         if(r.isConfirmed) {
             Swal.fire({ title: 'UPDATING...', didOpen: () => Swal.showLoading() });
-            apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, pass: session.pass }, () => {
+            apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, token: session.token }, () => {
                 Swal.fire({toast:true, position:'top-end', icon:'success', title:'Dossier updated.', showConfirmButton:false, timer:2000}); 
                 silentRefresh('getAdminDashboardData');
             }); 
@@ -1511,7 +1511,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       }).then(r => { 
           if(r.isConfirmed) {
               Swal.fire({ title: 'UPDATING...', didOpen: () => Swal.showLoading() });
-              apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, pass: session.pass }, () => {
+              apiCall('updateStudentInfo', { id: id, company: r.value[0], contact: r.value[1], user: session.user, token: session.token }, () => {
                   Swal.fire({toast:true, position:'top-end', icon:'success', title:'Dossier updated.', showConfirmButton:false, timer:2000}); 
                   silentRefresh('getAdminDashboardData');
               }); 
@@ -1531,7 +1531,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       }).then(r => { 
           if(r.isConfirmed) { 
               Swal.fire({ title: 'REMOVING...', didOpen: () => Swal.showLoading() }); 
-              apiCall('deleteStudentData', { id: id, user: session.user, pass: session.pass }, () => { 
+              apiCall('deleteStudentData', { id: id, user: session.user, token: session.token }, () => { 
                   Swal.fire({toast:true, position:'top-end', icon:'success', title:'Cadet discharged.', showConfirmButton:false, timer:2000}); 
                   silentRefresh('getAdminDashboardData'); 
               }); 
@@ -1596,7 +1596,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({ title: 'PROCESSING BATCH...', html: 'Updating unit rosters...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-        apiCall('bulkAddDiscipline', { targetCompany: target, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => {
+        apiCall('bulkAddDiscipline', { targetCompany: target, type: type, points: points, reason: reason, user: session.user, token: session.token }, (res) => {
             Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:3000});
             silentRefresh('getAdminDashboardData');
         }, (err) => { });
@@ -1628,7 +1628,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   
   function loadDisciplineHistory(id) { 
       document.getElementById('disc-history-table').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:10px;"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>'; 
-      apiCall('getDiscipline', { studentId: id, user: session.user, pass: session.pass }, (res) => { 
+      apiCall('getDiscipline', { studentId: id, user: session.user, token: session.token }, (res) => { 
           let h = ''; 
           (res.records || []).forEach(r => { 
               let ptsColor = parseInt(r.points) > 0 ? 'var(--status-green)' : 'var(--status-red)'; 
@@ -1652,7 +1652,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     const points = parseInt(parts[1]); 
     const reason = parts[2]; 
     
-    apiCall('addDiscipline', { studentId: currentDiscStudentId, type: type, points: points, reason: reason, user: session.user, pass: session.pass }, (res) => { 
+    apiCall('addDiscipline', { studentId: currentDiscStudentId, type: type, points: points, reason: reason, user: session.user, token: session.token }, (res) => { 
         Swal.fire({toast:true, position:'top-end', icon:'success', title:'Discipline logged.', showConfirmButton:false, timer:2000}); 
         document.getElementById('disc-action-select').value = ""; 
         btn.innerHTML = oldHtml; 
@@ -1705,7 +1705,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; 
     btn.disabled = true;
     
-    apiCall('submitLeaveRequest', { studentId: session.user, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { 
+    apiCall('submitLeaveRequest', { studentId: session.user, fromDate: f, toDate: t, reason: x, user: session.user, token: session.token }, (res) => { 
         Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
         document.getElementById('cadet-lv-from').value = ''; 
         document.getElementById('cadet-lv-to').value = ''; 
@@ -1724,7 +1724,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; 
     btn.disabled = true;
     
-    apiCall('submitLeaveRequest', { studentId: id, fromDate: f, toDate: t, reason: x, user: session.user, pass: session.pass }, (res) => { 
+    apiCall('submitLeaveRequest', { studentId: id, fromDate: f, toDate: t, reason: x, user: session.user, token: session.token }, (res) => { 
       Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
       ['id','from','to','reason'].forEach(k => document.getElementById(`lv-${k}`).value=''); 
       btn.innerHTML = oldHtml; 
@@ -1744,7 +1744,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
                       if(count <= 0) bl.style.display = 'none'; 
                   } 
               }
-              apiCall('updateLeaveStatus', { leaveId: id, status: s, user: session.user, pass: session.pass }, () => silentRefresh('getLeaveRequests')); 
+              apiCall('updateLeaveStatus', { leaveId: id, status: s, user: session.user, token: session.token }, () => silentRefresh('getLeaveRequests')); 
           } 
       }); 
   }
@@ -1815,7 +1815,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
 
   function loadLegacyClassesForDropdown() { 
       document.getElementById('leg-off-class').innerHTML='<option value="">Fetching...</option>'; 
-      apiCall('getLegacyClasses', { user: session.user, pass: session.pass }, (res) => { 
+      apiCall('getLegacyClasses', { user: session.user, token: session.token }, (res) => { 
           let o='<option value="">Select a Class...</option>'; 
           res.classes.forEach(c => o+=`<option value="${c.id}">${c.name} (${c.year})</option>`); 
           document.getElementById('leg-off-class').innerHTML=o; 
@@ -1868,7 +1868,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
 
   window.requestOfficerEditOTP = function() {
     Swal.fire({ title: 'SECURING CONNECTION...', html: 'Requesting OTP verification...', didOpen: () => Swal.showLoading() });
-    apiCall('requestEditOTP', { user: session.user, pass: session.pass }, (res) => {
+    apiCall('requestEditOTP', { user: session.user, token: session.token }, (res) => {
         Swal.fire({ 
             title: 'ENTER VERIFICATION CODE', 
             text: 'A 6-digit OTP has been sent to the database owner\'s email.', 
@@ -1892,7 +1892,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
         bio: document.getElementById('edit-off-bio').value, 
         otp: otp, 
         user: session.user, 
-        pass: session.pass 
+        token: session.token 
     };
     apiCall('submitOfficerEdit', payload, (res) => { 
         Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
@@ -1910,7 +1910,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...'; 
       btn.disabled = true;
       
-      apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, pass: session.pass }, (res) => { 
+      apiCall('addLegacyClass', { name: n, year: y, logoData: l, user: session.user, token: session.token }, (res) => { 
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
           document.getElementById('leg-class-name').value=''; 
           document.getElementById('leg-class-year').value=''; 
@@ -1939,7 +1939,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...'; 
       btn.disabled = true;
       
-      apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, pass: session.pass }, (res) => { 
+      apiCall('addLegacyOfficer', { classId: c, rank: r, name: n, designation: d, course: course, bio: bio, imageData: i, user: session.user, token: session.token }, (res) => { 
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
           document.getElementById('leg-off-rank').value=''; 
           document.getElementById('leg-off-name').value=''; 
@@ -1963,7 +1963,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
                   let count = parseInt(blg.innerText || 0) - 1; 
                   if(count > 0) { blg.innerText = count; } else { blg.style.display = 'none'; } 
               } 
-              apiCall('updateLegacyClassStatus', { classId: id, status: status, user: session.user, pass: session.pass }, () => { 
+              apiCall('updateLegacyClassStatus', { classId: id, status: status, user: session.user, token: session.token }, () => { 
                   Swal.fire({toast:true, position:'top-end', icon:'success', title:'Status updated.', showConfirmButton:false, timer:2000}); 
                   silentRefresh('getAdminLegacyData'); 
                   loadLegacyClassesForDropdown(); 
@@ -1975,7 +1975,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   window.deleteLegacyClass = function(id) { 
       Swal.fire({ title: 'PERMANENTLY DELETE CLASS?', text: 'All associated data will be wiped.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => { 
           if(r.isConfirmed) { 
-              apiCall('deleteLegacyClass', { classId: id, user: session.user, pass: session.pass }, () => { 
+              apiCall('deleteLegacyClass', { classId: id, user: session.user, token: session.token }, () => { 
                   Swal.fire({toast:true, position:'top-end', icon:'success', title:'Class removed.', showConfirmButton:false, timer:2000}); 
                   silentRefresh('getAdminLegacyData'); 
                   loadLegacyClassesForDropdown(); 
@@ -1987,7 +1987,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   window.deleteLegacyOfficer = function(id) { 
       Swal.fire({ title: 'PERMANENTLY DELETE OFFICER?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f' }).then(r => { 
           if(r.isConfirmed) { 
-              apiCall('deleteLegacyOfficer', { offId: id, user: session.user, pass: session.pass }, () => { 
+              apiCall('deleteLegacyOfficer', { offId: id, user: session.user, token: session.token }, () => { 
                   Swal.fire({toast:true, position:'top-end', icon:'success', title:'Officer removed.', showConfirmButton:false, timer:2000}); 
                   silentRefresh('getAdminLegacyData'); 
               }); 
@@ -2013,7 +2013,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     btn.disabled = true;
     
     let actionName = editingPostId ? 'resubmitPost' : 'submitPost'; 
-    let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, pass: session.pass }; 
+    let payload = { title: title, description: desc, imageArray: stagedImages, videoUrl: vid, user: session.user, token: session.token }; 
     if (editingPostId) payload.postId = editingPostId;
 
     apiCall(actionName, payload, (res) => {
@@ -2099,12 +2099,12 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     let currentPinned = globalAdminPostCache[postIndex].pinned; 
     globalAdminPostCache[postIndex].pinned = (currentPinned === true || currentPinned === "TRUE") ? false : true; 
     renderAdminPostsHTML();
-    apiCall('togglePinPost', { postId: id, user: session.user, pass: session.pass }, () => {}, () => { silentRefresh('getPostsAdmin'); });
+    apiCall('togglePinPost', { postId: id, user: session.user, token: session.token }, () => {}, () => { silentRefresh('getPostsAdmin'); });
   }
 
   window.deletePost = function(id) {
     Swal.fire({ title: 'PERMANENTLY DELETE?', text: "This post will be completely erased.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f', confirmButtonText: 'ANNIHILATE POST' }).then((result) => {
-      if (result.isConfirmed) { apiCall('deletePost', { postId: id, user: session.user, pass: session.pass }, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Post wiped.', showConfirmButton:false, timer:2000}); silentRefresh('getPostsAdmin'); }); }
+      if (result.isConfirmed) { apiCall('deletePost', { postId: id, user: session.user, token: session.token }, (res) => { Swal.fire({toast:true, position:'top-end', icon:'success', title:'Post wiped.', showConfirmButton:false, timer:2000}); silentRefresh('getPostsAdmin'); }); }
     });
   }
 
@@ -2127,7 +2127,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
             }
         }
         renderAdminPostsHTML();
-        apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, pass: session.pass }, () => { Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000 }); }, () => { silentRefresh('getPostsAdmin'); });
+        apiCall('updatePostStatus', { postId: id, status: status, feedback: feedback, user: session.user, token: session.token }, () => { Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000 }); }, () => { silentRefresh('getPostsAdmin'); });
       }
     });
   }
@@ -2183,7 +2183,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   function syncOfflineScans() {
     let offlineScans = JSON.parse(localStorage.getItem('scck_offline_scans') || "[]"); if (offlineScans.length === 0) return;
     const btn = document.getElementById('btn-sync-offline'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNCING...'; btn.disabled = true;
-    apiCall('bulkMarkAttendance', { scans: offlineScans, user: session.user, pass: session.pass }, (res) => {
+    apiCall('bulkMarkAttendance', { scans: offlineScans, user: session.user, token: session.token }, (res) => {
        localStorage.removeItem('scck_offline_scans'); updateOfflineSyncUI(); Swal.fire({toast:true, position:'top-end', icon:'success', title:'Synced successfully!', showConfirmButton:false, timer:2000}); btn.disabled = false;
        if(document.getElementById('panel-dashboard').classList.contains('active-panel')) silentRefresh('getAdminDashboardData');
     }, (err) => { btn.innerHTML = oldHtml; btn.disabled = false; });
@@ -2242,7 +2242,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     }
 
     m.style.background='rgba(245,127,23,0.9)'; m.style.color='#fff'; m.innerHTML='<i class="fas fa-spinner fa-spin"></i> PROCESSING DATA...'; document.getElementById('scan-name').innerText='QUERYING...'; document.getElementById('scan-id').innerText='...'; document.getElementById('scan-avatar').style.display='none'; document.getElementById('scan-avatar-icon').style.display='block'; 
-    apiCall('markAttendance', { scannedData: text, user: session.user, pass: session.pass }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); 
+    apiCall('markAttendance', { scannedData: text, user: session.user, token: session.token }, (res) => { if(res.status==='ok') { m.style.background='rgba(56,142,60,0.9)'; m.innerHTML='<i class="fas fa-check-circle"></i> LOGGED SUCCESSFULLY'; document.getElementById('scan-name').innerText=res.name; document.getElementById('scan-id').innerText=res.id; document.getElementById('scan-date').innerText=res.date; document.getElementById('scan-in').innerText=res.timeIn; document.getElementById('scan-out').innerText=res.timeOut; if(res.image){ document.getElementById('scan-avatar').src=res.image; document.getElementById('scan-avatar').style.display='block'; document.getElementById('scan-avatar-icon').style.display='none'; } let bc=res.action==='LATE'?'badge-late':(res.action==='VERY LATE'?'badge-verylate':(res.action==='TIME OUT'?'badge-timeout':'badge-present')); document.getElementById('scan-status').innerHTML=`<span class="badge ${bc}">${res.action}</span>`; const tb=document.getElementById('recent-scans'); const nr=document.createElement('tr'); nr.innerHTML=`<td><strong>${res.id}</strong><br><span style="font-size:12px; color:var(--text-muted);">${res.name}</span></td><td>${res.action==='TIME OUT'?res.timeOut:res.timeIn}</td><td><span class="badge ${bc}">${res.action}</span></td>`; tb.insertBefore(nr, tb.firstChild); recentScanCount++; document.getElementById('scan-count').innerText=recentScanCount; if(tb.rows.length>MAX_RECENT_SCANS) tb.deleteRow(tb.rows.length-1); } else { m.style.background='rgba(211,47,47,0.9)'; m.innerHTML='<i class="fas fa-exclamation-triangle"></i> '+res.msg; } setTimeout(() => { isScanning=false; m.innerText='OPTICS ONLINE. POINT AT QR CODE.'; m.style.background='rgba(232, 240, 254, 0.9)'; m.style.color='var(--army-primary)'; }, 3000); }, (err) => { m.innerText='COMMS LOST.'; m.style.background='rgba(211,47,47,0.9)'; isScanning=false; } ); 
   }
 
 
@@ -2497,7 +2497,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SAVING...';
       btn.disabled = true;
 
-      apiCall('saveTrainingSchedule', { schedule: schedule, user: session.user, pass: session.pass }, (res) => {
+      apiCall('saveTrainingSchedule', { schedule: schedule, user: session.user, token: session.token }, (res) => {
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000});
           btn.innerHTML = oldHtml;
           btn.disabled = false;
@@ -2512,7 +2512,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     if (!session || !session.user) return;
     
     // Fetch the actual profile data from the backend FIRST
-    apiCall('getProfile', { targetUser: session.user, user: session.user, pass: session.pass }, (res) => {
+    apiCall('getProfile', { targetUser: session.user, user: session.user, token: session.token }, (res) => {
         
         // 1. Populate the text boxes
         if(document.getElementById('prof-name')) document.getElementById('prof-name').value = res.name || session.user;
@@ -2541,7 +2541,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPDATING...'; 
       btn.disabled = true;
       
-      apiCall('saveProfile', { profileData: d, user: session.user, pass: session.pass }, (res) => { 
+      apiCall('saveProfile', { profileData: d, user: session.user, token: session.token }, (res) => { 
           Swal.fire({toast:true, position:'top-end', icon:'success', title:res.message, showConfirmButton:false, timer:2000}); 
           document.getElementById('prof-image-file').value=""; 
           delete croppedData['prof-image-file']; 
@@ -2566,7 +2566,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   }
   
   function saveSystemSettings() { 
-      let p={ user: session.user, pass: session.pass, clearBg: false }; 
+      let p={ user: session.user, token: session.token, clearBg: false }; 
       if(croppedData['set-logo-file']) p.logoData=croppedData['set-logo-file']; 
       if(croppedData['set-bg-file']) p.bgData=croppedData['set-bg-file']; 
       if(croppedData['set-nav-logo-file']) p.navLogoData=croppedData['set-nav-logo-file']; 
@@ -2593,7 +2593,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   
   function resetBackground() { 
       Swal.fire({ title: 'RESETTING...', didOpen: () => Swal.showLoading() }); 
-      apiCall('saveSettings', { clearBg: true, user: session.user, pass: session.pass }, (res) => { 
+      apiCall('saveSettings', { clearBg: true, user: session.user, token: session.token }, (res) => { 
           Swal.fire({toast:true, position:'top-end', icon:'success', title:'Background removed.', showConfirmButton:false, timer:2000}); 
           document.getElementById('view-login').style.backgroundImage=`radial-gradient(circle at center, var(--army-light) 0%, var(--army-dark) 100%)`; 
       }); 
@@ -2605,7 +2605,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
 
   function performLogin() {
     const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-pass').value;
+    const p = document.getElementById('login-token').value;
     const btn = document.getElementById('btn-login');
     const err = document.getElementById('login-err');
     
@@ -2615,15 +2615,14 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...'; 
     btn.disabled = true; err.innerText = '';
 
-    apiCall('systemLogin', { user: u, pass: p }, 
+    apiCall('systemLogin', { user: u, token: p }, 
       (res) => {
         btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> AUTHORIZE ACCESS'; 
         btn.disabled = false;
         
-        session = { user: u, pass: p, role: res.role };
-        localStorage.setItem('scck_session', JSON.stringify({ user: u, pass: p, role: res.role, expiry: Date.now() + 12*60*60*1000 }));
-        
-        document.getElementById('login-user').value = ''; document.getElementById('login-pass').value = '';
+        session = { user: u, token: res.token, role: res.role };
+localStorage.setItem('scck_session', JSON.stringify({ user: u, token: res.token, role: res.role, expiry: Date.now() + 12*60*60*1000 }));        
+        document.getElementById('login-user').value = ''; document.getElementById('login-token').value = '';
         
         document.getElementById('view-login').style.display = 'none'; 
         document.getElementById('app-container').style.display = 'flex';
@@ -2669,7 +2668,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       try {
         const parsed = JSON.parse(savedSession);
         if (parsed.expiry > Date.now()) {
-          session = { user: parsed.user, pass: parsed.pass, role: parsed.role };
+          session = { user: parsed.user, token: parsed.token, role: parsed.role };
           document.getElementById('view-login').style.display = 'none'; 
           document.getElementById('app-container').style.display = 'flex';
           loadUserProfile(); setupRoleUI(parsed.role); updateOfflineSyncUI();
@@ -2846,7 +2845,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
 
-    apiCall('getAnyCadetData', { targetId: studentId, user: session.user, pass: session.pass }, res => {
+    apiCall('getAnyCadetData', { targetId: studentId, user: session.user, token: session.token }, res => {
       
       // Auto-generate a beautiful placeholder avatar using their initials
       let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(safeName)}&background=2C3E20&color=F5A623&size=150&font-size=0.4&bold=true`;
@@ -2921,7 +2920,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     if(!newPass || newPass.length < 6) return Swal.fire('Weak Password', 'Must be at least 6 characters.', 'warning');
     
     Swal.fire({title: 'Requesting OTP...', didOpen: () => Swal.showLoading()});
-    apiCall('requestPasswordOTP', { user: session.user, pass: session.pass }, res => {
+    apiCall('requestPasswordOTP', { user: session.user, token: session.token }, res => {
       Swal.close();
       document.getElementById('btn-req-otp').style.display = 'none';
       document.getElementById('otp-section').style.display = 'block';
@@ -2934,14 +2933,14 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
     const newPass = document.getElementById('prof-new-pass').value;
     
     Swal.fire({title: 'Verifying...', didOpen: () => Swal.showLoading()});
-    apiCall('confirmPasswordChange', { otp: otp, newPass: newPass, user: session.user, pass: session.pass }, res => {
+    apiCall('confirmPasswordChange', { otp: otp, newPass: newPass, user: session.user, token: session.token }, res => {
       Swal.fire('Success', 'Password updated successfully.', 'success');
       document.getElementById('prof-new-pass').value = '';
       document.getElementById('prof-otp').value = '';
       document.getElementById('otp-section').style.display = 'none';
       document.getElementById('btn-submit-pass').style.display = 'none';
       document.getElementById('btn-req-otp').style.display = 'block';
-      session.pass = newPass; 
+      session.token = newPass; 
     });
   }
 
@@ -2977,7 +2976,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
 
   window.changeAccStatus = function(user, status) {
       Swal.fire({ title: `Change status to ${status}?`, showCancelButton: true }).then(r => {
-          if(r.isConfirmed) { apiCall('updateAccountStatus', { targetUser: user, status: status, user: session.user, pass: session.pass }, () => silentRefresh('getAdminDashboardData')); }
+          if(r.isConfirmed) { apiCall('updateAccountStatus', { targetUser: user, status: status, user: session.user, token: session.token }, () => silentRefresh('getAdminDashboardData')); }
       });
   }
 
@@ -2992,7 +2991,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
           if(r.isConfirmed) { 
               Swal.fire({ title: 'UPDATING...', didOpen: () => Swal.showLoading() });
               // This calls the built-in toggle route in your backend
-              apiCall('toggleLegacyAccess', { targetUser: user, user: session.user, pass: session.pass }, () => {
+              apiCall('toggleLegacyAccess', { targetUser: user, user: session.user, token: session.token }, () => {
                   Swal.fire({toast:true, position:'top-end', icon:'success', title:'Access updated.', showConfirmButton:false, timer:2000}); 
                   silentRefresh('getAdminDashboardData');
               }); 
@@ -3004,7 +3003,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       const u = document.getElementById('new-user').value.trim(), p = document.getElementById('new-pass').value, r = document.getElementById('new-role').value;
       if(!u || !p) return Swal.fire('Error', 'Username and Password required.', 'warning');
       Swal.fire({title:'Provisioning...', didOpen:()=>Swal.showLoading()});
-      apiCall('createAccount', { newUser: u, newPass: p, newRole: r, user: session.user, pass: session.pass }, res => {
+      apiCall('createAccount', { newUser: u, newPass: p, newRole: r, user: session.user, token: session.token }, res => {
           Swal.fire('Success', 'Account created.', 'success');
           document.getElementById('new-user').value=''; document.getElementById('new-pass').value='';
           silentRefresh('getAdminDashboardData');
@@ -3119,7 +3118,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
   // =========================================================================
   window.openHistoricalAttendance = function() {
       Swal.fire({ title: 'Establishing uplink...', didOpen: () => Swal.showLoading() });
-      apiCall('getAttendanceDates', { user: session.user, pass: session.pass }, (res) => {
+      apiCall('getAttendanceDates', { user: session.user, token: session.token }, (res) => {
           if (!res.dates || res.dates.length === 0) {
               return Swal.fire('No History', 'There are no past training logs in the database.', 'info');
           }
@@ -3153,7 +3152,7 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       const btn = document.getElementById('btn-hist-att');
       if(btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       
-      apiCall('getHistoricalAttendance', { date: date, coy: coy, user: session.user, pass: session.pass }, res => {
+      apiCall('getHistoricalAttendance', { date: date, coy: coy, user: session.user, token: session.token }, res => {
           if(btn) btn.innerHTML = '<i class="fas fa-history"></i> PAST LOGS';
           
           let ah = ''; 
