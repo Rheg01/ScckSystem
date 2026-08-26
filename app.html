@@ -2562,10 +2562,16 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
           let dateInput = document.getElementById(`sched-date-${i}`);
           let typeInput = document.getElementById(`sched-type-${i}`);
           
-          if(dateInput && !dateInput.disabled && dateInput.value) {
-              let parts = dateInput.value.split('-');
-              let formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
-              schedule.push({ date: formattedDate, type: typeInput.value });
+          // Only process active boxes (ignores the locked half of a double day)
+          if(dateInput && !dateInput.disabled) {
+              if(dateInput.value) {
+                  let parts = dateInput.value.split('-');
+                  let formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
+                  schedule.push({ date: formattedDate, type: typeInput.value });
+              } else {
+                  // CRITICAL FIX: Push an empty placeholder so the calendar doesn't shift left
+                  schedule.push({ date: "", type: "Single" });
+              }
           }
       }
       
