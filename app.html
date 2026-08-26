@@ -475,8 +475,7 @@
       <div class="header-bar anim-1">
         <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-graduation-cap"></i> UNIT GRADEBOOK</h2>
         <div class="header-actions">
-<button class="btn-info" onclick="exportTableToExcel('gradebook-table', 'ROTC_Gradebook')"><i class="fas fa-file-excel"></i> EXPORT</button>
-          <button id="btn-ref-grade" class="btn-outline" onclick="silentRefresh('getGradebookData', 'btn-ref-grade')"><i class="fas fa-sync"></i> SYNC</button>
+<button class="btn-info" onclick="exportGradebookByCourse()"><i class="fas fa-file-excel"></i> EXPORT BY COURSE</button>          <button id="btn-ref-grade" class="btn-outline" onclick="silentRefresh('getGradebookData', 'btn-ref-grade')"><i class="fas fa-sync"></i> SYNC</button>
         </div>
       </div>
       <div class="action-bar anim-2">
@@ -3179,7 +3178,81 @@ localStorage.setItem('scck_offline_scans', JSON.stringify(offlineScans));
           document.getElementById('att-log-header').innerHTML = `<button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-history"></i> ATTENDANCE LOG: ${date} <span style="font-size:14px; color:var(--text-muted); margin-left:10px;">(${coy === 'ALL' ? 'Entire Unit' : coy})</span>`;
       });
   }
+// =========================================================================
+  // ADVANCED GRADEBOOK EXPORT (MULTI-SHEET)
+  // =========================================================================
+  window.exportGradebookByCourse = function() {
+      // 1. Verify we have data loaded using your exact cache variable
+      if (!globalGradebookCache || globalGradebookCache.length === 0) {
+          Swal.fire('Empty', 'No gradebook data to export. Please sync first.', 'info');
+          return;
+      }
 
+      // 2. Find all unique courses in the data and sort them alphabetically
+      let courses = [...new Set(globalGradebookCache.map(c => c.course))];
+      courses = courses.filter(c => c && c !== "---" && c !== "Unknown Course").sort();
+
+      // 3. Create a new Excel Workbook
+      let wb = XLSX.utils.book_new();
+
+      // 4. Create a separate sheet/tab for each course
+      courses.forEach(course => {
+          // Filter cadets for this specific course AND sort them alphabetically by Name
+          let courseCadets = globalGradebookCache
+              .filter(c => c.course === course)
+              .sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)));
+
+          // Format the data into clean columns for Excel
+          let wsData = courseCadets.map(c => ({
+              "Cadet ID": c.id,
+              "Full Name": c.name,
+              "Company": c.company,
+              "Days Present": c.daysAttended,
+              "Prelim Score": c.prelim,
+              "Midterm Score": c.midterm,
+              "Finals Score": c.final,
+              "Exam Average": c.examAvg,
+              "Attendance %": c.attendancePct,
+              "Aptitude Score": c.aptitudePct,
+              "FINAL GRADE": c.finalGrade
+          }));
+
+          // Convert the JSON array to an Excel sheet
+          let ws = XLSX.utils.json_to_sheet(wsData);
+          
+          // Excel sheet names cannot exceed 31 characters and cannot contain special symbols
+          let safeSheetName = course.substring(0, 31).replace(/[\\\/\?\*\[\]:]/g, '');
+          
+          // Append the sheet to the workbook
+          XLSX.utils.book_append_sheet(wb, ws, safeSheetName);
+      });
+
+      // 5. Handle cadets who don't have a course listed (Fallback Sheet)
+      let unknownCadets = globalGradebookCache
+          .filter(c => !c.course || c.course === "---" || c.course === "Unknown Course")
+          .sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)));
+          
+      if (unknownCadets.length > 0) {
+          let wsDataUnknown = unknownCadets.map(c => ({
+              "Cadet ID": c.id,
+              "Full Name": c.name,
+              "Company": c.company,
+              "Days Present": c.daysAttended,
+              "Prelim Score": c.prelim,
+              "Midterm Score": c.midterm,
+              "Finals Score": c.final,
+              "Exam Average": c.examAvg,
+              "Attendance %": c.attendancePct,
+              "Aptitude Score": c.aptitudePct,
+              "FINAL GRADE": c.finalGrade
+          }));
+          let wsUnknown = XLSX.utils.json_to_sheet(wsDataUnknown);
+          XLSX.utils.book_append_sheet(wb, wsUnknown, "Unassigned");
+      }
+
+      // 6. Download the final compiled file
+      XLSX.writeFile(wb, "SCCK_ROTC_Gradebook_By_Course.xlsx");
+  }
 // Modify your existing exportTableToExcel logic slightly to accept the targetCompany param.
 // Loop through bodyData and `if(targetCompany !== 'ALL' && row[companyColIndex] !== targetCompany) continue;`
 
