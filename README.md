@@ -2,7 +2,7 @@
 
 Hey there! Welcome to the repository for the SCCK ROTC Command Center.
 
-I built this full-stack web application to solve a real-world logistical nightmare: managing attendance, discipline records, and academic grades for an ROTC unit of over 100+ cadets. Relying on paper trails and disorganized spreadsheets was causing data loss and massive delays.
+I built this full-stack web application to solve a real-world logistical nightmare: managing attendance, discipline records, and academic grades for an ROTC unit of over 300+ cadets. Relying on paper trails and disorganized spreadsheets was causing data loss and massive delays.
 
 This system digitizes the entire workflow, introducing offline-first QR scanning, role-based access control, and a real-time command dashboard.
 
