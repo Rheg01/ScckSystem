@@ -2869,6 +2869,12 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       else if(panelId === 'panel-legacy') { loadCommandTable(); loadLegacyClassesForDropdown(); silentRefresh('getAdminLegacyData'); }
       else if(panelId === 'panel-posts') silentRefresh('getPostsAdmin');
       else if(panelId === 'panel-audit') silentRefresh('getAuditLogs');
+      else if(panelId === 'panel-settings') {
+          apiCall('getTrainingSchedule', { user: session.user, token: session.token }, (res) => {
+              if(res.success && res.schedule) loadTrainingSchedule(res.schedule);
+          });
+      }
+  
   }
 
   window.toggleSidebar = function() {
@@ -2934,14 +2940,17 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       // Auto-generate a beautiful placeholder avatar using their initials
       let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(safeName)}&background=2C3E20&color=F5A623&size=150&font-size=0.4&bold=true`;
 
-      // Build the 15-Day Tracker UI
       let trackerHtml = '<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:15px;">';
       if(res.tracker && res.tracker.length > 0) {
           res.tracker.forEach((status, idx) => {
-              let bg = 'var(--hover-bg)', col = 'var(--text-muted)';
+              
+              // Changed the default background to visible gray instead of transparent hover-bg
+              let bg = 'var(--status-gray)', col = '#ffffff'; 
+              
               if(status === 'Present') { bg = 'var(--status-green)'; col = '#fff'; }
               else if(status === 'Late' || status === 'Very Late') { bg = 'var(--status-yellow)'; col = '#000'; }
               else if(status === 'Absent') { bg = 'var(--status-red)'; col = '#fff'; }
+              
               trackerHtml += `<div style="padding:8px 12px; background:${bg}; color:${col}; border-radius:4px; font-size:12px; font-weight:bold;" title="Day ${idx+1}: ${status}">D${idx+1}</div>`;
           });
       }
