@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SCCK Command Center</title>
+  <title>SCCK ROTC UNIT</title>
   
   <script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -332,7 +332,7 @@
   <div class="login-box">
     <div class="login-logo-container"><img src="" class="app-logo" id="system-logo-login" alt="Logo"></div>
     <h2>SCCK ROTC UNIT</h2>
-    <p>Command Center & Attendance</p>
+    <p>Department of Military Science</p>
     
     <div class="input-group" style="margin-bottom: 15px;">
       <label>IDENTIFICATION</label>
@@ -1843,27 +1843,37 @@ window.exportIDLinks = function() {
       let target = document.getElementById('id-target-select').value;
       let list = target === 'ALL' ? globalStudentCache : globalStudentCache.filter(s => s.id.toString() === target);
       
-      // Build the data array for Excel
+      // Get your live GitHub Pages base URL dynamically
+      let baseUrl = window.location.origin + window.location.pathname; 
+      
       let exportData = list.map(s => {
+          // Extract just the file ID from the Google Drive link to keep the URL short and clean
+          let fileId = "";
+          if (s.image) {
+              let match = s.image.match(/d\/([a-zA-Z0-9_-]+)/);
+              if (match && match[1]) fileId = match[1];
+          }
+          
+          // Build the "Magic Link" with URL parameters
+          let idUrl = `${baseUrl}?idcard=true&id=${encodeURIComponent(s.id)}&n=${encodeURIComponent(s.name)}&c=${encodeURIComponent(s.course || 'N/A')}&y=${encodeURIComponent(s.company || 'N/A')}&i=${fileId}`;
+          
           return {
               "Cadet ID": s.id,
               "Full Name": s.name,
               "Course": s.course || "N/A",
               "Company": s.company || "N/A",
-              "Profile Photo Link": s.image || "No Photo Uploaded",
-              "QR Code Link": `https://quickchart.io/qr?size=300&margin=2&text=${encodeURIComponent(s.id)}`
+              "Digital ID Link": idUrl
           };
       });
       
-      // Generate Excel File
       let ws = XLSX.utils.json_to_sheet(exportData);
       let wb = XLSX.utils.book_new();
       
-      // Auto-size columns to fit URLs
-      ws['!cols'] = [{wch: 15}, {wch: 30}, {wch: 15}, {wch: 15}, {wch: 60}, {wch: 60}];
+      // Widen the last column so the URL fits perfectly in Excel
+      ws['!cols'] = [{wch: 15}, {wch: 30}, {wch: 15}, {wch: 15}, {wch: 85}];
       
-      XLSX.utils.book_append_sheet(wb, ws, "ID_Links");
-      XLSX.writeFile(wb, "SCCK_ID_Data_Export.xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Digital_ID_Links");
+      XLSX.writeFile(wb, "SCCK_Digital_ID_Links.xlsx");
   }
   // =========================================================================
   // AUDIT LOGS
@@ -2823,6 +2833,51 @@ window.exportIDLinks = function() {
     }
   };
 
+  // --- MAGIC LINK INTERCEPTOR FOR DIGITAL ID CARDS ---
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('idcard') === 'true') {
+        document.getElementById('view-login').style.display = 'none';
+        document.body.style.background = '#e8ece1';
+        
+        let sId = urlParams.get('id') || 'N/A';
+        let sName = urlParams.get('n') || 'Unknown Cadet';
+        let sCourse = urlParams.get('c') || 'N/A';
+        let sCoy = urlParams.get('y') || 'N/A';
+        let sImgId = urlParams.get('i') || '';
+        let sImgUrl = sImgId ? `https://lh3.googleusercontent.com/d/${sImgId}` : '';
+        
+        let branding = JSON.parse(localStorage.getItem('scck_branding') || '{}'); 
+        let sysLogo = branding.logoUrl || 'https://cdn-icons-png.flaticon.com/512/1055/1055664.png';
+        
+        let ih = sImgUrl ? `<img src="${sImgUrl}" class="id-photo" alt="Photo" style="width:100%; height:100%; object-fit:cover;">` : `<div class="id-photo-placeholder" style="font-size:40px; color:#aaa; line-height:95px;"><i class="fas fa-user"></i></div>`;
+        
+        // Render the exact ID Card HTML structure onto a blank page
+        document.body.innerHTML = `
+        <div id="id-grid-container" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:20px;">
+          <div class="id-card-modern" style="margin-bottom:25px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);">
+              <div class="id-card-top"></div>
+              <div class="id-header-modern"><span>SCCK ROTC UNIT</span></div>
+              <div class="id-photo-container">${ih}</div>
+              <div class="id-name-modern">${sName}</div>
+              <div class="id-course-modern">COURSE: ${sCourse}</div>
+              <div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${sCoy}</div>
+              <div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${sId}</div>
+              <div class="qr-container-modern">
+                  <div id="qr-standalone"></div>
+                  <img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;">
+              </div>
+              <div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div>
+          </div>
+          <button id="print-btn-standalone" onclick="this.style.display='none'; window.print(); setTimeout(()=>this.style.display='block', 1000);" style="background:var(--army-primary); color:white; padding:12px 25px; border-radius:6px; font-family:'Oswald',sans-serif; border:none; cursor:pointer; font-size:16px; box-shadow:0 4px 10px rgba(0,0,0,0.2); letter-spacing: 1px;"><i class="fas fa-print"></i> PRINT THIS ID CARD</button>
+        </div>`;
+        
+        // Generate the QR Code dynamically
+        setTimeout(() => {
+            new QRCode(document.getElementById('qr-standalone'), { text: sId, width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H });
+        }, 300);
+        return; // Stops the rest of the app from loading
+    }
+    // --- END INTERCEPTOR ---
   function setupRoleUI(role) {
     document.getElementById('sidebar-menu-admin').style.display = 'none';
     document.getElementById('sidebar-menu-scanner').style.display = 'none';
