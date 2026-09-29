@@ -2804,36 +2804,7 @@ window.exportIDLinks = function() {
   window.logout = logout;
 
   window.onload = () => {
-    buildScheduleUI();
-    initCropperInputs();
-    
-    const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
-    if (cachedBranding) {
-      if(cachedBranding.logoUrl) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = cachedBranding.logoUrl; logoImg.style.display = 'block'; }
-      if(cachedBranding.bgUrl) document.getElementById('view-login').style.backgroundImage = `url('${cachedBranding.bgUrl}')`;
-    }
-    
-    apiCall('getSettings', {}, (res) => {
-      localStorage.setItem('scck_branding', JSON.stringify(res));
-      if(res.logoUrl && !cachedBranding) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = res.logoUrl; logoImg.style.display = 'block'; }
-      if(res.bgUrl && !cachedBranding) document.getElementById('view-login').style.backgroundImage = `url('${res.bgUrl}')`;
-    });
-
-    const savedSession = localStorage.getItem('scck_session');
-    if (savedSession) {
-      try {
-        const parsed = JSON.parse(savedSession);
-        if (parsed.expiry > Date.now()) {
-          session = { user: parsed.user, token: parsed.token, role: parsed.role };
-          document.getElementById('view-login').style.display = 'none'; 
-          document.getElementById('app-container').style.display = 'flex';
-          loadUserProfile(); setupRoleUI(parsed.role); updateOfflineSyncUI();
-        } else { localStorage.removeItem('scck_session'); }
-      } catch(e) {}
-    }
-  };
-
-  // --- MAGIC LINK INTERCEPTOR FOR DIGITAL ID CARDS ---
+    // --- MAGIC LINK INTERCEPTOR FOR DIGITAL ID CARDS ---
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('idcard') === 'true') {
         document.getElementById('view-login').style.display = 'none';
@@ -2878,6 +2849,36 @@ window.exportIDLinks = function() {
         return; // Stops the rest of the app from loading
     }
     // --- END INTERCEPTOR ---
+
+    buildScheduleUI();
+    initCropperInputs();
+    
+    const cachedBranding = JSON.parse(localStorage.getItem('scck_branding') || 'null');
+    if (cachedBranding) {
+      if(cachedBranding.logoUrl) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = cachedBranding.logoUrl; logoImg.style.display = 'block'; }
+      if(cachedBranding.bgUrl) document.getElementById('view-login').style.backgroundImage = `url('${cachedBranding.bgUrl}')`;
+    }
+    
+    apiCall('getSettings', {}, (res) => {
+      localStorage.setItem('scck_branding', JSON.stringify(res));
+      if(res.logoUrl && !cachedBranding) { const logoImg = document.getElementById('system-logo-login'); logoImg.src = res.logoUrl; logoImg.style.display = 'block'; }
+      if(res.bgUrl && !cachedBranding) document.getElementById('view-login').style.backgroundImage = `url('${res.bgUrl}')`;
+    });
+
+    const savedSession = localStorage.getItem('scck_session');
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession);
+        if (parsed.expiry > Date.now()) {
+          session = { user: parsed.user, token: parsed.token, role: parsed.role };
+          document.getElementById('view-login').style.display = 'none'; 
+          document.getElementById('app-container').style.display = 'flex';
+          loadUserProfile(); setupRoleUI(parsed.role); updateOfflineSyncUI();
+        } else { localStorage.removeItem('scck_session'); }
+      } catch(e) {}
+    }
+  };
+  
   function setupRoleUI(role) {
     document.getElementById('sidebar-menu-admin').style.display = 'none';
     document.getElementById('sidebar-menu-scanner').style.display = 'none';
