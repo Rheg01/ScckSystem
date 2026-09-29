@@ -1823,8 +1823,11 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       
       c.innerHTML=f.map(s => { 
           let ih=s.image?`<img src="${s.image}" class="id-photo" alt="Photo">`:`<div class="id-photo-placeholder"><i class="fas fa-user"></i></div>`; 
-          return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC COMMAND</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; 
+          
+          // CHANGED TEXT TO "SCCK ROTC UNIT" HERE:
+          return `<div class="id-card-modern"><div class="id-card-top"></div><div class="id-header-modern"><span>SCCK ROTC UNIT</span></div><div class="id-photo-container">${ih}</div><div class="id-name-modern">${s.name}</div><div class="id-course-modern">COURSE: ${s.course || 'N/A'}</div><div class="id-course-modern" style="color:var(--text-muted); font-size:10px; margin-top:2px;">COY: ${s.company || 'N/A'}</div><div style="font-size: 11px; text-align: center; margin-top: 2px; color: var(--text-muted); font-weight: 600;">ID NO: ${s.id}</div><div class="qr-container-modern"><div id="qr-${s.id}"></div><img src="${sysLogo}" style="position:absolute; width:22px; height:22px; background:white; padding:2px; border-radius:4px; z-index:10;"></div><div class="id-footer-modern">OFFICIAL CADET IDENTIFICATION</div></div>`; 
       }).join(''); 
+      
       setTimeout(() => f.forEach(s => new QRCode(document.getElementById(`qr-${s.id}`), { text: s.id.toString(), width: 75, height: 75, colorDark: '#1b2015', correctLevel: QRCode.CorrectLevel.H })), 300); 
   }
   
@@ -1834,7 +1837,34 @@ document.getElementById('attendance-table').innerHTML = ah || '<tr><td colspan="
       }
       window.print(); 
   }
-
+window.exportIDLinks = function() {
+      if(!globalStudentCache || globalStudentCache.length === 0) return Swal.fire({toast:true, position:'top', icon:'error', title:'No cadets loaded. Sync first.', showConfirmButton:false, timer:2000});
+      
+      let target = document.getElementById('id-target-select').value;
+      let list = target === 'ALL' ? globalStudentCache : globalStudentCache.filter(s => s.id.toString() === target);
+      
+      // Build the data array for Excel
+      let exportData = list.map(s => {
+          return {
+              "Cadet ID": s.id,
+              "Full Name": s.name,
+              "Course": s.course || "N/A",
+              "Company": s.company || "N/A",
+              "Profile Photo Link": s.image || "No Photo Uploaded",
+              "QR Code Link": `https://quickchart.io/qr?size=300&margin=2&text=${encodeURIComponent(s.id)}`
+          };
+      });
+      
+      // Generate Excel File
+      let ws = XLSX.utils.json_to_sheet(exportData);
+      let wb = XLSX.utils.book_new();
+      
+      // Auto-size columns to fit URLs
+      ws['!cols'] = [{wch: 15}, {wch: 30}, {wch: 15}, {wch: 15}, {wch: 60}, {wch: 60}];
+      
+      XLSX.utils.book_append_sheet(wb, ws, "ID_Links");
+      XLSX.writeFile(wb, "SCCK_ID_Data_Export.xlsx");
+  }
   // =========================================================================
   // AUDIT LOGS
   // =========================================================================
