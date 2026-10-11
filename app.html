@@ -1352,8 +1352,9 @@ window.editStudentDynamic = function(id, coy, con) {
     document.getElementById('cadet-stat-score').style.color = sColor;
     
     document.getElementById('cadet-stat-final').innerText = res.finalGrade || '0.00';
-    document.getElementById('cadet-stat-final').style.color = (res.finalGrade >= 75) ? 'var(--status-green)' : 'var(--status-red)';
+   document.getElementById('cadet-stat-final').style.color = (res.finalGrade >= 75) ? 'var(--status-green)' : 'var(--status-red)';
     document.getElementById('cadet-stat-exam').innerText = res.examAvg || '0.00';
+    document.getElementById('cadet-exam-breakdown').innerHTML = `P: <b>${res.prelim || 0}</b> | M: <b>${res.midterm || 0}</b> | F: <b>${res.finals || 0}</b>`;
 
     let trackerHtml = '';
     let trackerArr = res.tracker || [];
