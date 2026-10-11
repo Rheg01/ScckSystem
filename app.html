@@ -370,7 +370,7 @@
       <li class="admin-only"><button onclick="switchTab('panel-gradebook',this)"><i class="fas fa-graduation-cap"></i> <span>GRADEBOOK</span></button></li>
       <li><button onclick="switchTab('panel-attendance',this)"><i class="fas fa-clipboard-list"></i> <span>ATTENDANCE LOG</span></button></li>
       <li><button onclick="switchTab('panel-masterlist',this)"><i class="fas fa-users"></i> <span>UNIT ROSTER</span></button></li>
-      <li><button onclick="switchTab('panel-leaves',this)"><i class="fas fa-calendar-alt"></i> <span>LEAVE REQUESTS</span> <span id="badge-leaves" class="nav-badge" style="display:none;">0</span></button></li>
+      <li><button onclick="switchTab('panel-leaves',this)"><i class="fas fa-calendar-alt"></i> <span>EMERGENCY REQUESTS</span> <span id="badge-leaves" class="nav-badge" style="display:none;">0</span></button></li>
       <li class="admin-only"><button onclick="switchTab('panel-idcards',this)"><i class="fas fa-id-card"></i> <span>ID GENERATOR</span></button></li>
       <li><button onclick="switchTab('panel-legacy',this)"><i class="fas fa-landmark"></i> <span>LEGACY DB</span> <span id="badge-legacy" class="nav-badge" style="display:none;">0</span></button></li>
       <li><button onclick="switchTab('panel-posts',this)"><i class="fas fa-images"></i> <span>PUBLIC POSTS</span> <span id="badge-posts" class="nav-badge" style="display:none;">0</span></button></li>
@@ -389,7 +389,7 @@
     <!-- CADET MENU -->
     <ul class="sidebar-menu" id="sidebar-menu-cadet" style="display:none;">
       <li><button onclick="switchTab('panel-cadet-dashboard',this)" class="active"><i class="fas fa-id-badge"></i> <span>MY DASHBOARD</span></button></li>
-      <li><button onclick="switchTab('panel-cadet-leaves',this)"><i class="fas fa-envelope"></i> <span>MY LEAVE REQUESTS</span></button></li>
+      <li><button onclick="switchTab('panel-cadet-leaves',this)"><i class="fas fa-envelope"></i> <span>MY EMERGENCY REQUESTS</span></button></li>
       <li><button onclick="switchTab('panel-profile',this)"><i class="fas fa-user-circle"></i> <span>MY PROFILE</span></button></li>
     </ul>
 
@@ -439,7 +439,7 @@
     <!-- CADET LEAVES -->
     <div id="panel-cadet-leaves" class="view-panel">
       <div class="header-bar anim-1">
-        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-envelope"></i> MY LEAVE REQUESTS</h2>
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-envelope"></i> MY EMERGENCY REQUESTS</h2>
         <div class="header-actions"><button id="btn-ref-cadet2" class="btn-outline" onclick="silentRefresh('getCadetData', 'btn-ref-cadet2')"><i class="fas fa-sync"></i> SYNC</button></div>
       </div>
       <div class="action-bar anim-2">
@@ -580,10 +580,10 @@
       <div class="table-card anim-2"><div class="table-wrapper"><table><thead><tr><th>Cadet ID</th><th>Full Name</th><th>Company</th><th>Score</th><th>Contact</th><th>Actions</th></tr></thead><tbody id="masterlist-table"></tbody></table></div></div>
     </div>
 
-    <!-- LEAVE REQUESTS -->
+    <!-- EMERGENCY REQUESTS -->
     <div id="panel-leaves" class="view-panel">
       <div class="header-bar anim-1">
-        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-calendar-alt"></i> LEAVE REQUESTS</h2>
+        <h2><button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><i class="fas fa-calendar-alt"></i> EMERGENCY REQUESTS</h2>
         <div class="header-actions"><button class="btn-info" onclick="exportTableToExcel('leaves-table', 'Leave_Requests')"><i class="fas fa-file-excel"></i> EXPORT</button><button id="btn-ref-lv" class="btn-outline" onclick="silentRefresh('getLeaveRequests', 'btn-ref-lv')"><i class="fas fa-sync"></i> SYNC</button></div>
       </div>
       <div class="dashboard-grid anim-2" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;"><div class="stat-card" style="border-bottom-color:var(--status-yellow); padding: 15px;"><div><div class="stat-val" id="lv-stat-pending" style="color:var(--status-yellow);">0</div><div class="stat-label">Pending</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-green); padding: 15px;"><div><div class="stat-val" id="lv-stat-approved" style="color:var(--status-green);">0</div><div class="stat-label">Approved</div></div></div><div class="stat-card" style="border-bottom-color:var(--status-red); padding: 15px;"><div><div class="stat-val" id="lv-stat-rejected" style="color:var(--status-red);">0</div><div class="stat-label">Rejected</div></div></div></div>
