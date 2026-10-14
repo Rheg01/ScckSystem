@@ -1290,7 +1290,7 @@ adminImageInput.addEventListener('change', function(event) {
           if (typeof loadCadetDossier === 'function') loadCadetDossier(currentEditCadetId);
         }
       })
-      .adminUpdateCadetImage(session.username, session.token, currentEditCadetId, base64Image);
+      .adminUpdateCadetImage(session.user, session.token, currentEditCadetId, base64Image);
   };
   
   reader.readAsDataURL(file);
