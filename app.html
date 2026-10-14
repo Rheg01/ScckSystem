@@ -3134,7 +3134,10 @@ window.exportIDLinks = function() {
             <div style="flex: 1; min-width: 200px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:25px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
                 <img src="${avatarUrl}" style="border-radius:50%; border:4px solid var(--army-gold); margin-bottom:15px; width:130px; height:130px; object-fit:cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                 <h3 style="font-family:'Oswald', sans-serif; color:var(--army-primary); margin-bottom:5px; font-size:22px; line-height:1.2;">${safeName}</h3>
-                <div style="font-weight:bold; color:var(--text-muted); font-size:14px; letter-spacing:1px; background: var(--hover-bg); padding: 5px; border-radius: 4px; display:inline-block; margin-top:5px;">ID: ${studentId}</div>
+                <div style="font-weight:bold; color:var(--text-muted); font-size:14px; letter-spacing:1px; background: var(--hover-bg); padding: 5px; border-radius: 4px; display:inline-block; margin-top:5px; margin-bottom: 15px;">ID: ${studentId}</div>
+                
+                <!-- NEW CHANGE PHOTO BUTTON -->
+                <button class="btn-primary" onclick="promptAdminImageUpdate('${studentId}')" style="background:var(--army-primary); color:white; font-size: 12px; width: 100%; border-radius: 4px; padding: 8px;"><i class="fas fa-camera"></i> CHANGE PHOTO</button>
             </div>
 
             <!-- RIGHT COLUMN: LIVE STATS & TRACKER -->
