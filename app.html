@@ -1245,6 +1245,56 @@ function filterAttendance() {
       });
       document.getElementById('gradebook-table').innerHTML = html || '<tr><td colspan="10" style="text-align:center;">No records.</td></tr>';
   }
+  // Hidden HTML file input for the admin to select a new image
+const adminImageInput = document.createElement('input');
+adminImageInput.type = 'file';
+adminImageInput.accept = 'image/jpeg, image/png';
+adminImageInput.style.display = 'none';
+document.body.appendChild(adminImageInput);
+
+let currentEditCadetId = null;
+
+// Opens the file picker
+function promptAdminImageUpdate(cadetId) {
+  currentEditCadetId = cadetId;
+  adminImageInput.click(); 
+}
+
+// When the admin selects an image, process it and send to backend
+adminImageInput.addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Ensure file is not too massive (limit to ~2MB to prevent Apps Script lag)
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Image is too large. Please upload an image under 2MB.");
+    adminImageInput.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64Image = e.target.result;
+    
+    // Show a loading indicator if you have one, or change cursor
+    document.body.style.cursor = 'wait';
+    
+    // Send to Google Apps Script
+    google.script.run
+      .withSuccessHandler(function(res) {
+        document.body.style.cursor = 'default';
+        alert(res.message);
+        adminImageInput.value = ""; // Reset input
+        if (res.success) {
+          // If you are looking at the cadet dossier, refresh it automatically!
+          if (typeof loadCadetDossier === 'function') loadCadetDossier(currentEditCadetId);
+        }
+      })
+      .adminUpdateCadetImage(session.username, session.token, currentEditCadetId, base64Image);
+  };
+  
+  reader.readAsDataURL(file);
+});
 
   // =========================================================================
   // GLOBAL COMPANY & EDIT STUDENT LOGIC 
